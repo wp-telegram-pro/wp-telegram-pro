@@ -1,0 +1,37 @@
+
+.wctb-wrap .nav-tab {
+    background-color: #fff;
+}
+
+.wctb-wrap .nav-tab-active,
+.wctb-wrap .nav-tab-active:focus,
+.wctb-wrap .nav-tab-active:focus:active,
+.wctb-wrap .nav-tab-active:hover {
+    background-color: #f1f1f1;
+    border-bottom-color: #f1f1f1;
+}
+
+.wctb-wrap .nav-tab:focus {
+    box-shadow: none;
+}
+
+.wctb-wrap .mb-tab-content {
+    padding: 20px 0;
+}
+
+.wctb-wrap .mb-tab-content th {
+    width: 150px;
+    text-align: right;
+}
+
+.wctb-wrap .mb-tab-content {
+    padding: 20px 0;
+}
+
+.wctb-wrap .mb-tab-content input, .wctb-wrap .mb-tab-content textarea {
+    width: 100%;
+}
+
+.wctb-wrap .mb-tab-content input.ed_button {
+    width: auto;
+}
