@@ -5,6 +5,10 @@ Description
 
 Telegram bot for WooCommerce 
 
+Development Source:
+- [Telegram Bot API](https://core.telegram.org/bots/api)
+- [Emojipedia](https://emojipedia.org/) 
+
 Done:
 - Receive command from Telegram
 - Settings Page

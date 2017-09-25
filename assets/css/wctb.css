@@ -1,6 +1,8 @@
 
-.wctb-wrap .nav-tab {
+.wctb-wrap .nav-tab:not(.nav-tab-active) {
     background-color: #fff;
+    cursor: pointer;
+
 }
 
 .wctb-wrap .nav-tab-active,
@@ -9,6 +11,7 @@
 .wctb-wrap .nav-tab-active:hover {
     background-color: #f1f1f1;
     border-bottom-color: #f1f1f1;
+    cursor: default;
 }
 
 .wctb-wrap .nav-tab:focus {
@@ -28,10 +31,6 @@
     padding: 20px 0;
 }
 
-.wctb-wrap .mb-tab-content input, .wctb-wrap .mb-tab-content textarea {
+.wctb-wrap .mb-tab-content input[type="text"], .wctb-wrap .mb-tab-content textarea {
     width: 100%;
-}
-
-.wctb-wrap .mb-tab-content input.ed_button {
-    width: auto;
 }
