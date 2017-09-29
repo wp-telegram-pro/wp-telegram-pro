@@ -1,3 +1,15 @@
+.wctb-wrap table {
+    width: 100%;
+}
+
+.wctb-wrap table td {
+    padding: 5px 0;
+}
+
+.wctb-wrap table tr td:first-child {
+    width: 200px;
+    vertical-align: top;
+}
 
 .wctb-wrap .nav-tab:not(.nav-tab-active) {
     background-color: #fff;
@@ -31,6 +43,7 @@
     padding: 20px 0;
 }
 
-.wctb-wrap .mb-tab-content input[type="text"], .wctb-wrap .mb-tab-content textarea {
+.wctb-wrap .mb-tab-content textarea {
     width: 100%;
 }
+
