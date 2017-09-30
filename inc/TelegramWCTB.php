@@ -32,6 +32,7 @@ class TelegramWCTB
                 $return['chat_id'] = $callback_query['from']['id'];
                 $return['message_id'] = $callback_query['message']['message_id'];
                 $return['data'] = $callback_query['data'];
+                $return['callback_query_id'] = $callback_query['id'];
             }
             $this->input = $return;
             return $return;
@@ -85,10 +86,25 @@ class TelegramWCTB
         $chat_id = $chat_id == null ? $this->input['chat_id'] : $chat_id;
         $parameter = array('chat_id' => $chat_id, 'file' => $file);
         if ($caption != null)
-            $parameter['caption'] = $caption;
+            $parameter['caption'] = mb_substr($caption, 0, 200);
         if ($keyboard != null)
             $parameter['reply_markup'] = $keyboard;
         return $this->request($method, $parameter);
+    }
+
+    function answerCallbackQuery($text, $callback_query_id = null, $show_alert = false)
+    {
+        $callback_query_id = $callback_query_id == null ? $this->input['callback_query_id'] : $callback_query_id;
+        $parameter = array('callback_query_id' => $callback_query_id, 'text' => $text, 'show_alert' => $show_alert);
+        return $this->request('answerCallbackQuery', $parameter);
+    }
+
+    function editMessageReplyMarkup($reply_markup, $message_id = null, $chat_id = null)
+    {
+        $chat_id = $chat_id == null ? $this->input['chat_id'] : $chat_id;
+        $message_id = $message_id == null ? $this->input['message_id'] : $message_id;
+        $parameter = array('reply_markup' => $reply_markup, 'chat_id' => $chat_id, 'message_id' => $message_id);
+        return $this->request('editMessageReplyMarkup', $parameter);
     }
 
     function bot_info()
