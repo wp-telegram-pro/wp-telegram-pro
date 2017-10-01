@@ -1,6 +1,9 @@
 <?php
-if (!defined('ABSPATH'))
-    exit;
+/**
+ * Telegram Bot API Class
+ * @Author: Parsa Kafi
+ * @WebSite: http://parsa.ws
+*/
 
 class TelegramWCTB
 {
@@ -19,8 +22,8 @@ class TelegramWCTB
             $data = json_decode($input, true);
             if (json_last_error() !== JSON_ERROR_NONE || !isset($data['update_id']))
                 throw new Exception('Json With Error!');
-
             $return = array();
+            $return['input'] = $data;
             $return['text'] = $data['message']['text'];
             $return['from'] = $data['message']['from'];
             $return['chat_id'] = $data['message']['from']['id'];
