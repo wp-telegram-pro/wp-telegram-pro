@@ -64,7 +64,7 @@ class WooCommerceTelegramBot
         if (isset($data['data'])) {
             $button_data = $data['data'];
 
-            if ($button_data == 'product_variation_header') {
+            if (substr($button_data, 0, 24) == 'product_variation_header') {
                 $this->telegram->answerCallbackQuery(__('Select from the options below', $this->plugin_key));
 
             } elseif (substr($button_data, 0, 17) == 'product_variation') {
@@ -183,13 +183,36 @@ class WooCommerceTelegramBot
         $price = !empty($price) ? strip_tags(html_entity_decode(wc_price($price))) : $price;
         $add_info = '';
         $metas = array();
+
+        // Weight
         if (!empty($product['weight']))
-            $metas[] = __('Weight:', $this->plugin_key) . ' ' . $product['weight'] . ' ' . get_option('woocommerce_weight_unit');
+            $metas[] = __('Weight', $this->plugin_key) . ': ' . $product['weight'] . ' ' . get_option('woocommerce_weight_unit');
+
+        // Dimensions
         if (!empty($product['dimensions']) && $product['dimensions'] != __('N/A', 'woocommerce'))
-            $metas[] = __('Dimensions:', $this->plugin_key) . ' ' . $product['dimensions'];
-        if (!empty($product['attributes']) && count($product['attributes'])) {
-            foreach ($product['attributes'] as $k => $v) {
-                $metas[] = trim(urldecode($k), ':') . ': ' . str_replace(array(' | ', ' |', ' |', '|'), ', ', $v);
+            $metas[] = __('Dimensions', $this->plugin_key) . ': ' . $product['dimensions'];
+
+        // Attribute
+        if (is_array($product['variations']) && count($product['variations'])) {
+            foreach ($product['variations'] as $name => $variation) {
+                if ($variation['is_visible'] == 0 || empty($variation['value']))
+                    continue;
+                $var_head = urldecode($name);
+                if ($variation['is_variation'] == 1 && $variation['is_taxonomy'] == 1) {
+                    $tax = get_taxonomy($var_head);
+                    $var_head = $tax->labels->singular_name;
+                }
+                $items = array();
+                if ($variation['is_taxonomy'] == 0) {
+                    $items = array_map('urldecode', array_map('trim', explode('|', $variation['value'])));
+
+                } elseif ($variation['is_taxonomy'] == 1) {
+                    $terms = get_the_terms($product['id'], $variation['name']);
+                    foreach ($terms as $term)
+                        $items[] = $term->name;
+                }
+                $items = implode(', ', $items);
+                $metas[] = $var_head . ': ' . $items;
             }
         }
         if (!empty($product['average_rating']) && intval($product['average_rating']) > 0) {
@@ -237,6 +260,8 @@ class WooCommerceTelegramBot
 
         // Category Button
         if (is_array($product['categories']) && count($product['categories'])) {
+            //$max_lengths = max(array_map('strlen', count($product['categories'])));
+            //$columns = $this->keyboard_columns($max_lengths, count($product['categories']));
             $terms_r = $terms_d = array();
             $c = 1;
             foreach ($product['categories'] as $category) {
@@ -259,9 +284,10 @@ class WooCommerceTelegramBot
 
         // Variations
         if (is_array($product['variations']) && count($product['variations'])) {
+            $vi = 0;
             $attributes = wc_get_product_variation_attributes($product['product_variation_id']);
             foreach ($product['variations'] as $name => $variation) {
-                if ($variation['is_variation'] == 0)
+                if ($variation['is_variation'] != 1)
                     continue;
                 $var_head = urldecode($name);
                 if ($variation['is_variation'] == 1 && $variation['is_taxonomy'] == 1) {
@@ -270,15 +296,18 @@ class WooCommerceTelegramBot
                 }
                 $keyboard[] = array(array(
                     'text' => '- ' . $var_head . ' -',
-                    'callback_data' => 'product_variation_header'
+                    'callback_data' => 'product_variation_header_' . $vi
                 ));
+                $vi++;
 
                 // is custom variation
-                if ($variation['is_variation'] == 1 && $variation['is_taxonomy'] == 0) {
+                if ($variation['is_taxonomy'] == 0) {
                     $items = explode('|', $variation['value']);
                     $items = array_map('urldecode', array_map('trim', $items));
                     $terms_r = $terms_d = array();
                     $c = 1;
+                    $max_lengths = max(array_map('strlen', $items));
+                    $columns = $this->keyboard_columns($max_lengths, count($items));
                     foreach ($items as $item) {
                         if ($attributes) {
                             $attributes_ = array_keys($attributes);
@@ -290,9 +319,9 @@ class WooCommerceTelegramBot
                         }
                         $terms_d[] = array(
                             'text' => $item,
-                            'callback_data' => 'product_variation_text_' . $var_head . '_' . $item
+                            'callback_data' => 'product_variation_' . $product['id'] . '_text_' . $var_head . '_' . $item
                         );
-                        if ($c % 3 == 0) {
+                        if ($c % $columns == 0) {
                             $terms_r[] = $terms_d;
                             $terms_d = array();
                         }
@@ -303,17 +332,22 @@ class WooCommerceTelegramBot
                     $keyboard = array_merge($keyboard, $terms_r);
 
                     // is taxonomy variation
-                } elseif ($variation['is_variation'] == 1 && $variation['is_taxonomy'] == 1) {
+                } elseif ($variation['is_taxonomy'] == 1) {
                     $terms = get_the_terms($product['id'], $variation['name']);
                     if ($terms) {
+                        $temps = array();
+                        foreach ($terms as $term)
+                            $temps[] = $term->name;
+                        $max_lengths = max(array_map('strlen', $temps));
+                        $columns = $this->keyboard_columns($max_lengths, count($terms));
                         $terms_r = $terms_d = array();
                         $c = 1;
                         foreach ($terms as $term) {
                             $terms_d[] = array(
                                 'text' => $term->name,
-                                'callback_data' => 'product_variation_tax_' . $term->term_id
+                                'callback_data' => 'product_variation_' . $product['id'] . '_tax_' . $term->term_id
                             );
-                            if ($c % 3 == 0) {
+                            if ($c % $columns == 0) {
                                 $terms_r[] = $terms_d;
                                 $terms_d = array();
                             }
@@ -329,6 +363,26 @@ class WooCommerceTelegramBot
         }
 
         return $keyboard;
+    }
+
+    function keyboard_columns($length, $count)
+    {
+        if ($length >= 3 && $length <= 5)
+            $columns = 4;
+        elseif ($length >= 6 && $length <= 8)
+            $columns = 3;
+        elseif ($length >= 9 && $length <= 11)
+            $columns = 2;
+        elseif ($length >= 12)
+            $columns = 1;
+        else
+            $columns = 6;
+        for ($i = 2; $i <= $columns; $i++)
+            if ($count % $columns != 0 && $count % $i == 0 && $count != $i && $count / $i <= $columns) {
+                $columns = $count / $i;
+                break;
+            }
+        return $columns;
     }
 
     function send_products($products)
@@ -422,7 +476,8 @@ class WooCommerceTelegramBot
             <?php echo $update_message; ?>
             <div class="nav-tab-wrapper">
                 <a id="TabMB1" class="mb-tab nav-tab nav-tab-active"><?php _e('Global', $this->plugin_key) ?></a>
-                <a id="TabMB2" class="mb-tab nav-tab"><?php _e('Messages', $this->plugin_key) ?></a>
+                <a id="TabMB2" class="mb-tab nav-tab"><?php _e('Product', $this->plugin_key) ?></a>
+                <a id="TabMB3" class="mb-tab nav-tab"><?php _e('Messages', $this->plugin_key) ?></a>
             </div>
             <form action="" method="post">
                 <?php wp_nonce_field('settings_submit', 'wsb_nonce_field'); ?>
@@ -463,6 +518,23 @@ class WooCommerceTelegramBot
                 <div id="TabMB2Content" class="mb-tab-content hidden">
                     <table>
                         <tr>
+                            <th colspan="2"><?php _e('Display', $this->plugin_key) ?></th>
+                        </tr>
+                        <tr>
+                            <td><?php _e('Display', $this->plugin_key) ?></td>
+                            <td>
+                                <label><input type="checkbox" value="1" name="weight_display" <?php checked($this->get_option('weight_display'),1) ?>><?php _e('Weight', $this->plugin_key) ?></label>,
+                                <label><input type="checkbox" value="1" name="dimensions_display" <?php checked($this->get_option('dimensions_display'),1) ?>><?php _e('Dimensions', $this->plugin_key) ?></label>,
+                                <label><input type="checkbox" value="1" name="attributes_display" <?php checked($this->get_option('attributes_display'),1) ?>><?php _e('Attributes', $this->plugin_key) ?></label>,
+                                <label><input type="checkbox" value="1" name="rating_display" <?php checked($this->get_option('rating_display'),1) ?>><?php _e('Rating', $this->plugin_key) ?></label>
+                                <label><input type="checkbox" value="1" name="gallery_display" <?php checked($this->get_option('gallery_display'),1) ?>><?php _e('Gallery Button', $this->plugin_key) ?></label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="TabMB3Content" class="mb-tab-content hidden">
+                    <table>
+                        <tr>
                             <td>
                                 <label for="start_command"><?php _e('Start Command<br>(Welcome Message)', $this->plugin_key) ?></label>
                             </td>
@@ -479,8 +551,8 @@ class WooCommerceTelegramBot
             <hr>
             <a href="http://parsa.ws">Parsa.ws</a>
         </div>
+        }
         <?php
-    }
 
     function get_option($key)
     {

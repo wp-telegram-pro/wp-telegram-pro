@@ -34,8 +34,11 @@
     padding: 20px 0;
 }
 
-.wctb-wrap .mb-tab-content th {
-    width: 150px;
+body .wctb-wrap .mb-tab-content th {
+    text-align: left;
+}
+
+body.rtl .wctb-wrap .mb-tab-content th {
     text-align: right;
 }
 
