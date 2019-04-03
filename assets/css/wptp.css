@@ -1,0 +1,319 @@
+@import "icon.css";
+
+.wptp-wrap table {
+    width: 100%;
+}
+
+.wptp-wrap a, .wptp-wrap span {
+    display: inline-block;
+}
+
+.wptp-wrap label {
+    margin-right: 15px;
+}
+
+.wptp-wrap select {
+    min-width: 300px;
+}
+
+.wptp-wrap select[multiple] {
+    min-width: 300px;
+    max-height: 200px;
+}
+
+.wptp-wrap table td {
+    padding: 5px 0;
+}
+
+.wptp-wrap td > *:not(br) {
+    margin-bottom: 10px;
+}
+
+.wptp-wrap table tr td:first-child {
+    width: 200px;
+    vertical-align: top;
+}
+
+.wptp-wrap .nav-tab:not(.nav-tab-active) {
+    background-color: #fff;
+    cursor: pointer;
+
+}
+
+.wptp-wrap .nav-tab-active,
+.wptp-wrap .nav-tab-active:focus,
+.wptp-wrap .nav-tab-active:focus:active,
+.wptp-wrap .nav-tab-active:hover {
+    background-color: #f1f1f1;
+
+    background: rgba(227, 227, 227, 1);
+    background: -moz-linear-gradient(top, rgba(227, 227, 227, 1) 0%, rgba(241, 241, 241, 1) 100%);
+    background: -webkit-linear-gradient(top, rgba(227, 227, 227, 1) 0%, rgba(241, 241, 241, 1) 100%);
+    background: -o-linear-gradient(top, rgba(227, 227, 227, 1) 0%, rgba(241, 241, 241, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(227, 227, 227, 1) 0%, rgba(241, 241, 241, 1) 100%);
+    background: linear-gradient(to bottom, rgba(227, 227, 227, 1) 0%, rgba(241, 241, 241, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e3e3e3', endColorstr='#f1f1f1', GradientType=0);
+
+    border-bottom-color: #f1f1f1;
+    cursor: default;
+}
+
+.wptp-wrap .nav-tab:focus {
+    box-shadow: none;
+}
+
+.wptp-wrap .wptp-tab-content {
+    padding: 20px 0;
+}
+
+.wptp-wrap .wptp-tab-content th {
+    text-align: left;
+    padding: 15px 0 5px;
+    vertical-align: top;
+}
+
+body.rtl .wptp-wrap .wptp-tab-content th {
+    text-align: right;
+}
+
+.wptp-wrap .wptp-tab-content {
+    padding: 20px 0;
+}
+
+.wptp-wrap .wptp-tab-content textarea {
+    width: 100%;
+}
+
+.wptp-wrap .dashicons {
+    font-size: 2.4em;
+    color: #aaa;
+    margin-left: 10px;
+    cursor: pointer;
+    width: 31px;
+    height: 31px;
+}
+
+.wptp-metabox .dashicons {
+    font-size: 1.5em;
+    color: #fff;
+    margin-left: 0;
+    cursor: default;
+    width: 20px;
+    height: 20px;
+}
+
+.wptp-metabox .posted-to-channel {
+    font-size: 1.2em;
+    padding-top: 1px;
+}
+
+.wptp-wrap .dashicons:hover {
+    color: #7d7d7d;
+}
+
+.wptp-wrap .dashicons-update {
+    cursor: default;
+}
+
+.wptp-wrap .dashicons-info {
+    color: #086e9e;
+}
+
+.wptp-wrap .dashicons-info:hover {
+    color: #075b83;
+}
+
+.wptp-wrap .dashicons-trash {
+    color: #d63834;
+}
+
+.wptp-wrap .dashicons-trash:hover {
+    color: #a72c29;
+}
+
+.accordion-wptp {
+    background-color: #e4e4e4;
+    background: rgba(228, 228, 228, 1);
+    background: -moz-linear-gradient(left, rgba(228, 228, 228, 1) 0%, rgba(194, 194, 194, 1) 100%);
+    background: -webkit-linear-gradient(left, rgba(228, 228, 228, 1) 0%, rgba(194, 194, 194, 1) 100%);
+    background: -o-linear-gradient(left, rgba(228, 228, 228, 1) 0%, rgba(194, 194, 194, 1) 100%);
+    background: -ms-linear-gradient(left, rgba(228, 228, 228, 1) 0%, rgba(194, 194, 194, 1) 100%);
+    background: linear-gradient(to right, rgba(228, 228, 228, 1) 0%, rgba(194, 194, 194, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e4e4e4', endColorstr='#c2c2c2', GradientType=1);
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: all 0.4s;
+}
+
+.accordion-wptp .dashicons {
+    color: #444;
+    transition: all 0.4s;
+}
+
+.accordion-wptp.active .dashicons, .accordion-wptp:hover .dashicons {
+    color: #fff;
+}
+
+.channel-list-wptp .item {
+    border-bottom: 2px solid #cdcdcd;
+}
+
+.channel-list-wptp .item:last-child {
+    border-bottom: none !important;
+}
+
+.accordion-wptp.active, .accordion-wptp:hover {
+    background-color: #afafaf;
+    background: rgba(175, 175, 175, 1);
+    background: -moz-linear-gradient(left, rgba(175, 175, 175, 1) 0%, rgba(140, 140, 140, 1) 100%);
+    background: -webkit-linear-gradient(left, rgba(175, 175, 175, 1) 0%, rgba(140, 140, 140, 1) 100%);
+    background: -o-linear-gradient(left, rgba(175, 175, 175, 1) 0%, rgba(140, 140, 140, 1) 100%);
+    background: -ms-linear-gradient(left, rgba(175, 175, 175, 1) 0%, rgba(140, 140, 140, 1) 100%);
+    background: linear-gradient(to right, rgba(175, 175, 175, 1) 0%, rgba(140, 140, 140, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#afafaf', endColorstr='#8c8c8c', GradientType=1);
+    color: #fff;
+}
+
+.accordion-wptp:after {
+    content: '\002B';
+    color: #777;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+.accordion-wptp.active:after {
+    content: "\2212";
+}
+
+.accordion-wptp.active:after, .accordion-wptp:hover:after {
+    color: #fff;
+}
+
+.channel-list-wptp .panel {
+    padding: 20px;
+    background-color: white;
+    transition: max-height 0.2s ease-out;
+    display: none;
+}
+
+.channel-list-wptp table {
+    border-bottom: 1px solid #cfcfcf;
+}
+
+.channel-list-wptp table:last-child {
+    border-bottom: none;
+}
+
+.channel-list-wptp .add-channel {
+    padding: 10px;
+    color: #fff;
+    background-color: #558B2F;
+    border: none;
+    margin-top: 20px;
+    cursor: pointer;
+    float: right;
+}
+
+.channel-list-wptp .add-channel:hover {
+    background-color: #8BC34A;
+}
+
+.channel-list-wptp .add-channel:disabled {
+    background-color: #afafaf;
+    cursor: not-allowed;
+}
+
+.wptp-wrap .button-save {
+    padding: 10px;
+    color: #fff;
+    background-color: #0085ba;
+    border: none;
+    height: auto;
+    cursor: pointer;
+    display: flex;
+    align-content: center;
+    justify-content: space-around;
+}
+
+.wptp-wrap .button-save:hover {
+    background-color: #0097d3;
+}
+
+.wptp-wrap .star-ratings {
+    color: orange;
+    font-size: 1.6em;
+}
+
+.channel-list-wptp .add-channel .dashicons, .wptp-wrap .button-save .dashicons {
+    color: #fff;
+    font-size: 1.6em;
+    margin-left: auto;
+    margin-right: 10px;
+    width: 30px;
+    height: 20px;
+}
+
+.wptp-loader {
+    -webkit-animation: wptp_spin 2s linear infinite; /* Safari */
+    animation: wptp_spin 2s linear infinite;
+}
+
+#adminmenu #toplevel_page_wp-telegram-pro .menu-top div.wp-menu-image::before {
+    font-family: 'wptp' !important;
+    content: "\e900";
+}
+
+
+/* Safari */
+@-webkit-keyframes wptp_spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes wptp_spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/*
+#adminmenuwrap .toplevel_page_wp-telegram-pro .wp-menu-image {
+    filter: invert(1);
+    opacity: .5;
+}
+*/
+
+/* RTL */
+body.rtl .wptp-wrap .emojionearea-editor {
+    text-align: right;
+    direction: rtl;
+    padding-right: 40px;
+}
+
+body.rtl .wptp-wrap .dashicons {
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+body.rtl .channel-list-wptp .add-channel {
+    float: left;
+}
+
+body.rtl .wptp-wrap label {
+    margin-right: 0;
+    margin-left: 15px;
+}
