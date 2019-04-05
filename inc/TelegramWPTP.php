@@ -5,8 +5,8 @@
  * @WebSite: http://parsa.ws
  */
 
-if (class_exists('TelegramWPTB'))
-    return;
+if (!defined('ABSPATH')) exit;
+if (class_exists('TelegramWPTP')) return;
 
 class TelegramWPTP
 {

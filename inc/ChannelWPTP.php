@@ -326,7 +326,7 @@ class ChannelWPTP extends WPTelegramPro
         $channel = $this->telegram->get_members_count('@' . $channel_username);
         $channel_member = $this->telegram->get_last_result();
         if ($channel && $channel_member['ok'] && isset($channel_member['result'])) {
-            echo __('Channel Member Count:', $this->plugin_key) . ' ' . $channel_member['result'];
+            echo __('Channel Member Count:', $this->plugin_key) . ' ' . number_format($channel_member['result']);
         } else {
             _e('API Token or Channel Username Invalid, It may not have access to the channel! (Read Help)', $this->plugin_key);
         }

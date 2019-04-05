@@ -6,6 +6,7 @@
  * Author: Parsa Kafi
  * Version: 1.0
  * Author URI: http://parsa.ws
+ * Text Domain: wp-telegram-pro
  */
 
 if (!defined('ABSPATH')) exit;
