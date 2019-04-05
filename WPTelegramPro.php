@@ -43,7 +43,7 @@ class WPTelegramPro
         global $wpdb;
         
         $this->options = get_option($this->plugin_key);
-        $this->telegram = new TelegramWPT($this->get_option('api_token'));
+        $this->telegram = new TelegramWPTP($this->get_option('api_token'));
         $this->db_table = $wpdb->prefix . 'wptelegrampro_users';
         $this->plugin_name = __('WP Telegram Pro', $this->plugin_key);
         $this->now = date("Y-m-d H:i:s");

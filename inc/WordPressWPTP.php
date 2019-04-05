@@ -84,7 +84,7 @@ class WordPressWPTP extends WPTelegramPro
     function before_settings_updated($update_message, $current_option, $new_option)
     {
         if ($this->get_option('api_token') != $new_option['api_token']) {
-            $telegram = new TelegramWPT($new_option['api_token']);
+            $telegram = new TelegramWPTP($new_option['api_token']);
             $webHook = $this->webHookURL();
             if ($telegram->setWebhook($webHook['url'])) {
                 $update_message .= $this->message(__('Set Webhook Successfully.', $this->plugin_key));

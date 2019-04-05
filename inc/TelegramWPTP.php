@@ -8,7 +8,7 @@
 if (class_exists('TelegramWPTB'))
     return;
 
-class TelegramWPT
+class TelegramWPTP
 {
     protected $token, $input, $last_result = '';
     protected $fileMethod = array('sendPhoto', 'sendAudio', 'sendDocument', 'sendVideo', 'sendVoice', 'sendVideoNote');
