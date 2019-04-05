@@ -34,6 +34,7 @@ Done:
 - Comment notification
 - Send post types to channel
 - Gutenberg editor compatible
+- Display Telegram channel members count with shortcode: `[channel_members_wptp channel="channel username" formatting="1"]`
 
 Develop Plan:
 - RTL/LTR language Compatible

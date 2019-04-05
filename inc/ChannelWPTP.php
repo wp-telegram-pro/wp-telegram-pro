@@ -16,6 +16,7 @@ class ChannelWPTP extends WPTelegramPro
         add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 20);
         add_action('wptelegrampro_settings_content', [$this, 'settings_content']);
         add_action('before_settings_updated_wptp', [$this, 'before_settings_updated'], 2);
+        add_Shortcode('channel_members_wptp', [$this, 'channel_members_shortcode']);
         
         if ($this->get_option('send_to_channels') == 1) {
             add_action('init', [$this, 'schedule']);
@@ -320,6 +321,34 @@ class ChannelWPTP extends WPTelegramPro
         <?php
     }
     
+    function channel_members_shortcode($atts)
+    {
+        $atts = shortcode_atts(array(
+            'channel' => '',
+            'formatting' => 1
+        ), $atts);
+        
+        if (!$atts['channel'] || empty($atts['channel']))
+            return "[Set 'channel' attribute]";
+        
+        $transient_key = 'channel_members_' . $atts['channel'] . '_wptp';
+        
+        if (WP_DEBUG or false === ($count = get_transient($transient_key))) {
+            $channel = $this->telegram->get_members_count('@' . $atts['channel']);
+            $channel_member = $this->telegram->get_last_result();
+            
+            if ($channel && $channel_member['ok'] && isset($channel_member['result'])) {
+                $count = $atts['formatting'] == 1 ? number_format($channel_member['result']) : $channel_member['result'];
+                set_transient($transient_key, $count, 60 * 60);
+                return $count;
+            } else {
+                return __('[API Token or Channel Username Invalid]', $this->plugin_key);
+            }
+        } else {
+            return get_transient($transient_key);
+        }
+    }
+    
     function channel_members_count()
     {
         $channel_username = $_POST['channel_username'];
@@ -533,21 +562,21 @@ class ChannelWPTP extends WPTelegramPro
                     </tr>
                     <!--<tr>
                         <td>
-                            <?php /*_e('Image Position', $this->plugin_key) */?>
+                            <?php /*_e('Image Position', $this->plugin_key) */ ?>
                         </td>
                         <td>
-                            <span class="description"><?php /*_e('Telegram limits the photo caption to 200 characters. Here are two options if your message text exceeds this limit:', $this->plugin_key) */?></span><br>
-                            <select name="channel_image_position[<?php /*echo $item['index'] */?>]"
+                            <span class="description"><?php /*_e('Telegram limits the photo caption to 200 characters. Here are two options if your message text exceeds this limit:', $this->plugin_key) */ ?></span><br>
+                            <select name="channel_image_position[<?php /*echo $item['index'] */ ?>]"
                                     class="image_position">
-                                <option value="before_text" <?php /*selected(isset($item['image_position']) ? $item['image_position'] : '', 'before_text') */?>><?php /*_e('Send image before text', $this->plugin_key) */?></option>
-                                <option value="after_text" <?php /*selected(isset($item['image_position']) ? $item['image_position'] : '', 'after_text') */?>><?php /*_e('Send image after text', $this->plugin_key) */?></option>
+                                <option value="before_text" <?php /*selected(isset($item['image_position']) ? $item['image_position'] : '', 'before_text') */ ?>><?php /*_e('Send image before text', $this->plugin_key) */ ?></option>
+                                <option value="after_text" <?php /*selected(isset($item['image_position']) ? $item['image_position'] : '', 'after_text') */ ?>><?php /*_e('Send image after text', $this->plugin_key) */ ?></option>
                             </select>
                             <br>
-                            <strong><?php /*_e('Send image before text', $this->plugin_key) */?>:</strong>
-                            <span class="description"><?php /*_e('This will send the photo with the pattern content as the caption. If pattern content exceeds 200 characters limit, then this will send the photo with the post title', $this->plugin_key) */?></span>
+                            <strong><?php /*_e('Send image before text', $this->plugin_key) */ ?>:</strong>
+                            <span class="description"><?php /*_e('This will send the photo with the pattern content as the caption. If pattern content exceeds 200 characters limit, then this will send the photo with the post title', $this->plugin_key) */ ?></span>
                             <br>
-                            <strong><?php /*_e('Send image after text', $this->plugin_key) */?>:</strong>
-                            <span class="description"><?php /*_e('This will attach an invisible link of your photo to the beginning of your message. People wouldn\'t see the link, but Telegram clients will show the photo at the bottom of the message (All in one message).', $this->plugin_key) */?></span>
+                            <strong><?php /*_e('Send image after text', $this->plugin_key) */ ?>:</strong>
+                            <span class="description"><?php /*_e('This will attach an invisible link of your photo to the beginning of your message. People wouldn\'t see the link, but Telegram clients will show the photo at the bottom of the message (All in one message).', $this->plugin_key) */ ?></span>
                         </td>
                     </tr>-->
                 </table>
