@@ -44,7 +44,7 @@ class WordPressWPTP extends WPTelegramPro
                         <br>
                         <span class="description"><?php //_e('Send this code from your telegram bot to identify the your user.', $this->plugin_key) ?></span>
                     </td>
-                <?php }else{
+                <?php } else {
                     echo '<td colspan="2">Not connected!</td>';
                 } ?>
             </tr>
@@ -266,9 +266,11 @@ class WordPressWPTP extends WPTelegramPro
         $current_status = $this->user_field('status');
         
         if ($user_text == '/start') {
+            $message = $this->get_option('start_command');
+            $message = empty(trim($message)) ? __('Welcome!', $this->plugin_key) : $message;
             $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
             $default_keyboard = $this->telegram->keyboard($default_keyboard);
-            $this->telegram->sendMessage($this->get_option('start_command'), $default_keyboard);
+            $this->telegram->sendMessage($message, $default_keyboard);
             
         } else if ($user_text == '/search' || $user_text == $words['search']) {
             $this->telegram->sendMessage(__('Enter word for search:', $this->plugin_key));

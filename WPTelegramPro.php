@@ -43,7 +43,7 @@ class WPTelegramPro
     {
         global $wpdb;
         
-        load_plugin_textdomain($this->plugin_key, FALSE, basename(dirname(__FILE__)) . '/languages');
+        load_plugin_textdomain($this->plugin_key, false, basename(dirname(__FILE__)) . '/languages');
         
         $this->options = get_option($this->plugin_key);
         $this->telegram = new TelegramWPTP($this->get_option('api_token'));
