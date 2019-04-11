@@ -67,8 +67,9 @@ class WPTelegramPro
             add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 100);
             add_action('wptelegrampro_settings_content', [$this, 'help_settings_content']);
             add_action('wptelegrampro_settings_content', [$this, 'about_settings_content']);
-            
+    
         }
+        add_action('plugins_loaded', [$this, 'load_plugin_textdomain']);
     }
     
     function words($words)
@@ -175,7 +176,7 @@ class WPTelegramPro
         ?>
         <div id="<?php echo $this->aboutTabID ?>-content" class="wptp-tab-content hidden">
             <p>
-               <h3><?php _e('Integrate WordPress with Telegram', $this->plugin_key) ?></h3>
+            <h3><?php _e('Integrate WordPress with Telegram', $this->plugin_key) ?></h3>
             </p>
             <p><?php _e('Do you like WP Telegram Pro?', $this->plugin_key) ?>
                 <br>
@@ -367,8 +368,8 @@ class WPTelegramPro
     
     /**
      * Get Plugin Option
-     * @param   string $key Option Name
-     * @param   string $default Default Option Value
+     * @param string $key Option Name
+     * @param string $default Default Option Value
      * @return  string|array Option Value
      */
     function get_option($key, $default = '')
@@ -682,9 +683,9 @@ class WPTelegramPro
     
     /**
      * WordPress Image Size Select
-     * @param   string $name Select Name
-     * @param   string $selected Current Selected Value
-     * @param   string $none_select none option
+     * @param string $name Select Name
+     * @param string $selected Current Selected Value
+     * @param string $none_select none option
      * @return  string HTML Image Size Select
      */
     function image_size_select($name, $selected = null, $none_select = null)
@@ -703,9 +704,9 @@ class WPTelegramPro
     /** https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
      * Get size information for all currently-registered image sizes.
      *
-     * @global $_wp_additional_image_sizes
-     * @uses   get_intermediate_image_sizes()
      * @return array $sizes Data for all currently-registered image sizes.
+     * @uses   get_intermediate_image_sizes()
+     * @global $_wp_additional_image_sizes
      */
     function get_image_sizes()
     {
@@ -832,6 +833,11 @@ class WPTelegramPro
         }
         
         update_option('wptp-version', WPTELEGRAMPRO_VERSION);
+    }
+    
+    function load_plugin_textdomain()
+    {
+        load_plugin_textdomain($this->plugin_key, FALSE, basename(dirname(__FILE__)) . '/languages');
     }
     
     /**
