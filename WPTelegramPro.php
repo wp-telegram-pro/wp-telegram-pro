@@ -42,6 +42,8 @@ class WPTelegramPro
     public function __construct($bypass = false)
     {
         global $wpdb;
+    
+        load_plugin_textdomain($this->plugin_key, FALSE, basename(dirname(__FILE__)) . '/languages');
         
         $this->options = get_option($this->plugin_key);
         $this->telegram = new TelegramWPTP($this->get_option('api_token'));
@@ -67,9 +69,7 @@ class WPTelegramPro
             add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 100);
             add_action('wptelegrampro_settings_content', [$this, 'help_settings_content']);
             add_action('wptelegrampro_settings_content', [$this, 'about_settings_content']);
-    
         }
-        add_action('plugins_loaded', [$this, 'load_plugin_textdomain']);
     }
     
     function words($words)
@@ -833,11 +833,6 @@ class WPTelegramPro
         }
         
         update_option('wptp-version', WPTELEGRAMPRO_VERSION);
-    }
-    
-    function load_plugin_textdomain()
-    {
-        load_plugin_textdomain($this->plugin_key, FALSE, basename(dirname(__FILE__)) . '/languages');
     }
     
     /**
