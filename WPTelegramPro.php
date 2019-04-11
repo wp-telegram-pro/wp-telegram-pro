@@ -42,7 +42,7 @@ class WPTelegramPro
     public function __construct($bypass = false)
     {
         global $wpdb;
-    
+        
         load_plugin_textdomain($this->plugin_key, FALSE, basename(dirname(__FILE__)) . '/languages');
         
         $this->options = get_option($this->plugin_key);
