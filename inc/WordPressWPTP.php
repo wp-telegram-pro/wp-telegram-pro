@@ -76,7 +76,7 @@ class WordPressWPTP extends WPTelegramPro
         if (count($search_post_type))
             $new_keyboard[] = $this->words['search'];
         
-        $keyboard[] = $new_keyboard;
+        $keyboard[] = is_rtl() ? array_reverse($new_keyboard) : $new_keyboard;
         
         return $keyboard;
     }
@@ -112,9 +112,9 @@ class WordPressWPTP extends WPTelegramPro
                 'tags' => __('The tags of this post. Tags are automatically converted to Telegram hashtags', $this->plugin_key),
                 'categories' => __('The categories of this post. Categories are automatically separated by | symbol', $this->plugin_key),
                 'image' => __('The featured image URL', $this->plugin_key),
-                'cf:'=>__('The custom field of this post, Example {cf:price}', $this->plugin_key),
-                'terms:'=>__('The Taxonomy Terms of this post: {terms:taxonomy}, Example {terms:category}', $this->plugin_key),
-                "if='cf:custom_field_name'}content{/if"=>__("IF Statement for custom field, Example: {if='cf:price'}Price: {cf:price}{/if}", $this->plugin_key)
+                'cf:' => __('The custom field of this post, Example {cf:price}', $this->plugin_key),
+                'terms:' => __('The Taxonomy Terms of this post: {terms:taxonomy}, Example {terms:category}', $this->plugin_key),
+                "if='cf:custom_field_name'}content{/if" => __("IF Statement for custom field, Example: {if='cf:price'}Price: {cf:price}{/if}", $this->plugin_key)
             )
         );
         return $tags;
@@ -464,6 +464,23 @@ class WordPressWPTP extends WPTelegramPro
                             echo '<label><input type="checkbox" name="search_post_type[]" value="' . $post_type . '" ' . checked(in_array($post_type, $search_post_type), true, false) . ' > ' . $post_type_->label . '</label>';
                         }
                         ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="2"><?php _e('Telegram Keyboard', $this->plugin_key) ?></th>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="force_update_keyboard"><?php _e('Force update keyboard', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label>
+                            <input type="checkbox" value="1" id="force_update_keyboard"
+                                   name="force_update_keyboard"> <?php _e('Update') ?>
+                        </label><br>
+                        <span class="description">
+                            <?php _e('You should update keyboard for users when change WordPress language, active Woocommerce plugin, search setting changed. (Status dont saved)', $this->plugin_key) ?>
+                        </span>
                     </td>
                 </tr>
             </table>

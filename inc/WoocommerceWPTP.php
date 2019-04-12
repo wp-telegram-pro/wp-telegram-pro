@@ -49,11 +49,12 @@ class WoocommerceWPTP extends WPTelegramPro
     function default_keyboard($keyboard)
     {
         $this->words = apply_filters('wptelegrampro_words', $this->words);
-        $keyboard[] = array(
+        $new_keyboard = array(
             $this->words['products'],
             $this->words['product_categories'],
             $this->words['cart']
         );
+        $keyboard[] = is_rtl() ? array_reverse($new_keyboard) : $new_keyboard;
         return $keyboard;
     }
     

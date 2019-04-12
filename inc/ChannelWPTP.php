@@ -433,7 +433,6 @@ class ChannelWPTP extends WPTelegramPro
         $this->post_types = get_post_types(array('public' => true, 'show_ui' => true), "objects");
         $this->options = get_option($this->plugin_key);
         ?>
-
         <div id="<?php echo $this->tabID ?>-content" class="wptp-tab-content hidden">
             <table>
                 <tr>
@@ -511,8 +510,7 @@ class ChannelWPTP extends WPTelegramPro
         <?php
     }
     
-    private
-    function item($item)
+    private function item($item)
     {
         ?>
         <div class="item" data-index="<?php echo $item['index'] ?>">

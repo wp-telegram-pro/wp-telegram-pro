@@ -407,13 +407,15 @@ class WPTelegramPro
                 'posts_per_page' => intval($per_page),
                 'paged' => intval($page),
                 'order' => 'DESC',
-                'orderby' => 'modified',
+                'orderby' => 'modified'
             ));
             
             $args['tax_query'] = array('relation' => 'AND');
             
-            if (isset($query['s']) && !empty(trim($query['s'])))
-                $args['s'] = $query['s'];
+            if (isset($query['s']) && !empty(trim($query['s']))) {
+                $args['s'] = $query['s'] . ' ' . mb_strtolower($query['s'], 'UTF-8');
+                $args['sentence'] = '';
+            }
             
             if (isset($query['tax_query']))
                 $args['tax_query'] = array_merge($args['tax_query'], $query['tax_query']);
