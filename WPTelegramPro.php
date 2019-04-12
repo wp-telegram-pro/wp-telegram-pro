@@ -77,10 +77,10 @@ class WPTelegramPro
         $new_words = array(
             'yes' => __('Yes', $this->plugin_key),
             'no' => __('No', $this->plugin_key),
-            'next' => __('< Next', $this->plugin_key),
-            'prev' => __('Previous >', $this->plugin_key),
-            'next_page' => __('< Next Page', $this->plugin_key),
-            'prev_page' => __('Previous Page >', $this->plugin_key),
+            'next' => __('Next >', $this->plugin_key),
+            'prev' => __('< Previous', $this->plugin_key),
+            'next_page' => __('Next Page >', $this->plugin_key),
+            'prev_page' => __('< Previous Page', $this->plugin_key),
             'back' => __('Back', $this->plugin_key),
             'posts' => __('Posts', $this->plugin_key),
             'search' => __('Search', $this->plugin_key),
@@ -359,8 +359,9 @@ class WPTelegramPro
                 do_action('wptelegrampro_settings_content');
                 ?>
 
-                <button type="submit" class="button-save"><span
-                            class="dashicons dashicons-yes"></span> <span><?php _e('Save') ?></span></button>
+                <button type="submit" class="button-save">
+                    <span class="dashicons dashicons-yes"></span> <span><?php _e('Save') ?></span>
+                </button>
             </form>
         </div>
         <?php

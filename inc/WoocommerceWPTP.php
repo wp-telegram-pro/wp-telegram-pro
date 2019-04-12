@@ -292,7 +292,7 @@ class WoocommerceWPTP extends WPTelegramPro
             $product_id = intval(end(explode('_', $button_data)));
             if (get_post_status($product_id) === 'publish') {
                 $image_size = $this->get_option('image_size');
-                $this->telegram->answerCallbackQuery(__('Galleries: ', $this->plugin_key) . get_the_title($product_id));
+                $this->telegram->answerCallbackQuery(__('Galleries', $this->plugin_key) . ': ' . get_the_title($product_id));
                 $_product = new WC_Product($product_id);
                 $galleries = $_product->get_gallery_image_ids();
                 if (is_array($galleries) && count($galleries)) {
@@ -355,7 +355,7 @@ class WoocommerceWPTP extends WPTelegramPro
         } elseif ($this->button_data_check($button_data, 'product_detail')) {
             $product_id = intval(end(explode('_', $button_data)));
             if (get_post_status($product_id) === 'publish') {
-                $this->telegram->answerCallbackQuery(__('Product: ', $this->plugin_key) . get_the_title($product_id));
+                $this->telegram->answerCallbackQuery(__('Product', $this->plugin_key) . ': ' . get_the_title($product_id));
                 $product = $this->query(array('p' => $product_id, 'post_type' => 'product'));
                 $this->send_product($product);
             } else {
@@ -369,7 +369,7 @@ class WoocommerceWPTP extends WPTelegramPro
             else
                 $current_page--;
             $this->update_user(array('page' => $current_page));
-            $this->telegram->answerCallbackQuery(__('Page: ', $this->plugin_key) . $current_page);
+            $this->telegram->answerCallbackQuery(__('Page') . ': ' . $current_page);
             $args = array(
                 'category_id' => $this->get_user_meta('product_category_id'),
                 'post_type' => 'product',
@@ -392,7 +392,7 @@ class WoocommerceWPTP extends WPTelegramPro
             $this->update_user_meta('product_category_id', $product_category_id);
             $product_category = get_term($product_category_id, 'product_cat');
             if ($product_category) {
-                $this->telegram->answerCallbackQuery(__('Category: ', $this->plugin_key) . $product_category->name);
+                $this->telegram->answerCallbackQuery(__('Category') . ': ' . $product_category->name);
                 $products = $this->query(array('category_id' => $product_category_id, 'per_page' => $this->get_option('products_per_page', 1), 'post_type' => 'product'));
                 $this->send_products($products);
             } else {
@@ -807,10 +807,12 @@ class WoocommerceWPTP extends WPTelegramPro
                 $keyboard[0][0]['callback_data'] = 'product_detail_' . $product['ID'];
                 if ($products['max_num_pages'] > 1 && $i == count($products['product'])) {
                     $keyboard[1] = array();
-                    if ($current_page < $products['max_num_pages'])
-                        $keyboard[1][] = array('text' => $this->words['next_page'], 'callback_data' => 'product_page_next');
                     if ($current_page > 1)
                         $keyboard[1][] = array('text' => $this->words['prev_page'], 'callback_data' => 'product_page_prev');
+                    if ($current_page < $products['max_num_pages'])
+                        $keyboard[1][] = array('text' => $this->words['next_page'], 'callback_data' => 'product_page_next');
+                    if (is_rtl())
+                        $keyboard[1] = array_reverse($keyboard[1]);
                 }
                 $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
                 if ($product['image_path'] !== null) {

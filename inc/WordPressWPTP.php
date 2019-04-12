@@ -111,7 +111,9 @@ class WordPressWPTP extends WPTelegramPro
                 'short-link' => __('The short url of this post', $this->plugin_key),
                 'tags' => __('The tags of this post. Tags are automatically converted to Telegram hashtags', $this->plugin_key),
                 'categories' => __('The categories of this post. Categories are automatically separated by | symbol', $this->plugin_key),
-                'image' => __('The featured image URL', $this->plugin_key)
+                'image' => __('The featured image URL', $this->plugin_key),
+                'cf:'=>__('The custom field of this post, Example {cf:price}', $this->plugin_key),
+                'terms:'=>__('The Taxonomy Terms of this post: {terms:taxonomy}, Example {terms:category}', $this->plugin_key)
             )
         );
         return $tags;
@@ -136,14 +138,14 @@ class WordPressWPTP extends WPTelegramPro
             }
             if ($users) {
                 $text = "*" . __('New Comment', $this->plugin_key) . "*\n\n";
-                $text .= __('Post:', $this->plugin_key) . ' ' . get_the_title($comment->comment_post_ID) . "\n";
-                $text .= __('Author:', $this->plugin_key) . ' ' . $comment->comment_author . "\n";
+                $text .= __('Post') . ': ' . get_the_title($comment->comment_post_ID) . "\n";
+                $text .= __('Author') . ': ' . $comment->comment_author . "\n";
                 if (!empty($comment->comment_author_email))
-                    $text .= __('Email:', $this->plugin_key) . ' ' . $comment->comment_author_email . "\n";
+                    $text .= __('Email') . ': ' . $comment->comment_author_email . "\n";
                 if (!empty($comment->comment_author_url))
-                    $text .= __('Website:', $this->plugin_key) . ' ' . $comment->comment_author_url . "\n";
+                    $text .= __('Website') . ': ' . $comment->comment_author_url . "\n";
                 if (!empty($comment->comment_content))
-                    $text .= __('Comment:', $this->plugin_key) . "\n" . stripslashes(strip_tags($comment->comment_content)) . "\n";
+                    $text .= __('Comment') . ":\n" . stripslashes(strip_tags($comment->comment_content)) . "\n";
                 
                 $keyboard_ = array(array(
                     array(
@@ -241,10 +243,12 @@ class WordPressWPTP extends WPTelegramPro
                 $text = $post['title'] . "\n" . $post['excerpt'] . "\n\n" . $post['short-link'];
                 if ($posts['max_num_pages'] > 1 && $i == count($posts_)) {
                     $keyboard[1] = array();
-                    if ($current_page < $posts['max_num_pages'])
-                        $keyboard[1][] = array('text' => $this->words['next_page'], 'callback_data' => 'posts_page_next');
                     if ($current_page > 1)
                         $keyboard[1][] = array('text' => $this->words['prev_page'], 'callback_data' => 'posts_page_prev');
+                    if ($current_page < $posts['max_num_pages'])
+                        $keyboard[1][] = array('text' => $this->words['next_page'], 'callback_data' => 'posts_page_next');
+                    if (is_rtl())
+                        $keyboard[1] = array_reverse($keyboard[1]);
                 }
                 $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
                 $this->telegram->disable_web_page_preview(true);
@@ -273,6 +277,12 @@ class WordPressWPTP extends WPTelegramPro
             $this->telegram->sendMessage($message, $default_keyboard);
             
         } else if ($user_text == '/search' || $user_text == $words['search']) {
+            /*$default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
+            $default_keyboard = $this->telegram->keyboard($default_keyboard);
+            $this->telegram->sendMessage('‌---', $default_keyboard);
+            $result = $this->telegram->get_last_result();
+            $this->telegram->sendMessage(serialize($result));*/
+            
             $this->telegram->sendMessage(__('Enter word for search:', $this->plugin_key));
             
         } elseif ($current_status == 'search') {
@@ -316,7 +326,7 @@ class WordPressWPTP extends WPTelegramPro
             else
                 $current_page--;
             $this->update_user(array('page' => $current_page));
-            $this->telegram->answerCallbackQuery(__('Page: ', $this->plugin_key) . $current_page);
+            $this->telegram->answerCallbackQuery(__('Page') . ': ' . $current_page);
             $args = array(
                 'category_id' => $this->get_user_meta('category_id'),
                 'post_type' => 'post',
@@ -338,7 +348,7 @@ class WordPressWPTP extends WPTelegramPro
             $this->update_user_meta('category_id', $category_id);
             $product_category = get_term($category_id, 'category');
             if ($product_category) {
-                $this->telegram->answerCallbackQuery(__('Category: ', $this->plugin_key) . $product_category->name);
+                $this->telegram->answerCallbackQuery(__('Category') . ': ' . $product_category->name);
                 $products = $this->query(array('category_id' => $category_id, 'per_page' => $this->get_option('posts_per_page', 1), 'post_type' => 'post'));
                 $this->send_posts($products);
             } else {
@@ -354,7 +364,7 @@ class WordPressWPTP extends WPTelegramPro
                 $status_message = __('New Status:', $this->plugin_key) . ' ';
                 if ($new_status == 'trash') {
                     wp_delete_comment($comment_ID);
-                    $status_message .= __('Trash', $this->plugin_key);
+                    $status_message .= __('Trash');
                 } elseif ($new_status == 'untrash') {
                     wp_untrash_comment($comment_ID);
                     $status_message .= __('Restore from Trash', $this->plugin_key);
@@ -364,7 +374,7 @@ class WordPressWPTP extends WPTelegramPro
                     elseif ($new_status == 'approve')
                         $status_message .= __('Approve', $this->plugin_key);
                     elseif ($new_status == 'spam')
-                        $status_message .= __('Spam', $this->plugin_key);
+                        $status_message .= __('Spam');
                     wp_untrash_comment($comment_ID);
                     wp_set_comment_status($comment_ID, $new_status);
                 }
