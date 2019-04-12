@@ -17,8 +17,8 @@ class ChannelWPTP extends WPTelegramPro
         add_action('wptelegrampro_settings_content', [$this, 'settings_content']);
         add_action('before_settings_updated_wptp', [$this, 'before_settings_updated'], 2);
         add_Shortcode('channel_members_wptp', [$this, 'channel_members_shortcode']);
-        add_filter('wptelegrampro_channel_text', [$this, 'init_shortcode'], 10, 2);
-        
+        add_Shortcode('if_statement_wptp', [$this, 'if_statement_shortcode']);
+        add_filter('wptelegrampro_channel_text', [$this, 'replace_channel_text'], 999999, 2);
         
         if ($this->get_option('send_to_channels') == 1) {
             add_action('init', [$this, 'schedule']);
@@ -29,7 +29,26 @@ class ChannelWPTP extends WPTelegramPro
             wp_clear_scheduled_hook('auto_channels_wptp');
     }
     
-    function init_shortcode($template, $post_id)
+    function if_statement_shortcode($atts, $content = "")
+    {
+        $atts = shortcode_atts(array(
+            'field' => '',
+            'post_id' => false
+        ), $atts);
+        
+        if (!$atts['post_id'] || empty($atts['field']))
+            return '';
+        
+        $_field = explode(':', $atts['field']);
+        if ($_field[0] == 'cf') {
+            $value = get_post_meta($atts['post_id'], $_field[1], true);
+            if (!$value) return '';
+        }
+        
+        return $content;
+    }
+    
+    function replace_channel_text($template, $post_id)
     {
         if (preg_match_all('/(?<=\{)(terms|cf):([^\}]+?)(?=\})/iu', $template, $matches)) {
             foreach ($matches[0] as $field) {
@@ -50,6 +69,10 @@ class ChannelWPTP extends WPTelegramPro
                 }
             }
         }
+        
+        $template = preg_replace('/{if=\'(.*?)\'}(.*?){\/if}/', '[if_statement_wptp field="$1" post_id="' . $post_id . '"]$2[/if_statement_wptp]', $template);
+        
+        $template = do_shortcode($template);
         
         return $template;
     }
@@ -359,11 +382,11 @@ class ChannelWPTP extends WPTelegramPro
         ), $atts);
         
         if (!$atts['channel'] || empty($atts['channel']))
-            return "[Set 'channel' attribute]";
+            return __("[Set 'channel' attribute]", $this->plugin_key);
         
         $transient_key = 'channel_members_' . $atts['channel'] . '_wptp';
         
-        if (WP_DEBUG or false === ($count = get_transient($transient_key))) {
+        if (WP_DEBUG || false === ($count = get_transient($transient_key))) {
             $channel = $this->telegram->get_members_count('@' . $atts['channel']);
             $channel_member = $this->telegram->get_last_result();
             
@@ -409,10 +432,8 @@ class ChannelWPTP extends WPTelegramPro
     {
         $this->post_types = get_post_types(array('public' => true, 'show_ui' => true), "objects");
         $this->options = get_option($this->plugin_key);
-        
-        $template = $this->init_shortcode('{cf:price} test , {terms:category} terms', 78);
-        var_dump($template);
         ?>
+
         <div id="<?php echo $this->tabID ?>-content" class="wptp-tab-content hidden">
             <table>
                 <tr>
@@ -490,7 +511,8 @@ class ChannelWPTP extends WPTelegramPro
         <?php
     }
     
-    private function item($item)
+    private
+    function item($item)
     {
         ?>
         <div class="item" data-index="<?php echo $item['index'] ?>">
@@ -618,7 +640,8 @@ class ChannelWPTP extends WPTelegramPro
         <?php
     }
     
-    private function select_tags()
+    private
+    function select_tags()
     {
         $select = '<select class="patterns-select-wptp">';
         $select .= '<option style="display:none;" selected> ' . __('- Select a Tag -', $this->plugin_key) . ' </option>';

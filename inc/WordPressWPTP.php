@@ -113,7 +113,8 @@ class WordPressWPTP extends WPTelegramPro
                 'categories' => __('The categories of this post. Categories are automatically separated by | symbol', $this->plugin_key),
                 'image' => __('The featured image URL', $this->plugin_key),
                 'cf:'=>__('The custom field of this post, Example {cf:price}', $this->plugin_key),
-                'terms:'=>__('The Taxonomy Terms of this post: {terms:taxonomy}, Example {terms:category}', $this->plugin_key)
+                'terms:'=>__('The Taxonomy Terms of this post: {terms:taxonomy}, Example {terms:category}', $this->plugin_key),
+                "if='cf:custom_field_name'}content{/if"=>__("IF Statement for custom field, Example: {if='cf:price'}Price: {cf:price}{/if}", $this->plugin_key)
             )
         );
         return $tags;
