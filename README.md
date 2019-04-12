@@ -35,7 +35,7 @@ Done:
 - Send post types to channel
 - Gutenberg editor compatible
 - Display Telegram channel members count with shortcode: `[channel_members_wptp channel="channel username" formatting="1"]`
-- RTL Navigatiom
+- Compatible with RTL languages
 - Add custom field and terms to pattern tags: `{cf:price}`, `{terms:taxonomy}`
 - Add if statement to pattern tags: `{if='cf:price'}Price: {cf:price}{/if}`
 - Admin can force update telegram keyboard
