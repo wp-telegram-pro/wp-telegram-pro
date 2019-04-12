@@ -14,6 +14,7 @@ class WordPressWPTP extends WPTelegramPro
         add_action('wptelegrampro_settings_content', [$this, 'settings_content']);
         add_action('wptelegrampro_inline_keyboard_response', array($this, 'inline_keyboard'));
         add_action('wptelegrampro_keyboard_response', array($this, 'keyboard'));
+        add_action('wptelegrampro_keyboard_response', array($this, 'check_keyboard_need_update'), 9999);
         add_filter('wptelegrampro_before_settings_update_message', array($this, 'before_settings_updated'), 10, 3);
         add_filter('wptelegrampro_default_keyboard', [$this, 'default_keyboard'], 10);
         add_filter('wptelegrampro_default_commands', [$this, 'default_commands'], 10);
@@ -92,6 +93,10 @@ class WordPressWPTP extends WPTelegramPro
             } else
                 $update_message .= $this->message(__('Set Webhook with Error!', $this->plugin_key), 'error');
         }
+        
+        if (isset($new_option['force_update_keyboard']))
+            update_option('update_keyboard_time_wptp', time());
+        
         return $update_message;
     }
     
@@ -264,6 +269,20 @@ class WordPressWPTP extends WPTelegramPro
         }
     }
     
+    function check_keyboard_need_update()
+    {
+        $system_time = get_option('update_keyboard_time_wptp');
+        if (!empty($system_time)) {
+            $update_keyboard_time = $this->get_user_meta('update_keyboard_time');
+            if (empty($update_keyboard_time) || $system_time > $update_keyboard_time) {
+                $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
+                $default_keyboard = $this->telegram->keyboard($default_keyboard);
+                $this->telegram->sendMessage(__('Update'), $default_keyboard);
+                $this->update_user_meta('update_keyboard_time', time());
+            }
+        }
+    }
+    
     function keyboard($user_text)
     {
         $this->set_user();
@@ -278,12 +297,6 @@ class WordPressWPTP extends WPTelegramPro
             $this->telegram->sendMessage($message, $default_keyboard);
             
         } else if ($user_text == '/search' || $user_text == $words['search']) {
-            /*$default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
-            $default_keyboard = $this->telegram->keyboard($default_keyboard);
-            $this->telegram->sendMessage('‌---', $default_keyboard);
-            $result = $this->telegram->get_last_result();
-            $this->telegram->sendMessage(serialize($result));*/
-            
             $this->telegram->sendMessage(__('Enter word for search:', $this->plugin_key));
             
         } elseif ($current_status == 'search') {
@@ -479,7 +492,7 @@ class WordPressWPTP extends WPTelegramPro
                                    name="force_update_keyboard"> <?php _e('Update') ?>
                         </label><br>
                         <span class="description">
-                            <?php _e('You should update keyboard for users when change WordPress language, active Woocommerce plugin, search setting changed. (Status dont saved)', $this->plugin_key) ?>
+                            <?php _e("You should update keyboard for users when change WordPress language, active Woocommerce plugin, search setting changed. (Status don't save)", $this->plugin_key) ?>
                         </span>
                     </td>
                 </tr>

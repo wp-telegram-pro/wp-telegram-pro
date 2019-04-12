@@ -219,7 +219,6 @@ class WPTelegramPro
             else
                 $new_status = 'start';
             
-            //if ($new_status != 'search')
             $this->update_user_meta('search_query', null);
             
             $this->update_user(array('status' => $new_status));
@@ -585,7 +584,7 @@ class WPTelegramPro
             $sql = "SELECT * FROM {$this->db_table} WHERE user_id = '{$from['id']}'";
             $user = $wpdb->get_row($sql, ARRAY_A);
             if ($user)
-                $result = $wpdb->update(
+                $wpdb->update(
                     $this->db_table,
                     array(
                         'first_name' => $from['first_name'],
@@ -597,7 +596,7 @@ class WPTelegramPro
                 );
             else {
                 $rand_id = $this->random_id();
-                $result = $wpdb->insert(
+                $wpdb->insert(
                     $this->db_table,
                     array(
                         'user_id' => $from['id'],
@@ -606,16 +605,14 @@ class WPTelegramPro
                         'last_name' => $from['last_name'],
                         'username' => $from['username'],
                         'status' => 'start',
+                        'meta' => serialize(array('update_keyboard_time' => time())),
                         'created_at' => $this->now,
-                        'updated_at' => $this->now,
+                        'updated_at' => $this->now
                     )
                 );
             }
             
-            //if ($result)
             $this->user = $wpdb->get_row($sql, ARRAY_A);
-            // else
-            //    return false;
         }
         return false;
     }
@@ -835,7 +832,8 @@ class WPTelegramPro
             dbDelta($sql);
         }
         
-        update_option('wptp-version', WPTELEGRAMPRO_VERSION);
+        update_option('wptelegrampro_version', WPTELEGRAMPRO_VERSION);
+        update_option('update_keyboard_time_wptp', time());
     }
     
     /**
