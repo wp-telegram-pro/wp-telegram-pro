@@ -466,7 +466,7 @@ class WoocommerceWPTP extends WPTelegramPro
                     <td><?php echo $this->dropdown_categories('exclude_display_categories[]', 'product_cat', $this->get_option('exclude_display_categories')); ?></td>
                 </tr>
                 <tr>
-                    <th colspan="2"><?php _e('Empty Cart', $this->plugin_key) ?></th>
+                    <th colspan="2"><?php _e('Empty the cart', $this->plugin_key) ?></th>
                 </tr>
                 <tr>
                     <td>
