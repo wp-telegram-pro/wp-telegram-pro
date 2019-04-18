@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Plugins - WP Telegram Pro - Stable (latest release)\n"
 "POT-Creation-Date: 2019-04-13 03:28+0430\n"
-"PO-Revision-Date: 2019-04-13 03:29+0430\n"
+"PO-Revision-Date: 2019-04-13 14:28+0430\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa\n"
@@ -88,8 +88,8 @@ msgid ""
 "How to set bot commands: Start %s and select your bot > \"Edit Bot\" > \"Edit "
 "Commands\" > Send text below."
 msgstr ""
-"چگونه دستورهای بات را تنظیم کنیم: با شروع %s و انتخاب بات خود » دکمه \"Edit Bot"
-"\" » دکمه \"Edit Commands\" » متن زیر را ارسال کنید."
+"چگونه دستورهای بات را تنظیم کنیم: با شروع %s و انتخاب بات خود » دکمه \"Edit Bot\" » "
+"دکمه \"Edit Commands\" » متن زیر را ارسال کنید."
 
 #: WPTelegramPro.php:151 inc/ChannelWPTP.php:427
 msgid "Channel"
@@ -97,11 +97,11 @@ msgstr "کانال"
 
 #: WPTelegramPro.php:154
 msgid ""
-"Telegram channel is a great way for attracting people to your site.<br> This "
-"option allows you to send posts to your Telegram channel."
+"Telegram channel is a great way for attracting people to your site.<br> This option "
+"allows you to send posts to your Telegram channel."
 msgstr ""
-"کانال تلگرام روش خوبی برای جذب افراد به سایت شما است.<br>با این گزینه شما "
-"می‌توانید نوشته‌های خود را به کانال تلگرام ارسال کنید."
+"کانال تلگرام روش خوبی برای جذب افراد به سایت شما است.<br>با این گزینه شما می‌توانید "
+"نوشته‌های خود را به کانال تلگرام ارسال کنید."
 
 #: WPTelegramPro.php:157
 msgid "Create a channel (if you don't already have one)."
@@ -121,8 +121,7 @@ msgstr "گزینه 'Add Administrator' را انتخاب کنید."
 
 #: WPTelegramPro.php:161
 msgid "Search the username of your bot and add it as administrator."
-msgstr ""
-"نام‌کاربری بات خود را جستجو کنید و به عنوان Administrator به کانال اضافه کنید."
+msgstr "نام‌کاربری بات خود را جستجو کنید و به عنوان Administrator به کانال اضافه کنید."
 
 #: WPTelegramPro.php:162
 msgid "Allow 'Post Messages' Permission"
@@ -134,11 +133,11 @@ msgstr "نام کاربری کانال را وارد کنید و دکمه ذخی
 
 #: WPTelegramPro.php:164
 msgid ""
-"Yes! Now, whenever you publish or update a post you can choose whether send it "
-"to Telegram (from post editor page)"
+"Yes! Now, whenever you publish or update a post you can choose whether send it to "
+"Telegram (from post editor page)"
 msgstr ""
-"بله! اکنون هر وقت نوشته‌ای را منتشر یا بروز می‌کنید، می‌توانید انتخاب کنید چگونه "
-"به تلگرام ارسال شود (از برگه ویرایش نوشته)"
+"بله! اکنون هر وقت نوشته‌ای را منتشر یا بروز می‌کنید، می‌توانید انتخاب کنید چگونه به "
+"تلگرام ارسال شود (از برگه ویرایش نوشته)"
 
 #: WPTelegramPro.php:179
 msgid "Integrate WordPress with Telegram"
@@ -226,11 +225,11 @@ msgstr "تعداد اعضای کانال:"
 
 #: inc/ChannelWPTP.php:413
 msgid ""
-"API Token or Channel Username Invalid, It may not have access to the channel! "
-"(Read Help)"
+"API Token or Channel Username Invalid, It may not have access to the channel! (Read "
+"Help)"
 msgstr ""
-"کلید API یا نام‌کاربری معتبر نیست، شاید امکان دسترسی به کانال وجود ندارد! "
-"(راهنما را بخوانید)"
+"کلید API یا نام‌کاربری معتبر نیست، شاید امکان دسترسی به کانال وجود ندارد! (راهنما را "
+"بخوانید)"
 
 #: inc/ChannelWPTP.php:440
 msgid "Send to Channels"
@@ -280,12 +279,12 @@ msgstr "قالب‌بندی پیام‌ها"
 
 #: inc/ChannelWPTP.php:582
 msgid ""
-"Telegram supports basic markdown and some HTML tags (bold, italic, inline "
-"links). By checking one of the following options, your messages will be "
-"compatible with Telegram format."
+"Telegram supports basic markdown and some HTML tags (bold, italic, inline links). "
+"By checking one of the following options, your messages will be compatible with "
+"Telegram format."
 msgstr ""
-"تلگرام از زبان نشانه‌گذاری/Markdown و چندی از HTML Tags (ضخیم, کج, لینک) "
-"پشتیبانی می‌کند. با انتخاب هر گزینه زیر، پیام شما با قالب تلگرام سازگار می‌شود."
+"تلگرام از زبان نشانه‌گذاری/Markdown و چندی از HTML Tags (ضخیم, کج, لینک) پشتیبانی "
+"می‌کند. با انتخاب هر گزینه زیر، پیام شما با قالب تلگرام سازگار می‌شود."
 
 #: inc/ChannelWPTP.php:584
 msgid "Telegram Bot API"
@@ -309,7 +308,7 @@ msgstr "طول چکیده متن"
 
 #: inc/ChannelWPTP.php:602
 msgid "Words"
-msgstr "کلمات"
+msgstr "کلمه"
 
 #: inc/ChannelWPTP.php:607
 msgid "Web page preview in messages"
@@ -459,8 +458,7 @@ msgstr "گالری"
 msgid "Back to Product"
 msgstr "برگشت به محصول"
 
-#: inc/WoocommerceWPTP.php:323 inc/WoocommerceWPTP.php:353
-#: inc/WoocommerceWPTP.php:363
+#: inc/WoocommerceWPTP.php:323 inc/WoocommerceWPTP.php:353 inc/WoocommerceWPTP.php:363
 msgid "The product does not exist"
 msgstr "محصول یافت نشد"
 
@@ -629,8 +627,7 @@ msgid "The short url of this post"
 msgstr "لینک کوتاه نوشته"
 
 #: inc/WordPressWPTP.php:117
-msgid ""
-"The tags of this post. Tags are automatically converted to Telegram hashtags"
+msgid "The tags of this post. Tags are automatically converted to Telegram hashtags"
 msgstr "برچسب‌های نوشته، برچسب‌ها به صورت خودکاربه هشتگ تبدیل می‌شوند"
 
 #: inc/WordPressWPTP.php:118
@@ -647,13 +644,11 @@ msgid "The custom field of this post, Example {cf:price}"
 msgstr "زمینه دلخواه این نوشته، نمونه {cf:price}"
 
 #: inc/WordPressWPTP.php:121
-msgid ""
-"The Taxonomy Terms of this post: {terms:taxonomy}, Example {terms:category}"
+msgid "The Taxonomy Terms of this post: {terms:taxonomy}, Example {terms:category}"
 msgstr "مقدارهای تاکسونامی این نوشته: {terms:taxonomy}، نمونه: {terms:category}"
 
 #: inc/WordPressWPTP.php:122
-msgid ""
-"IF Statement for custom field, Example: {if='cf:price'}Price: {cf:price}{/if}"
+msgid "IF Statement for custom field, Example: {if='cf:price'}Price: {cf:price}{/if}"
 msgstr "شرط برای زمینه دلخواه، نمونه: {if='cf:price'}هزینه: {cf:price}{/if}"
 
 #: inc/WordPressWPTP.php:146 inc/WordPressWPTP.php:457
@@ -769,9 +764,9 @@ msgid ""
 "You should update keyboard for users when change WordPress language, active "
 "Woocommerce plugin, search setting changed. (Status don't save)"
 msgstr ""
-"در هر زمانی که زبان وردپرس را تغییر داید، یا افزونه ووکامرس را فعال کردید، یا "
-"تظیمات جستجو را تغییر دادید نیاز هست که کیبورد را بروز کنید. (وضعیت این گزینه "
-"ذخیره نمی‌شود)"
+"در هر زمانی که زبان وردپرس را تغییر دادید، یا افزونه ووکامرس را فعال کردید، یا "
+"تظیمات جستجو را تغییر دادید نیاز هست که کیبورد را بروز کنید. (وضعیت این گزینه ذخیره "
+"نمی‌شود)"
 
 #~ msgid "Telegram User"
 #~ msgstr "کاربر تلگرام"

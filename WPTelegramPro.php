@@ -332,7 +332,7 @@ class WPTelegramPro
             do_action('wptelegrampro_before_settings_updated', $this->options, $_POST);
             $update_message = apply_filters('wptelegrampro_before_settings_update_message', $update_message, $this->options, $_POST);
             
-            update_option($this->plugin_key, $_POST);
+            update_option($this->plugin_key, $_POST,false);
             
             do_action('wptelegrampro_after_settings_updated', $this->options, $_POST);
             $update_message = apply_filters('wptelegrampro_after_settings_update_message', $update_message, $this->options, $_POST);
@@ -832,8 +832,8 @@ class WPTelegramPro
             dbDelta($sql);
         }
         
-        update_option('wptelegrampro_version', WPTELEGRAMPRO_VERSION);
-        update_option('update_keyboard_time_wptp', time());
+        update_option('wptelegrampro_version', WPTELEGRAMPRO_VERSION, false);
+        update_option('update_keyboard_time_wptp', time(), false);
     }
     
     /**

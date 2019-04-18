@@ -89,13 +89,13 @@ class WordPressWPTP extends WPTelegramPro
             $webHook = $this->webHookURL();
             if ($telegram->setWebhook($webHook['url'])) {
                 $update_message .= $this->message(__('Set Webhook Successfully.', $this->plugin_key));
-                update_option('wptp-rand-url', $webHook['rand']);
+                update_option('wptp-rand-url', $webHook['rand'],false);
             } else
                 $update_message .= $this->message(__('Set Webhook with Error!', $this->plugin_key), 'error');
         }
         
         if (isset($new_option['force_update_keyboard']))
-            update_option('update_keyboard_time_wptp', time());
+            update_option('update_keyboard_time_wptp', time(),false);
         
         return $update_message;
     }
