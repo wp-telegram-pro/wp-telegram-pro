@@ -36,7 +36,8 @@ class WPTelegramPro
     public static $instance = null;
     public $plugin_key = 'wp-telegram-pro', $per_page = 1, $patterns_tags = array(),
         $rand_id_length = 10, $now, $db_table, $words = array(), $options, $telegram,
-        $telegram_input, $user, $default_keyboard, $plugin_name;
+        $telegram_input, $user, $default_keyboard, $plugin_name,
+        $ignore_post_types = array("attachment", "revision", "nav_menu_item", "custom_css", "customize_changeset", "oembed_cache", "product_variation");
     protected $helpTabID = 'help-wptp-tab', $aboutTabID = 'about-wptp-tab';
     
     public function __construct($bypass = false)
@@ -332,7 +333,7 @@ class WPTelegramPro
             do_action('wptelegrampro_before_settings_updated', $this->options, $_POST);
             $update_message = apply_filters('wptelegrampro_before_settings_update_message', $update_message, $this->options, $_POST);
             
-            update_option($this->plugin_key, $_POST,false);
+            update_option($this->plugin_key, $_POST, false);
             
             do_action('wptelegrampro_after_settings_updated', $this->options, $_POST);
             $update_message = apply_filters('wptelegrampro_after_settings_update_message', $update_message, $this->options, $_POST);

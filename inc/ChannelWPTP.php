@@ -7,7 +7,7 @@ class ChannelWPTP extends WPTelegramPro
     protected $tabID = 'channel-wptp-tab';
     public $excerpt_length = 100;
     public $max_channel = 10;
-    protected $post_types, $ignore_post_types = array("attachment", "revision", "nav_menu_item", "custom_css", "customize_changeset", "oembed_cache", "product_variation", "");
+    protected $post_types;
     
     public function __construct()
     {
@@ -430,7 +430,7 @@ class ChannelWPTP extends WPTelegramPro
     
     function settings_content()
     {
-        $this->post_types = get_post_types(array('public' => true, 'show_ui' => true), "objects");
+        $this->post_types = get_post_types(['public' => true, 'exclude_from_search' => false, 'show_ui' => true], "objects");
         $this->options = get_option($this->plugin_key);
         ?>
         <div id="<?php echo $this->tabID ?>-content" class="wptp-tab-content hidden">

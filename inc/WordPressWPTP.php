@@ -89,13 +89,13 @@ class WordPressWPTP extends WPTelegramPro
             $webHook = $this->webHookURL();
             if ($telegram->setWebhook($webHook['url'])) {
                 $update_message .= $this->message(__('Set Webhook Successfully.', $this->plugin_key));
-                update_option('wptp-rand-url', $webHook['rand'],false);
+                update_option('wptp-rand-url', $webHook['rand'], false);
             } else
                 $update_message .= $this->message(__('Set Webhook with Error!', $this->plugin_key), 'error');
         }
         
         if (isset($new_option['force_update_keyboard']))
-            update_option('update_keyboard_time_wptp', time(),false);
+            update_option('update_keyboard_time_wptp', time(), false);
         
         return $update_message;
     }
@@ -410,7 +410,7 @@ class WordPressWPTP extends WPTelegramPro
     function settings_content()
     {
         $this->options = get_option($this->plugin_key);
-        $post_types = get_post_types(['public' => true, 'exclude_from_search' => false, 'show_ui' => true]);
+        $post_types = get_post_types(['public' => true, 'exclude_from_search' => false, 'show_ui' => true], "objects");
         ?>
         <div id="<?php echo $this->tabID ?>-content" class="wptp-tab-content">
             <table>
@@ -473,8 +473,8 @@ class WordPressWPTP extends WPTelegramPro
                         <?php
                         $search_post_type = $this->get_option('search_post_type', array());
                         foreach ($post_types as $post_type) {
-                            $post_type_ = get_post_type_object($post_type);
-                            echo '<label><input type="checkbox" name="search_post_type[]" value="' . $post_type . '" ' . checked(in_array($post_type, $search_post_type), true, false) . ' > ' . $post_type_->label . '</label>';
+                            if (!in_array($post_type->name, $this->ignore_post_types))
+                                echo '<label><input type="checkbox" name="search_post_type[]" value="' . $post_type->name . '" ' . checked(in_array($post_type->name, $search_post_type), true, false) . ' > ' . $post_type->label . '</label>';
                         }
                         ?>
                     </td>
