@@ -39,10 +39,12 @@ Done:
 - Add custom field and terms to pattern tags: `{cf:price}`, `{terms:taxonomy}`
 - Add if statement to pattern tags: `{if='cf:price'}Price: {cf:price}{/if}`
 - Admin can force update telegram keyboard
-
+- Add proxy settings
 
 Develop Plan:
-- Add proxy settings
+- Inline button for channel message
+- Delay time to send channel
+
 
 
 

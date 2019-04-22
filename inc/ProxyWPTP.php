@@ -44,7 +44,8 @@ class ProxyWPTP extends WPTelegramPro
                 add_filter('wptelegrampro_api_remote_post_args', [$this, 'google_script_request_args'], 10, 3);
                 add_filter('wptelegrampro_api_request_url', [$this, 'google_script_request_url']);
             }
-        } elseif ($proxy_status == 'php_proxy') {
+            
+        } elseif ($proxy_status === 'php_proxy') {
             $this->setup_php_proxy();
         }
     }
