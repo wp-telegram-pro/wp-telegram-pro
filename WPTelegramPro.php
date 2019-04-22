@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/parsakafi/wp-telegram-pro
  * Description: Integrate WordPress with Telegram
  * Author: Parsa Kafi
- * Version: 1.2
+ * Version: 1.3
  * Author URI: http://parsa.ws
  * Text Domain: wp-telegram-pro
  */
