@@ -30,6 +30,7 @@ require_once WPTELEGRAMPRO_INC_DIR . 'TelegramWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'WordPressWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'WoocommerceWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'ChannelWPTP.php';
+require_once WPTELEGRAMPRO_INC_DIR . 'ProxyWPTP.php';
 
 class WPTelegramPro
 {
@@ -167,6 +168,7 @@ class WPTelegramPro
                         </ol>
                     </td>
                 </tr>
+                <?php do_action('wptelegrampro_help_tab_content') ?>
             </table>
         </div>
         <?php
@@ -801,6 +803,18 @@ class WPTelegramPro
             );
         }
         return $schedules;
+    }
+    
+    function check_remote_post($r, $url)
+    {
+        $bot_api_url = 'https://api.telegram.org/bot';
+        $user_link = 'https://t.me/';
+        $pattern = '/^(?:' . preg_quote($bot_api_url, '/') . '|' . preg_quote($user_link, '/') . ')/i';
+        $to_telegram = preg_match($pattern, $url);
+        $by_wptelegrampro = (isset($r['headers']['wptelegrampro']) && $r['headers']['wptelegrampro']);
+        
+        // if the request is sent to Telegram by WP Telegram Pro
+        return $to_telegram && $by_wptelegrampro;
     }
     
     static function install()

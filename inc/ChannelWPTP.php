@@ -136,20 +136,26 @@ class ChannelWPTP extends WPTelegramPro
     
     function send_to_channel($post_id, $channel)
     {
+        $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
+        
         $options = $this->options;
         $index = 0;
+        
         foreach ($options['channel_username'] as $k => $v)
             if (!empty($v) && $channel == $v)
                 $index = $k;
+        
         if ($options['channel_username'][$index] == $channel) {
-            $message_pattern = $text = get_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$index] . '_wptp', true);
-            if (empty($message_pattern))
-                $message_pattern = $text = $options['channel_message_pattern'][$index];
+            $post = $this->query(array('p' => $post_id, 'post_type' => get_post_type($post_id)));
             
-            if (has_post_thumbnail($post_id)) {
+            $text = get_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$index] . '_wptp', true);
+            if (empty($text))
+                $text = $options['channel_message_pattern'][$index];
+            
+            if ($post['image'] !== null) {
                 $featured_image = get_post_meta($post_id, '_featured_image_' . $options['channel_username'][$index] . '_wptp', true);
                 if (empty($featured_image))
-                    $featured_image = isset($options['channel_with_featured_image'][$index]) ? 1 : 2;
+                    $featured_image = isset($options['channel_with_featured_image'][$index]);
             } else {
                 $featured_image = false;
             }
@@ -166,8 +172,9 @@ class ChannelWPTP extends WPTelegramPro
             //$image_position = $options['channel_image_position'][$index];
             $formatting_messages = $options['channel_formatting_messages'][$index];
             $formatting_messages = $formatting_messages == 'simple' ? null : $formatting_messages;
-            $post = $this->query(array('p' => $post_id, 'post_type' => get_post_type($post_id)));
+            
             $post['content'] = $formatting_messages != 'HTML' ? strip_tags($post['content']) : $post['content'];
+            
             if (isset($post['tags']) && is_array($post['tags']))
                 if (count($post['tags']) > 0)
                     $post['tags'] = '#' . implode(' #', array_keys($post['tags']));
@@ -197,7 +204,11 @@ class ChannelWPTP extends WPTelegramPro
             $text = apply_filters('wptelegrampro_channel_text', $text, $post_id);
             
             $this->telegram->disable_web_page_preview($disable_web_page_preview);
-            $this->telegram->sendMessage($text, null, '@' . $channel, $formatting_messages);
+            if ($featured_image && $post[$image_send_mode] !== null)
+                $this->telegram->sendFile('sendPhoto', $post[$image_send_mode], $text, null, '@' . $channel);
+            else
+                $this->telegram->sendMessage($text, null, '@' . $channel, $formatting_messages);
+            
             $result = $this->telegram->get_last_result();
             if (isset($result['ok']) && $result['ok']) {
                 update_post_meta($post_id, '_posted_status_' . $channel . '_wptp', 1);
@@ -638,8 +649,7 @@ class ChannelWPTP extends WPTelegramPro
         <?php
     }
     
-    private
-    function select_tags()
+    private function select_tags()
     {
         $select = '<select class="patterns-select-wptp">';
         $select .= '<option style="display:none;" selected> ' . __('- Select a Tag -', $this->plugin_key) . ' </option>';

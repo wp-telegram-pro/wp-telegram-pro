@@ -34,27 +34,35 @@
     vertical-align: top;
 }
 
-.wptp-wrap .nav-tab:not(.nav-tab-active) {
-    background-color: #fff;
-    cursor: pointer;
+.wptp-wrap input.small-text {
+    width: 100px;
+}
 
+.wptp-wrap .nav-tab-wrapper {
+    border-bottom: none;
+}
+
+.wptp-wrap .nav-tab {
+    border: 1px solid #e0e0e0;
+    border-bottom: none;
+    color: #787878;
+}
+
+.wptp-wrap .nav-tab:not(.nav-tab-active) {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+.wptp-wrap .description {
+    color: #8a8a8a;
 }
 
 .wptp-wrap .nav-tab-active,
 .wptp-wrap .nav-tab-active:focus,
 .wptp-wrap .nav-tab-active:focus:active,
 .wptp-wrap .nav-tab-active:hover {
-    background-color: #f1f1f1;
-
-    background: rgba(227, 227, 227, 1);
-    background: -moz-linear-gradient(top, rgba(227, 227, 227, 1) 0%, rgba(241, 241, 241, 1) 100%);
-    background: -webkit-linear-gradient(top, rgba(227, 227, 227, 1) 0%, rgba(241, 241, 241, 1) 100%);
-    background: -o-linear-gradient(top, rgba(227, 227, 227, 1) 0%, rgba(241, 241, 241, 1) 100%);
-    background: -ms-linear-gradient(top, rgba(227, 227, 227, 1) 0%, rgba(241, 241, 241, 1) 100%);
-    background: linear-gradient(to bottom, rgba(227, 227, 227, 1) 0%, rgba(241, 241, 241, 1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e3e3e3', endColorstr='#f1f1f1', GradientType=0);
-
-    border-bottom-color: #f1f1f1;
+    background-color: #fff;
+    border-bottom-color: #fff;
     cursor: default;
 }
 
@@ -63,7 +71,9 @@
 }
 
 .wptp-wrap .wptp-tab-content {
-    padding: 20px 0;
+    padding: 20px;
+    background-color: #fff;
+    margin-bottom: 20px;
 }
 
 .wptp-wrap .wptp-tab-content th {
@@ -74,10 +84,6 @@
 
 body.rtl .wptp-wrap .wptp-tab-content th {
     text-align: right;
-}
-
-.wptp-wrap .wptp-tab-content {
-    padding: 20px 0;
 }
 
 .wptp-wrap .wptp-tab-content textarea {
@@ -133,13 +139,6 @@ body.rtl .wptp-wrap .wptp-tab-content th {
 
 .accordion-wptp {
     background-color: #e4e4e4;
-    background: rgba(228, 228, 228, 1);
-    background: -moz-linear-gradient(left, rgba(228, 228, 228, 1) 0%, rgba(194, 194, 194, 1) 100%);
-    background: -webkit-linear-gradient(left, rgba(228, 228, 228, 1) 0%, rgba(194, 194, 194, 1) 100%);
-    background: -o-linear-gradient(left, rgba(228, 228, 228, 1) 0%, rgba(194, 194, 194, 1) 100%);
-    background: -ms-linear-gradient(left, rgba(228, 228, 228, 1) 0%, rgba(194, 194, 194, 1) 100%);
-    background: linear-gradient(to right, rgba(228, 228, 228, 1) 0%, rgba(194, 194, 194, 1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e4e4e4', endColorstr='#c2c2c2', GradientType=1);
     color: #444;
     cursor: pointer;
     padding: 18px;
@@ -170,13 +169,6 @@ body.rtl .wptp-wrap .wptp-tab-content th {
 
 .accordion-wptp.active, .accordion-wptp:hover {
     background-color: #afafaf;
-    background: rgba(175, 175, 175, 1);
-    background: -moz-linear-gradient(left, rgba(175, 175, 175, 1) 0%, rgba(140, 140, 140, 1) 100%);
-    background: -webkit-linear-gradient(left, rgba(175, 175, 175, 1) 0%, rgba(140, 140, 140, 1) 100%);
-    background: -o-linear-gradient(left, rgba(175, 175, 175, 1) 0%, rgba(140, 140, 140, 1) 100%);
-    background: -ms-linear-gradient(left, rgba(175, 175, 175, 1) 0%, rgba(140, 140, 140, 1) 100%);
-    background: linear-gradient(to right, rgba(175, 175, 175, 1) 0%, rgba(140, 140, 140, 1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#afafaf', endColorstr='#8c8c8c', GradientType=1);
     color: #fff;
 }
 
@@ -197,10 +189,14 @@ body.rtl .wptp-wrap .wptp-tab-content th {
 }
 
 .channel-list-wptp .panel {
-    padding: 20px;
-    background-color: white;
+    background-color: #f8f8f8;
     transition: max-height 0.2s ease-out;
     display: none;
+    width: 100%;
+}
+
+.channel-list-wptp .panel > * {
+    padding: 20px;
 }
 
 .channel-list-wptp table {
@@ -216,7 +212,7 @@ body.rtl .wptp-wrap .wptp-tab-content th {
     color: #fff;
     background-color: #558B2F;
     border: none;
-    margin-top: 20px;
+    margin-top: 40px;
     cursor: pointer;
     float: right;
 }

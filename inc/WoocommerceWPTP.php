@@ -290,6 +290,8 @@ class WoocommerceWPTP extends WPTelegramPro
             $this->select_product_variation($product, $button_data['5'], $button_data['6'], $button_data['7'], $button_data['4'], $taxonomy);
             
         } elseif ($this->button_data_check($button_data, 'image_galleries')) {
+            $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
+            
             $product_id = intval(end(explode('_', $button_data)));
             if (get_post_status($product_id) === 'publish') {
                 $image_size = $this->get_option('image_size');
@@ -299,22 +301,28 @@ class WoocommerceWPTP extends WPTelegramPro
                 if (is_array($galleries) && count($galleries)) {
                     $keyboards = null;
                     $i = 1;
-                    foreach ($galleries as $image) {
-                        $meta_data = wp_get_attachment_metadata($image);
+                    foreach ($galleries as $image_id) {
+                        $meta_data = wp_get_attachment_metadata($image_id);
                         if (is_array($meta_data)) {
-                            $upload_dir = wp_upload_dir();
-                            $image_path = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . $meta_data['file'];
-                            if ($image_size != 'full' && isset($meta_data['sizes'][$image_size])) {
-                                $file_name = pathinfo($image_path, PATHINFO_BASENAME);
-                                $image_path = str_replace($file_name, $meta_data['sizes'][$image_size]['file'], $image_path);
+                            if ($image_send_mode === 'image_path') {
+                                $upload_dir = wp_upload_dir();
+                                $image_path = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . $meta_data['file'];
+                                if ($image_size != 'full' && isset($meta_data['sizes'][$image_size])) {
+                                    $file_name = pathinfo($image_path, PATHINFO_BASENAME);
+                                    $image_path = str_replace($file_name, $meta_data['sizes'][$image_size]['file'], $image_path);
+                                }
+                            } else {
+                                $image_path = wp_get_attachment_image_src($image_id, $image_size);
+                                $image_path = $image_path[0];
                             }
+                            
                             if ($i == count($galleries)) {
                                 $keyboard = array(array(
                                     array('text' => __('Back to Product', $this->plugin_key), 'callback_data' => 'product_detail_' . $product_id)
                                 ));
                                 $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
                             }
-                            $this->telegram->sendFile('sendPhoto', $image_path, get_the_title($image), $keyboards);
+                            $this->telegram->sendFile('sendPhoto', $image_path, get_the_title($image_id), $keyboards);
                             $i++;
                         }
                     }
@@ -798,6 +806,8 @@ class WoocommerceWPTP extends WPTelegramPro
     function send_products($products)
     {
         if (count($products['product'])) {
+            $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
+            
             $this->words = apply_filters('wptelegrampro_words', $this->words);
             $keyboard = $this->default_products_keyboard;
             $i = 1;
@@ -816,8 +826,8 @@ class WoocommerceWPTP extends WPTelegramPro
                         $keyboard[1] = array_reverse($keyboard[1]);
                 }
                 $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
-                if ($product['image_path'] !== null) {
-                    $this->telegram->sendFile('sendPhoto', $product['image_path'], $text, $keyboards);
+                if ($product[$image_send_mode] !== null) {
+                    $this->telegram->sendFile('sendPhoto', $product[$image_send_mode], $text, $keyboards);
                 } else
                     $this->telegram->sendMessage($text, $keyboards);
                 $i++;
@@ -829,6 +839,7 @@ class WoocommerceWPTP extends WPTelegramPro
     
     function send_product($product)
     {
+        $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
         $price = $this->product_price($product);
         $add_info = '';
         $metas = array();
@@ -878,13 +889,10 @@ class WoocommerceWPTP extends WPTelegramPro
         
         $text = $product['title'] . "\n" . $price . $add_info . "\n" . $product['content'];
         
-        if ($product['image_path'] !== null && mb_strlen($text) <= 200)
-            $this->telegram->sendFile('sendPhoto', $product['image_path'], $text);
-        else {
-            if ($product['image_path'] !== null)
-                $this->telegram->sendFile('sendPhoto', $product['image_path']);
+        if ($product[$image_send_mode] !== null)
+            $this->telegram->sendFile('sendPhoto', $product[$image_send_mode], $text);
+        else
             $this->telegram->sendMessage($text);
-        }
         
         // Keyboard
         $message_id = $this->telegram->get_last_result()['result']['message_id'];

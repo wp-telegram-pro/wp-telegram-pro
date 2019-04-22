@@ -92,6 +92,7 @@ class WordPressWPTP extends WPTelegramPro
                 update_option('wptp-rand-url', $webHook['rand'], false);
             } else
                 $update_message .= $this->message(__('Set Webhook with Error!', $this->plugin_key), 'error');
+            
         }
         
         if (isset($new_option['force_update_keyboard']))
@@ -231,7 +232,9 @@ class WordPressWPTP extends WPTelegramPro
     {
         if (!is_array($posts['parameter']['post_type']))
             $posts['parameter']['post_type'] = array($posts['parameter']['post_type']);
-        //$this->telegram->sendMessage(serialize($posts));
+        
+        $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
+        
         $posts_ = array();
         foreach ($posts['parameter']['post_type'] as $post_type)
             if (isset($posts[$post_type]))
@@ -258,9 +261,9 @@ class WordPressWPTP extends WPTelegramPro
                 }
                 $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
                 $this->telegram->disable_web_page_preview(true);
-                if ($post['image_path'] !== null) {
-                    $this->telegram->sendFile('sendPhoto', $post['image_path'], $text, $keyboards);
-                } else
+                if ($post[$image_send_mode] !== null)
+                    $this->telegram->sendFile('sendPhoto', $post[$image_send_mode], $text, $keyboards);
+                else
                     $this->telegram->sendMessage($text, $keyboards);
                 $i++;
             }

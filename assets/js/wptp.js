@@ -20,8 +20,8 @@ jQuery(function ($) {
     });
 
     $.fn.extend({
-        insertAtCaret: function(myValue) {
-            this.each(function() {
+        insertAtCaret: function (myValue) {
+            this.each(function () {
                 if (document.selection) {
                     this.focus();
                     let sel = document.selection.createRange();
@@ -32,7 +32,7 @@ jQuery(function ($) {
                     let endPos = this.selectionEnd;
                     let scrollTop = this.scrollTop;
                     this.value = this.value.substring(0, startPos) +
-                        myValue + this.value.substring(endPos,this.value.length);
+                        myValue + this.value.substring(endPos, this.value.length);
                     this.focus();
                     this.selectionStart = startPos + myValue.length;
                     this.selectionEnd = startPos + myValue.length;
@@ -72,6 +72,11 @@ jQuery(function ($) {
                     });
                 }
             }, 1000);
+
+        $('#proxy-wptp-tab-content input[type=radio][name=proxy_status]').unbind('change').change(function () {
+            $('.proxy-status-wptp').hide();
+            $('#proxy_' + this.value).show();
+        });
 
         function wptp_init() {
             $('.accordion-wptp').unbind('click').on('click', function () {
