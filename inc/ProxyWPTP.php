@@ -151,7 +151,7 @@ class ProxyWPTP extends WPTelegramPro
         <div id="<?php echo $this->tabID ?>-content" class="wptp-tab-content hidden">
             <table>
                 <tr>
-                    <th><?php _e('DISCLAIMER!', $this->plugin_key) ?></th>
+                    <th><?php _e('DISCLAIMER', $this->plugin_key) ?></th>
                     <td><?php _e('Use the proxy at your own risk!', $this->plugin_key) ?></td>
                 </tr>
                 <tr>

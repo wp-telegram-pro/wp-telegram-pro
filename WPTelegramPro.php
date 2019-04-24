@@ -68,6 +68,7 @@ class WPTelegramPro
             add_action('wp_ajax_bot_info_wptp', array($this, 'get_bot_info'));
             add_filter('cron_schedules', array($this, 'add_every_minutes'));
             
+            add_filter('wptelegrampro_settings_update_message', [$this, 'check_ssl'], 100);
             add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 100);
             add_action('wptelegrampro_settings_content', [$this, 'help_settings_content']);
             add_action('wptelegrampro_settings_content', [$this, 'about_settings_content']);
@@ -327,7 +328,8 @@ class WPTelegramPro
         $tabs_title_list = array();
         $tabs_title = apply_filters('wptelegrampro_settings_tabs', $tabs_title_list);
         
-        $update_message = '';
+        $update_message = apply_filters('wptelegrampro_settings_update_message', '');
+        
         if (isset($_POST['wpt_nonce_field']) && wp_verify_nonce($_POST['wpt_nonce_field'], 'settings_submit')) {
             unset($_POST['wpt_nonce_field']);
             unset($_POST['_wp_http_referer']);
@@ -815,6 +817,13 @@ class WPTelegramPro
         
         // if the request is sent to Telegram by WP Telegram Pro
         return $to_telegram && $by_wptelegrampro;
+    }
+    
+    function check_ssl($message)
+    {
+        if (!is_ssl())
+            $message .= $this->message(__('The plugin requires SSL in the domain of your website!', $this->plugin_key), 'error');
+        return $message;
     }
     
     static function install()

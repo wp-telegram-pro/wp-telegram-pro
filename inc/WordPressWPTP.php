@@ -35,7 +35,7 @@ class WordPressWPTP extends WPTelegramPro
             <tr>
                 <?php if ($user) { ?>
                     <td colspan="2"><?php echo __('User connect to:', $this->plugin_key) . ' ' . $user['first_name'] . ' ' . $user['last_name'] . ' <a href="https://t.me/' . $user['username'] . '" target="_blank">@' . $user['username'] . '</a>'; ?></td>
-                <?php } elseif (0) { // Under Develop ?>
+                <?php } elseif (0) { // @TODO: Under Develop ?>
                     <td>
                         <label for="identify_telegram_user"><?php //_e('Send via Telegram Bot', $this->plugin_key) ?></label>
                     </td>
