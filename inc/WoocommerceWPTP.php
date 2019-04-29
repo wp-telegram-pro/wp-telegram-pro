@@ -625,8 +625,6 @@ class WoocommerceWPTP extends WPTelegramPro
         if ($variation_type == 'text')
             $this->telegram->answerCallbackQuery(__('Select', $this->plugin_key) . ' ' . $variation_name . ': ' . $variation_value);
         elseif ($variation_type == 'tax' && !empty($taxonomy)) {
-            //$taxonomy = get_taxonomy($taxonomy);
-            //$term = get_term(intval($variation_value), $taxonomy);
             $term = get_term_by('slug', $variation_value, $taxonomy);
             if ($term)
                 $this->telegram->answerCallbackQuery(__('Select', $this->plugin_key) . ' ' . $variation_name . ': ' . $term->name);
