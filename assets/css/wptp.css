@@ -86,7 +86,7 @@ body.rtl .wptp-wrap .wptp-tab-content th {
     text-align: right;
 }
 
-.wptp-wrap .wptp-tab-content textarea {
+.wptp-wrap .wptp-tab-content textarea, .wptp-metabox textarea, .wptp-metabox select {
     width: 100%;
 }
 

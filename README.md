@@ -40,10 +40,11 @@ Done:
 - Add if statement to pattern tags: `{if='cf:price'}Price: {cf:price}{/if}`
 - Admin can force update telegram keyboard
 - Add proxy settings
+- Delay time to send channels
 
 Develop Plan:
 - Inline button for channel message
-- Delay time to send channel
+
 
 
 

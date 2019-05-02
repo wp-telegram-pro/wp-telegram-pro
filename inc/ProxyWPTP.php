@@ -33,7 +33,7 @@ class ProxyWPTP extends WPTelegramPro
     }
     
     /**
-     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram/
+     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram
      */
     function setup_proxy()
     {
@@ -54,7 +54,7 @@ class ProxyWPTP extends WPTelegramPro
     
     /**
      * Setup PHP proxy
-     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram/
+     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram
      */
     private function setup_php_proxy()
     {
@@ -76,7 +76,7 @@ class ProxyWPTP extends WPTelegramPro
     
     /**
      * Returns The proxy options
-     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram/
+     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram
      * @return array
      */
     private static function get_proxy()
@@ -87,7 +87,7 @@ class ProxyWPTP extends WPTelegramPro
     /**
      * Modify cURL handle
      * The method is not used by default but can be used to modify the behavior of cURL requests
-     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram/
+     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram
      *
      * @param resource $handle The cURL handle (passed by reference).
      * @param array $r The HTTP request arguments.
@@ -119,7 +119,7 @@ class ProxyWPTP extends WPTelegramPro
     }
     
     /**
-     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram/
+     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram
      */
     public static function google_script_request_args($args, $method, $token)
     {
@@ -134,7 +134,7 @@ class ProxyWPTP extends WPTelegramPro
     }
     
     /**
-     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram/
+     * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram
      */
     public function google_script_request_url($url)
     {
@@ -290,7 +290,7 @@ class ProxyWPTP extends WPTelegramPro
                 <br><br>
                 <strong><?php _e('How to Deploy', $this->plugin_key) ?></strong>
                 <ol>
-                    <li><?php echo sprintf('Goto <a href="%s">script.google.com</a> and sign in if required.', 'https://script.google.com'); ?></li>
+                    <li><?php printf('Goto <a href="%s">script.google.com</a> and sign in if required.', 'https://script.google.com'); ?></li>
                     <li><?php _e('Create a new project and give it a name.', $this->plugin_key); ?></li>
                     <li><?php _e('It should open a file (Code.gs by default). Remove the contents of this file.', $this->plugin_key); ?></li>
                     <li><?php _e('Copy the contents of below code and paste into your project file (Code.gs).', $this->plugin_key); ?></li>

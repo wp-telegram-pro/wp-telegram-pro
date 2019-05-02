@@ -50,6 +50,9 @@ class ChannelWPTP extends WPTelegramPro
     
     function replace_channel_text($template, $post_id)
     {
+        /**
+         * @copyright Base on WP Telegram plugin, https://wordpress.org/plugins/wptelegram
+         */
         if (preg_match_all('/(?<=\{)(terms|cf):([^\}]+?)(?=\})/iu', $template, $matches)) {
             foreach ($matches[0] as $field) {
                 $_field = explode(':', $field);
@@ -61,15 +64,18 @@ class ChannelWPTP extends WPTelegramPro
                     if (taxonomy_exists($_field[1])) {
                         $terms = get_the_terms($post_id, $_field[1]);
                         $names = (is_wp_error($terms) || empty($terms)) ? array() : wp_list_pluck($terms, 'name');
-                        if (!empty($names)) {
+                        if (!empty($names))
                             $value = implode(' | ', $names);
-                        }
                     }
                     $template = str_replace("{{$field}}", $value, $template);
                 }
             }
         }
         
+        
+        /**
+         * Check if statement
+         */
         $template = preg_replace('/{if=\'(.*?)\'}(.*?){\/if}/', '[if_statement_wptp field="$1" post_id="' . $post_id . '"]$2[/if_statement_wptp]', $template);
         
         $template = do_shortcode($template);
@@ -105,6 +111,8 @@ class ChannelWPTP extends WPTelegramPro
                     continue;
                 if (isset($options['channel_post_type'][$k]) && count($options['channel_post_type'][$k]) > 0) {
                     $post_types = array_keys($options['channel_post_type'][$k]);
+                    $delay = intval($this->get_option('channels_delay_send', 0));
+                    
                     $args = array(
                         'posts_per_page' => 1,
                         'post_status' => 'publish',
@@ -123,6 +131,14 @@ class ChannelWPTP extends WPTelegramPro
                             )
                         )
                     );
+                    if ($delay > 0) {
+                        $args['date_query'] = array(
+                            array(
+                                'column' => 'post_modified',
+                                'before' => "{$delay} minutes ago"
+                            )
+                        );
+                    }
                     $query = new WP_Query($args);
                     if ($query->have_posts()) {
                         $query->the_post();
@@ -226,9 +242,9 @@ class ChannelWPTP extends WPTelegramPro
     
     function meta_save($post_id, $post)
     {
-        if (!isset($_POST['wptb-nonce']))
+        if (!isset($_POST['wptp-nonce']))
             return $post_id;
-        if (!isset($_POST["wptb-nonce"]) || !wp_verify_nonce($_POST["wptb-nonce"], basename(__FILE__)))
+        if (!isset($_POST["wptp-nonce"]) || !wp_verify_nonce($_POST["wptp-nonce"], basename(__FILE__)))
             return $post_id;
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
             return $post_id;
@@ -274,9 +290,10 @@ class ChannelWPTP extends WPTelegramPro
         $options = $this->options;
         if (isset($options['channel_username'])) {
             $post_types = array();
-            foreach ($options['channel_username'] as $k => $v)
+            foreach ($options['channel_username'] as $k => $v) {
                 if (!empty($v) && isset($options['channel_post_type'][$k]) && is_array($options['channel_post_type'][$k]))
-                    $post_types = array_keys($options['channel_post_type'][$k]);
+                    $post_types = array_merge($post_types, array_keys($options['channel_post_type'][$k]));
+            }
             if (in_array($post_type, $post_types))
                 add_meta_box('WPTBMetaBox', $this->plugin_name, array($this, 'post_display'), $post_type);
         }
@@ -286,7 +303,7 @@ class ChannelWPTP extends WPTelegramPro
     {
         $options = $this->options;
         $post_id = get_the_ID();
-        wp_nonce_field(basename(__FILE__), "wptb-nonce");
+        wp_nonce_field(basename(__FILE__), "wptp-nonce");
         ?>
         <div class="wrap wptp-metabox channel-list-wptp">
             <?php
@@ -466,7 +483,21 @@ class ChannelWPTP extends WPTelegramPro
                                value="<?php echo $this->get_option('channels_cron_interval', 1) ?>"
                                placeholder="1" min="1" max="60"
                                class="small excerpt_length ltr"> <?php _e('Minutes', $this->plugin_key) ?>,
-                        <?php printf(__('Work with <a href="%s" target="_blank">WP-Cron</a>', $this->plugin_key), "https://code.tutsplus.com/articles/insights-into-wp-cron-an-introduction-to-scheduling-tasks-in-wordpress--wp-23119") ?>
+                        <span class="description">
+                            <?php printf(__('Work with <a href="%s" target="_blank">WP-Cron</a>.', $this->plugin_key), "https://code.tutsplus.com/articles/insights-into-wp-cron-an-introduction-to-scheduling-tasks-in-wordpress--wp-23119") ?>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="channels_delay_send"><?php _e('Delay in send', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <input type="number" name="channels_delay_send" id="channels_delay_send"
+                               value="<?php echo $this->get_option('channels_delay_send', 5) ?>"
+                               placeholder="0" min="0"
+                               class="small excerpt_length ltr"> <?php _e('Minutes', $this->plugin_key) ?>,
+                        <span class="description"><?php _e('Least 5 minutes recommended.', $this->plugin_key) ?></span>
                     </td>
                 </tr>
             </table>
