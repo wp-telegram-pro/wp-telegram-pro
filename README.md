@@ -41,9 +41,10 @@ Done:
 - Admin can force update telegram keyboard
 - Add proxy settings
 - Delay time to send channels
+- Inline button for channel message
 
 Develop Plan:
-- Inline button for channel message
+
 
 
 
@@ -53,4 +54,4 @@ Develop Plan:
 
 Warning
 -
-Plugin under developing, Not recommended in the product. You can download stable version in [WordPress.org plugins repository](https://wordpress.org/plugins/wp-telegram-pro)
+The plugin is in development, Not recommended in the product. You can download stable version in [WordPress.org plugins repository](https://wordpress.org/plugins/wp-telegram-pro)

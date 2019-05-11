@@ -4,9 +4,11 @@
  * Plugin URI: https://github.com/parsakafi/wp-telegram-pro
  * Description: Integrate WordPress with Telegram
  * Author: Parsa Kafi
- * Version: 1.4
+ * Version: 1.5
  * Author URI: http://parsa.ws
  * Text Domain: wp-telegram-pro
+ * WC requires at least: 3.0.0
+ * WC tested up to: 3.6.2
  */
 
 if (!defined('ABSPATH')) exit;
@@ -25,7 +27,6 @@ define('WPTELEGRAMPRO_DIR', untrailingslashit(plugin_dir_path(__FILE__)));
 define('WPTELEGRAMPRO_URL', untrailingslashit(plugins_url('', __FILE__)));
 define('WPTELEGRAMPRO_INC_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR);
 
-// https://pippinsplugins.com/storing-session-data-in-wordpress-without-_session/
 require_once WPTELEGRAMPRO_INC_DIR . 'TelegramWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'WordPressWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'WoocommerceWPTP.php';

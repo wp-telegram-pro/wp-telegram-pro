@@ -72,7 +72,6 @@ class ChannelWPTP extends WPTelegramPro
             }
         }
         
-        
         /**
          * Check if statement
          */
@@ -143,23 +142,18 @@ class ChannelWPTP extends WPTelegramPro
                     if ($query->have_posts()) {
                         $query->the_post();
                         $post_id = get_the_ID();
-                        $this->send_to_channel($post_id, $options['channel_username'][$k]);
+                        $this->send_to_channel($post_id, $options['channel_username'][$k], $k);
                     }
                 }
             }
         }
     }
     
-    function send_to_channel($post_id, $channel)
+    function send_to_channel($post_id, $channel, $index = 0)
     {
         $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
-        
+        $keyboards = null;
         $options = $this->options;
-        $index = 0;
-        
-        foreach ($options['channel_username'] as $k => $v)
-            if (!empty($v) && $channel == $v)
-                $index = $k;
         
         if ($options['channel_username'][$index] == $channel) {
             $post = $this->query(array('p' => $post_id, 'post_type' => get_post_type($post_id)));
@@ -167,6 +161,13 @@ class ChannelWPTP extends WPTelegramPro
             $text = get_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$index] . '_wptp', true);
             if (empty($text))
                 $text = $options['channel_message_pattern'][$index];
+            
+            if (isset($options['channel_inline_button_title'][$index]) && !empty($options['channel_inline_button_title'][$index])) {
+                $keyboard = array(array(
+                    array('text' => $options['channel_inline_button_title'][$index], 'url' => $post['short-link'])
+                ));
+                $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+            }
             
             if ($post['image'] !== null) {
                 $featured_image = get_post_meta($post_id, '_featured_image_' . $options['channel_username'][$index] . '_wptp', true);
@@ -221,9 +222,9 @@ class ChannelWPTP extends WPTelegramPro
             
             $this->telegram->disable_web_page_preview($disable_web_page_preview);
             if ($featured_image && $post[$image_send_mode] !== null)
-                $this->telegram->sendFile('sendPhoto', $post[$image_send_mode], $text, null, '@' . $channel);
+                $this->telegram->sendFile('sendPhoto', $post[$image_send_mode], $text, $keyboards, '@' . $channel);
             else
-                $this->telegram->sendMessage($text, null, '@' . $channel, $formatting_messages);
+                $this->telegram->sendMessage($text, $keyboards, '@' . $channel, $formatting_messages);
             
             $result = $this->telegram->get_last_result();
             if (isset($result['ok']) && $result['ok']) {
@@ -521,6 +522,7 @@ class ChannelWPTP extends WPTelegramPro
                         'with_featured_image' => isset($options['channel_with_featured_image'][$k]) ? $options['channel_with_featured_image'][$k] : '',
                         'formatting_messages' => $options['channel_formatting_messages'][$k],
                         'excerpt_length' => $options['channel_excerpt_length'][$k],
+                        'inline_button_title' => $options['channel_inline_button_title'][$k],
                         'disable_web_page_preview' => isset($options['channel_disable_web_page_preview'][$k]) ? $options['channel_disable_web_page_preview'][$k] : '',
                         //'image_position' => $options['channel_image_position'][$k]
                     );
@@ -642,6 +644,16 @@ class ChannelWPTP extends WPTelegramPro
                                    value="<?php echo isset($item['excerpt_length']) ? $item['excerpt_length'] : '' ?>"
                                    placeholder="<?php echo $this->excerpt_length ?>"
                                    class="excerpt_length ltr"> <?php _e('Words', $this->plugin_key) ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php _e('Inline button title', $this->plugin_key) ?>
+                        </td>
+                        <td>
+                            <input type="text" name="channel_inline_button_title[<?php echo $item['index'] ?>]"
+                                   value="<?php echo isset($item['inline_button_title']) ? $item['inline_button_title'] : '' ?>"
+                                   class="inline_button_title regular-text">
                         </td>
                     </tr>
                     <tr>

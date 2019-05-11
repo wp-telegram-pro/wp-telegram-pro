@@ -29,7 +29,7 @@
     margin-bottom: 10px;
 }
 
-.wptp-wrap table tr td:first-child {
+.wptp-wrap table tr td:first-child , .wptp-wrap table tr th:first-child {
     width: 200px;
     vertical-align: top;
 }

@@ -89,7 +89,6 @@ class TelegramWPTP
             $args = apply_filters('wptelegrampro_api_remote_post_args', $args, $method, $this->token);
             $raw_response = $this->raw_response = $this->last_result = wp_remote_post($url, $args);
             $this->set_properties($raw_response);
-            
             $this->valid_json = $this->decode_body();
             $result = $this->get_decoded_body();
             

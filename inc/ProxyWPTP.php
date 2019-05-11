@@ -304,7 +304,7 @@ class ProxyWPTP extends WPTelegramPro
                     <li><?php _e('In the popup window select your Google Account.', $this->plugin_key); ?></li>
                     <li><?php _e('On the next screen, click "Allow".', $this->plugin_key); ?></li>
                     <li><?php _e('After redirection, you should see "This project is now deployed as a web app."', $this->plugin_key); ?></li>
-                    <li><?php _e('Copy the "Current web app URL:" and paste it in your app or plugin', $this->plugin_key); ?></li>
+                    <li><?php _e('Copy the "Current web app URL" and paste it in plugin', $this->plugin_key); ?></li>
                 </ol>
                 </span>
                 <textarea cols="30" class="ltr" rows="5"

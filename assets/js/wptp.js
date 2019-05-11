@@ -165,6 +165,7 @@ jQuery(function ($) {
             item.find('.with_featured_image').change_item_index(new_index);
             item.find('.formatting_messages').change_item_index(new_index);
             item.find('.excerpt_length').change_item_index(new_index);
+            item.find('.inline_button_title').change_item_index(new_index);
             item.find('.disable_web_page_preview').change_item_index(new_index);
             //item.find('.image_position').change_item_index(new_index);
             item.find('input[type="text"],input[type="number"],textarea').val('');
