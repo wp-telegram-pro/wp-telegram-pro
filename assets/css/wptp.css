@@ -29,7 +29,7 @@
     margin-bottom: 10px;
 }
 
-.wptp-wrap table tr td:first-child , .wptp-wrap table tr th:first-child {
+.wptp-wrap table tr td:first-child, .wptp-wrap table tr th:first-child {
     width: 200px;
     vertical-align: top;
 }
@@ -305,6 +305,11 @@ body.rtl .wptp-wrap .dashicons {
     margin-right: 10px;
 }
 
+body.rtl .channel-list-wptp .accordion-wptp {
+    text-align: right;
+    direction: ltr;
+}
+
 body.rtl .channel-list-wptp .add-channel {
     float: left;
 }
@@ -312,4 +317,9 @@ body.rtl .channel-list-wptp .add-channel {
 body.rtl .wptp-wrap label {
     margin-right: 0;
     margin-left: 15px;
+}
+
+body.rtl .wptp-wrap .ltr-right {
+    direction: ltr;
+    text-align: right;
 }

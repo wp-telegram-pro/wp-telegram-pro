@@ -224,7 +224,7 @@ class ProxyWPTP extends WPTelegramPro
                 <tr>
                     <td><?php _e('Proxy Type', $this->plugin_key) ?></td>
                     <td>
-                        <fieldset>
+                        <fieldset class="ltr-right">
                             <label>
                                 <input type="radio" value="CURLPROXY_HTTP"
                                        name="proxy_type" <?php checked($proxy_type == 'CURLPROXY_HTTP' || $proxy_type == '' ? true : false) ?>> <?php _e('HTTP', $this->plugin_key) ?>
@@ -290,20 +290,20 @@ class ProxyWPTP extends WPTelegramPro
                 <br><br>
                 <strong><?php _e('How to Deploy', $this->plugin_key) ?></strong>
                 <ol>
-                    <li><?php printf('Goto <a href="%s">script.google.com</a> and sign in if required.', 'https://script.google.com'); ?></li>
-                    <li><?php _e('Create a new project and give it a name.', $this->plugin_key); ?></li>
-                    <li><?php _e('It should open a file (Code.gs by default). Remove the contents of this file.', $this->plugin_key); ?></li>
-                    <li><?php _e('Copy the contents of below code and paste into your project file (Code.gs).', $this->plugin_key); ?></li>
+                    <li><?php printf(__('Goto <a href="%s">script.google.com</a> and sign in if required'), 'https://script.google.com'); ?></li>
+                    <li><?php _e('Create a new project and give it a name', $this->plugin_key); ?></li>
+                    <li><?php _e('It should open a file (Code.gs by default). Remove the contents of this file', $this->plugin_key); ?></li>
+                    <li><?php _e('Copy the contents of below code and paste into your project file (Code.gs)', $this->plugin_key); ?></li>
                     <li><?php _e('Click File > Save or press Ctrl+S', $this->plugin_key); ?></li>
                     <li><?php _e('Click "Publish" from the menu and select "Deploy as web app..."', $this->plugin_key); ?></li>
                     <li><?php _e('If asked, Enter any name for the project and click "OK"', $this->plugin_key); ?></li>
                     <li><?php _e('In "Execute the app as:", select "Me (your email)" [IMPORTANT]', $this->plugin_key); ?></li>
                     <li><?php _e('In "Who has access to the app:", select "Anyone, even anonymous" [IMPORTANT]', $this->plugin_key); ?></li>
-                    <li><?php _e('Click "Deploy" to open the Authorization box.', $this->plugin_key); ?></li>
-                    <li><?php _e('Click "Review Permissions" to authorize the script.', $this->plugin_key); ?></li>
-                    <li><?php _e('In the popup window select your Google Account.', $this->plugin_key); ?></li>
-                    <li><?php _e('On the next screen, click "Allow".', $this->plugin_key); ?></li>
-                    <li><?php _e('After redirection, you should see "This project is now deployed as a web app."', $this->plugin_key); ?></li>
+                    <li><?php _e('Click "Deploy" to open the Authorization box', $this->plugin_key); ?></li>
+                    <li><?php _e('Click "Review Permissions" to authorize the script', $this->plugin_key); ?></li>
+                    <li><?php _e('In the popup window select your Google Account', $this->plugin_key); ?></li>
+                    <li><?php _e('On the next screen, click "Allow"', $this->plugin_key); ?></li>
+                    <li><?php _e('After redirection, you should see "This project is now deployed as a web app"', $this->plugin_key); ?></li>
                     <li><?php _e('Copy the "Current web app URL" and paste it in plugin', $this->plugin_key); ?></li>
                 </ol>
                 </span>

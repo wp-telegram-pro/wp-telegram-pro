@@ -643,7 +643,7 @@ class ChannelWPTP extends WPTelegramPro
                             <input type="number" name="channel_excerpt_length[<?php echo $item['index'] ?>]"
                                    value="<?php echo isset($item['excerpt_length']) ? $item['excerpt_length'] : '' ?>"
                                    placeholder="<?php echo $this->excerpt_length ?>"
-                                   class="excerpt_length ltr"> <?php _e('Words', $this->plugin_key) ?>
+                                   class="excerpt_length ltr"> <?php _e('Word', $this->plugin_key) ?>
                         </td>
                     </tr>
                     <tr>
@@ -663,7 +663,7 @@ class ChannelWPTP extends WPTelegramPro
                         <td>
                             <label><input type="checkbox" class="disable_web_page_preview"
                                           value="1" <?php checked(isset($item['disable_web_page_preview']) ? $item['disable_web_page_preview'] : '', 1) ?>
-                                          name="channel_disable_web_page_preview[<?php echo $item['index'] ?>]"> <?php _e('Disable web page preview', $this->plugin_key) ?>
+                                          name="channel_disable_web_page_preview[<?php echo $item['index'] ?>]"> <?php _e('Disable', $this->plugin_key) ?>
                             </label>
                         </td>
                     </tr>

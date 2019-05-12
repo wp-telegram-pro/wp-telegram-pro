@@ -704,7 +704,7 @@ class WPTelegramPro
             $select .= '<option value="">' . $none_select . '</option>';
         $select .= '<option value="full" ' . selected('full', $selected, false) . '>' . __('Full', $this->plugin_key) . '</option>';
         foreach ($image_sizes as $k => $v)
-            $select .= '<option value="' . $k . '" ' . selected($k, $selected, false) . '>' . (ucwords(str_replace('_', ' ', $k))) . (!empty($v['width']) ? ' (' . $v['width'] . 'x' . $v['height'] . ($v['crop'] ? ', ' . __('Crop', $this->plugin_key) : '') . ')' : '') . '</option>';
+            $select .= '<option value="' . $k . '" ' . selected($k, $selected, false) . '>' . __(ucwords(str_replace('_', ' ', $k))) . (!empty($v['width']) ? ' (' . $v['width'] . 'x' . $v['height'] . ($v['crop'] ? ', ' . __('Crop', $this->plugin_key) : '') . ')' : '') . '</option>';
         $select .= '</select>';
         return $select;
     }

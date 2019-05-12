@@ -2,780 +2,919 @@
 # This file is distributed under the same license as the Plugins - WP Telegram Pro - Stable (latest release) package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Plugins - WP Telegram Pro - Stable (latest release)\n"
-"POT-Creation-Date: 2019-04-13 03:28+0430\n"
-"PO-Revision-Date: 2019-04-13 14:28+0430\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: fa\n"
+"PO-Revision-Date: 2019-05-12 00:49+0430\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 2.2.1\n"
-"X-Poedit-KeywordsList: __;_e\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-SearchPath-0: .\n"
+"Language: fa\n"
+"Project-Id-Version: Plugins - WP Telegram Pro - Stable (latest release)\n"
+"POT-Creation-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
 
-#: WPTelegramPro.php:51
-msgid "WP Telegram Pro"
-msgstr "WP Telegram Pro"
+#: inc/ChannelWPTP.php:500
+msgid "Least 5 minutes recommended."
+msgstr "حداقل 5 دقیقه پیشنهاد می‌شود."
 
-#: WPTelegramPro.php:78 inc/ChannelWPTP.php:327 inc/ChannelWPTP.php:359
-#: inc/ChannelWPTP.php:573
-msgid "Yes"
-msgstr "بله"
+#: inc/ChannelWPTP.php:493
+msgid "Delay in send"
+msgstr "تاخیر در ارسال"
 
-#: WPTelegramPro.php:79 inc/ChannelWPTP.php:332 inc/ChannelWPTP.php:364
-msgid "No"
-msgstr "خیر"
+#: inc/ProxyWPTP.php:307
+msgid "Copy the \"Current web app URL:\" and paste it in your app or plugin"
+msgstr "مقدار \"Current web app URL:\" را کپی و در افزونه قرار دهید"
 
-#: WPTelegramPro.php:80
-msgid "Next >"
-msgstr "بعدی »"
+#: inc/ProxyWPTP.php:306
+msgid "After redirection, you should see \"This project is now deployed as a web app.\""
+msgstr "بعد از هدایت به صفحه، شما باید \"This project is now deployed as a web app.\" را ببینید"
 
-#: WPTelegramPro.php:81
-msgid "< Previous"
-msgstr "« قبلی"
+#: inc/ProxyWPTP.php:305
+msgid "On the next screen, click \"Allow\"."
+msgstr "در صفحه بعد، برروی \"Allow\" کلیک کنید."
 
-#: WPTelegramPro.php:82
-msgid "Next Page >"
-msgstr "صفحه بعدی »"
+#: inc/ProxyWPTP.php:304
+msgid "In the popup window select your Google Account."
+msgstr "در پنجره باز شده حساب کاربری گوگل خود را انتخاب کنید."
 
-#: WPTelegramPro.php:83
-msgid "< Previous Page"
-msgstr "« صفحه قبلی"
+#: inc/ProxyWPTP.php:303
+msgid "Click \"Review Permissions\" to authorize the script."
+msgstr "برای مجوز دادن به اسکریپت برروی \"Review Permissions\" کلیک کنید."
 
-#: WPTelegramPro.php:84
-msgid "Back"
-msgstr "بازگشت"
+#: inc/ProxyWPTP.php:302
+msgid "Click \"Deploy\" to open the Authorization box."
+msgstr "برای بازد شدن جعبه تایید مجوز برروی \"Deploy\" کلیک کنید."
 
-#: WPTelegramPro.php:85 inc/WordPressWPTP.php:61
-msgid "Posts"
-msgstr "نوشته‌ها"
+#: inc/ProxyWPTP.php:301
+msgid "In \"Who has access to the app:\", select \"Anyone, even anonymous\" [IMPORTANT]"
+msgstr "در \"Who has access to the app:\"، گزینه \"Anyone, even anonymous\" را انتخاب کنید [مهم]"
 
-#: WPTelegramPro.php:86 inc/WordPressWPTP.php:63 inc/WordPressWPTP.php:466
-msgid "Search"
-msgstr "جستجو"
+#: inc/ProxyWPTP.php:300
+msgid "In \"Execute the app as:\", select \"Me (your email)\" [IMPORTANT]"
+msgstr "در \"Execute the app as:\"، گزینه \"Me (ایمیل شما)\" را انتخاب کنید [مهم]"
 
-#: WPTelegramPro.php:87
-msgid "Categories"
-msgstr "دسته‌ها"
+#: inc/ProxyWPTP.php:299
+msgid "If asked, Enter any name for the project and click \"OK\""
+msgstr "در صورت درخواست، هر نامی را برای پروژه وارد کنید و روی \"OK\" کلیک کنید"
 
-#: WPTelegramPro.php:88 inc/WoocommerceWPTP.php:22
-msgid "Detail"
-msgstr "جزییات"
+#: inc/ProxyWPTP.php:298
+msgid "Click \"Publish\" from the menu and select \"Deploy as web app...\""
+msgstr "از منوی \"Publish\" گزینه \"Deploy as web app...\" را انتخاب کنید"
 
-#: WPTelegramPro.php:89
-msgid "More"
-msgstr "بیشتر"
+#: inc/ProxyWPTP.php:297
+msgid "Click File > Save or press Ctrl+S"
+msgstr "منوی File » گزینه Save یا کلیدهای Ctrl+S فشار دهید"
 
-#: WPTelegramPro.php:112
-msgid "Help"
-msgstr "راهنما"
+#: inc/ProxyWPTP.php:296
+msgid "Copy the contents of below code and paste into your project file (Code.gs)."
+msgstr "محتوای کدهای زیر را کپی و در فایل پروژه خود بچسبانید (Code.gs)."
 
-#: WPTelegramPro.php:113
-msgid "About"
-msgstr "درباره"
+#: inc/ProxyWPTP.php:295
+msgid "It should open a file (Code.gs by default). Remove the contents of this file."
+msgstr "باید فایل را باز کند (پیشفرض Code.gs). محتویات این فایل را حذف کنید."
 
-#: WPTelegramPro.php:125
-msgid "Default command list:"
-msgstr "لیست دستورهای پیشفرض:"
+#: inc/ProxyWPTP.php:294
+msgid "Create a new project and give it a name."
+msgstr "یک پروژه جدید ایجاد کنید و نام برای آن انتخاب کنید."
 
-#: WPTelegramPro.php:138
-#, php-format
-msgid ""
-"How to set bot commands: Start %s and select your bot > \"Edit Bot\" > \"Edit "
-"Commands\" > Send text below."
-msgstr ""
-"چگونه دستورهای بات را تنظیم کنیم: با شروع %s و انتخاب بات خود » دکمه \"Edit Bot\" » "
-"دکمه \"Edit Commands\" » متن زیر را ارسال کنید."
+#: inc/ProxyWPTP.php:291
+msgid "How to Deploy"
+msgstr "نحوه استفاده"
 
-#: WPTelegramPro.php:151 inc/ChannelWPTP.php:427
-msgid "Channel"
-msgstr "کانال"
+#: inc/ProxyWPTP.php:288
+msgid "You can use this script to bypass the bans on Telegram API by different hosts. Simply send the request to this script instead of the Telegram Bot API after deploying it as a web app and allowing anonymous access."
+msgstr "شما می‌توانید از این اسکریپت برای جلوگیری از ممنوعیت Telegram API توسط میزبان‌های مختلف استفاده کنید. به سادگی درخواست به این اسکریپت مانند Telegram Bot API است، بعد از استقرار به عنوان برنامه وب و دادن مجوز دسترسی افراد ناشناس."
 
-#: WPTelegramPro.php:154
-msgid ""
-"Telegram channel is a great way for attracting people to your site.<br> This option "
-"allows you to send posts to your Telegram channel."
-msgstr ""
-"کانال تلگرام روش خوبی برای جذب افراد به سایت شما است.<br>با این گزینه شما می‌توانید "
-"نوشته‌های خود را به کانال تلگرام ارسال کنید."
+#: inc/ProxyWPTP.php:194
+msgid "See help tab"
+msgstr "زبانه راهنما را ببینید"
 
-#: WPTelegramPro.php:157
-msgid "Create a channel (if you don't already have one)."
-msgstr "کانالی ایجاد کنید (اگر در حال حاضر ندارید)"
+#: WPTelegramPro.php:827
+msgid "The plugin requires SSL in the domain of your website!"
+msgstr "افزونه نیاز به SSL برای دامنه سایت شما دارد!"
 
-#: WPTelegramPro.php:158
-msgid "Create a bot (if you don't already have one)."
-msgstr "باتی ایجاد کنید (اگر در حال حاضر ندارید)"
+#: inc/ProxyWPTP.php:264
+msgid "Password"
+msgstr "رمزعبور"
 
-#: WPTelegramPro.php:159
-msgid "Go to channel options and select 'Administrator' option."
-msgstr "به تنظیمات کانال بروید و گزینه 'Administrator' را انتخاب کنید."
+#: inc/ProxyWPTP.php:259 inc/ProxyWPTP.php:270
+msgid "Leave empty if not required"
+msgstr "اگر ضروری نیست، خالی بگذارید"
 
-#: WPTelegramPro.php:160
-msgid "Select 'Add Administrator' option."
-msgstr "گزینه 'Add Administrator' را انتخاب کنید."
+#: inc/ProxyWPTP.php:253
+msgid "Username"
+msgstr "نام کاربری"
 
-#: WPTelegramPro.php:161
-msgid "Search the username of your bot and add it as administrator."
-msgstr "نام‌کاربری بات خود را جستجو کنید و به عنوان Administrator به کانال اضافه کنید."
+#: inc/ProxyWPTP.php:246
+msgid "SOCKS5_HOSTNAME"
+msgstr "SOCKS5_HOSTNAME"
 
-#: WPTelegramPro.php:162
-msgid "Allow 'Post Messages' Permission"
-msgstr "مجوز 'Post Messages' را بدهید"
+#: inc/ProxyWPTP.php:242
+msgid "SOCKS5"
+msgstr "SOCKS5"
 
-#: WPTelegramPro.php:163
-msgid "Enter the username of the channel and hit SAVE button!!!"
-msgstr "نام کاربری کانال را وارد کنید و دکمه ذخیره را فشار دهید!"
+#: inc/ProxyWPTP.php:238
+msgid "SOCKS4A"
+msgstr "SOCKS4A"
 
-#: WPTelegramPro.php:164
-msgid ""
-"Yes! Now, whenever you publish or update a post you can choose whether send it to "
-"Telegram (from post editor page)"
-msgstr ""
-"بله! اکنون هر وقت نوشته‌ای را منتشر یا بروز می‌کنید، می‌توانید انتخاب کنید چگونه به "
-"تلگرام ارسال شود (از برگه ویرایش نوشته)"
+#: inc/ProxyWPTP.php:234
+msgid "SOCKS4"
+msgstr "SOCKS4"
 
-#: WPTelegramPro.php:179
-msgid "Integrate WordPress with Telegram"
-msgstr "یکپارچه‌سازی وردپرس با تلگرام"
+#: inc/ProxyWPTP.php:230
+msgid "HTTP"
+msgstr "HTTP"
 
-#: WPTelegramPro.php:181
-msgid "Do you like WP Telegram Pro?"
-msgstr "WP Telegram Pro را دوست دارید؟"
+#: inc/ProxyWPTP.php:225
+msgid "Proxy Type"
+msgstr "نوع پروکسی"
 
-#: WPTelegramPro.php:184
-msgid "Give it a rating"
-msgstr "امتیاز دهید"
+#: inc/ProxyWPTP.php:221
+msgid "Target Port like 8080"
+msgstr "شماره پورت مانند 8080"
 
-#: WPTelegramPro.php:189
-msgid "Keep in touch with me:"
-msgstr "با من در تماس باشید:"
+#: inc/ProxyWPTP.php:215
+msgid "Proxy Port"
+msgstr "پورت پروکسی"
 
-#: WPTelegramPro.php:239
-msgid "Bot Name:"
-msgstr "نام بات:"
+#: inc/ProxyWPTP.php:210
+msgid "Host IP or domain name like 192.168.55.124"
+msgstr "IP هاست یا نام دامنه مانند 192.168.55.124"
 
-#: WPTelegramPro.php:241
-msgid "API Token Invalid (Need to save settings)"
-msgstr "کلید API معتبر نیست (نیازمند ذخیره تنظیمات)"
+#: inc/ProxyWPTP.php:204
+msgid "Proxy Host"
+msgstr "هاست پروکسی"
 
-#: WPTelegramPro.php:256 inc/WoocommerceWPTP.php:987
-msgid "Welcome, your user is successfully connected to the store."
-msgstr "خوش‌ آمدید، کاربری شما با موفقیت به فروشگاه متصل شد."
+#: inc/ProxyWPTP.php:193
+msgid "The requests to Telegram will be sent via your Google Script."
+msgstr "ارسال درخواست به تلگرام از گوگل اسکریپت شما انجام می‌شود."
 
-#: WPTelegramPro.php:291 inc/ChannelWPTP.php:518
-msgid "New Channel"
-msgstr "کانال جدید"
+#: inc/ProxyWPTP.php:187
+msgid "Google Script URL"
+msgstr "نشانی گوگل اسکریپت"
 
-#: WPTelegramPro.php:292
-msgid "Remove % Channel?"
-msgstr "حذف کانال %؟"
+#: inc/ProxyWPTP.php:176
+msgid "PHP Proxy"
+msgstr "پروکسی PHP"
 
-#: WPTelegramPro.php:318
-msgid "Settings saved."
-msgstr "تنظیمات ذخیره شد."
+#: inc/ProxyWPTP.php:172 inc/ProxyWPTP.php:285
+msgid "Google Script"
+msgstr "گوگل اسکریپت"
 
-#: WPTelegramPro.php:362
-msgid "Save"
-msgstr "ذخیره"
+#: inc/ProxyWPTP.php:168
+msgid "Deactive"
+msgstr "غیرفعال"
 
-#: WPTelegramPro.php:697
-msgid "Full"
-msgstr "کامل"
+#: inc/ProxyWPTP.php:160
+msgid "Use the proxy at your own risk!"
+msgstr "خطر استفاده از پروکسی برعهده شماست!"
 
-#: WPTelegramPro.php:699
-msgid "Crop"
-msgstr "بُرِش خورده"
+#: inc/ProxyWPTP.php:159
+msgid "DISCLAIMER"
+msgstr "سلب مسئولیت"
 
-#: WPTelegramPro.php:740
-msgid "- Category Select -"
-msgstr "- انتخاب دسته -"
+#: inc/ProxyWPTP.php:146 inc/ProxyWPTP.php:163
+msgid "Proxy"
+msgstr "پروکسی"
 
-#: WPTelegramPro.php:796
-msgid "Every % Minutes"
-msgstr "هر % دقیقه"
+#: inc/WoocommerceWPTP.php:477
+msgid "Empty the cart"
+msgstr "خالی کردن سبد"
 
-#: inc/ChannelWPTP.php:320
-msgid "Send to Channel"
-msgstr "ارسال به کانال"
+#: inc/WordPressWPTP.php:498
+msgid "You should update keyboard for users when change WordPress language, active Woocommerce plugin, search setting changed. (Status don't save)"
+msgstr "در هر زمانی که زبان وردپرس را تغییر داید، یا افزونه ووکامرس را فعال کردید، یا تظیمات جستجو را تغییر دادید نیاز هست که کیبورد را بروز کنید. (وضعیت این گزینه ذخیره نمی‌شود)"
 
-#: inc/ChannelWPTP.php:339 inc/ChannelWPTP.php:556
-msgid "Message Pattern"
-msgstr "الگوی پیام"
+#: inc/WordPressWPTP.php:490
+msgid "Force update keyboard"
+msgstr "بروزرسانی اجباری کیبورد"
 
-#: inc/ChannelWPTP.php:352
-msgid "Attache featured Image"
-msgstr "پیوست تصویر شاخص"
+#: inc/WordPressWPTP.php:486
+msgid "Telegram Keyboard"
+msgstr "کیبورد تلگرام"
 
-#: inc/ChannelWPTP.php:385
+#: inc/WordPressWPTP.php:297
+msgid "Welcome!"
+msgstr "خوش‌آمدید!"
+
+#: inc/WordPressWPTP.php:283 inc/WordPressWPTP.php:495
+msgid "Update"
+msgstr "بروزرسانی"
+
+#: inc/WordPressWPTP.php:148
+msgid "Post"
+msgstr "نوشته"
+
+#: inc/WordPressWPTP.php:123
+msgid "IF Statement for custom field, Example: {if='cf:price'}Price: {cf:price}{/if}"
+msgstr "شرط برای زمینه دلخواه، نمونه: {if='cf:price'}Price: {cf:price}{/if}"
+
+#: inc/WordPressWPTP.php:122
+msgid "The Taxonomy Terms of this post: {terms:taxonomy}, Example {terms:category}"
+msgstr "مقدارهای تاکسونامی این نوشته: {terms:taxonomy}، نمونه: {terms:category}"
+
+#: inc/WordPressWPTP.php:121
+msgid "The custom field of this post, Example {cf:price}"
+msgstr "زمینه دلخواه این نوشته، نمونه {cf:price}"
+
+#: inc/ChannelWPTP.php:413
 msgid "[Set 'channel' attribute]"
 msgstr "[مشخصه 'channel' را تنظیم کنید]"
 
-#: inc/ChannelWPTP.php:398
-msgid "[API Token or Channel Username Invalid]"
-msgstr "[کلید API یا نام‌کاربری معتبر نیست]"
-
-#: inc/ChannelWPTP.php:411
-msgid "Channel Member Count:"
-msgstr "تعداد اعضای کانال:"
-
-#: inc/ChannelWPTP.php:413
-msgid ""
-"API Token or Channel Username Invalid, It may not have access to the channel! (Read "
-"Help)"
-msgstr ""
-"کلید API یا نام‌کاربری معتبر نیست، شاید امکان دسترسی به کانال وجود ندارد! (راهنما را "
-"بخوانید)"
-
-#: inc/ChannelWPTP.php:440
-msgid "Send to Channels"
-msgstr "ارسال به کانال"
-
-#: inc/ChannelWPTP.php:445 inc/ChannelWPTP.php:540 inc/WoocommerceWPTP.php:477
-#: inc/WoocommerceWPTP.php:487 inc/WordPressWPTP.php:461
-msgid "Active"
-msgstr "فعال"
-
-#: inc/ChannelWPTP.php:451
-msgid "Check send every"
-msgstr "بررسی ارسال هر"
-
-#: inc/ChannelWPTP.php:457
-msgid "Minutes"
-msgstr "دقیقه"
-
-#: inc/ChannelWPTP.php:458
-#, php-format
-msgid "Work with <a href=\"%s\" target=\"_blank\">WP-Cron</a>"
-msgstr "اجرا توسط <a href=\"%s\" target=\"_blank\">WP-Cron</a>"
-
-#: inc/ChannelWPTP.php:506
-msgid "Add Channel"
-msgstr "افزودن کانال"
-
-#: inc/ChannelWPTP.php:523
-msgid "Channel Username"
-msgstr "نام‌کاربری کانال"
-
-#: inc/ChannelWPTP.php:535
-msgid "Send to channel (Default)"
-msgstr "ارسال به کانال (پیشفرض)"
-
-#: inc/ChannelWPTP.php:545
-msgid "Active on PostType"
-msgstr "فعال در نوع نوشته"
-
-#: inc/ChannelWPTP.php:568
-msgid "With featured image?"
-msgstr "همراه تصویر شاخص؟"
-
-#: inc/ChannelWPTP.php:579
-msgid "Formatting messages"
-msgstr "قالب‌بندی پیام‌ها"
-
-#: inc/ChannelWPTP.php:582
-msgid ""
-"Telegram supports basic markdown and some HTML tags (bold, italic, inline links). "
-"By checking one of the following options, your messages will be compatible with "
-"Telegram format."
-msgstr ""
-"تلگرام از زبان نشانه‌گذاری/Markdown و چندی از HTML Tags (ضخیم, کج, لینک) پشتیبانی "
-"می‌کند. با انتخاب هر گزینه زیر، پیام شما با قالب تلگرام سازگار می‌شود."
-
-#: inc/ChannelWPTP.php:584
-msgid "Telegram Bot API"
-msgstr "API بات تلگرام"
-
-#: inc/ChannelWPTP.php:588
-msgid "Simple"
-msgstr "ساده"
-
-#: inc/ChannelWPTP.php:589
-msgid "Markdown"
-msgstr "Markdown (زبان نشانه‌گذاری)"
-
-#: inc/ChannelWPTP.php:590
-msgid "HTML"
-msgstr "HTML"
-
-#: inc/ChannelWPTP.php:596
-msgid "Excerpt length"
-msgstr "طول چکیده متن"
-
-#: inc/ChannelWPTP.php:602
-msgid "Words"
-msgstr "کلمه"
-
-#: inc/ChannelWPTP.php:607
-msgid "Web page preview in messages"
-msgstr "پیش‌نمایش لینک در پیام‌ها"
-
-#: inc/ChannelWPTP.php:612
-msgid "Disable web page preview"
-msgstr "غیرفعال کردن پیش‌نمایش لینک‌ها"
-
-#: inc/ChannelWPTP.php:645
-msgid "- Select a Tag -"
-msgstr "- برچسبی را انتخاب کنید -"
-
-#: inc/WoocommerceWPTP.php:42 inc/WoocommerceWPTP.php:64
-msgid "Products"
-msgstr "محصولات"
-
-#: inc/WoocommerceWPTP.php:43
-msgid "Product Categories List"
-msgstr "لیست دسته‌های محصول"
-
-#: inc/WoocommerceWPTP.php:44 inc/WoocommerceWPTP.php:66
-msgid "Cart"
-msgstr "سبدخرید"
-
-#: inc/WoocommerceWPTP.php:65
-msgid "Product Categories"
-msgstr "دسته‌های محصول"
-
-#: inc/WoocommerceWPTP.php:67
-msgid "Checkout"
-msgstr "پرداخت"
-
-#: inc/WoocommerceWPTP.php:68
-msgid "Your cart is empty."
-msgstr "سبدخرید شما خالی است."
-
-#: inc/WoocommerceWPTP.php:69
-msgid "Empty Cart?"
-msgstr "خالی کردن سبدخرید؟"
-
-#: inc/WoocommerceWPTP.php:70
-msgid "Cart has been empty."
-msgstr "سبدخرید خالی است."
-
-#: inc/WoocommerceWPTP.php:71
-msgid "Refresh Cart"
-msgstr "بروزرسانی سبدخرید"
-
-#: inc/WoocommerceWPTP.php:72
-msgid "In stock"
-msgstr "موجود هست"
-
-#: inc/WoocommerceWPTP.php:73
-msgid "Out of stock"
-msgstr "موجود نیست"
-
-#: inc/WoocommerceWPTP.php:199
-msgid "WooCommerce Tags"
-msgstr "برچسب‌های ووکامرس"
-
-#: inc/WoocommerceWPTP.php:202
-msgid "The price of this product"
-msgstr "قیمت محصول"
-
-#: inc/WoocommerceWPTP.php:203
-msgid "The regular price of this product"
-msgstr "قیمت عادی محصول"
-
-#: inc/WoocommerceWPTP.php:204
-msgid "The sale price of this product"
-msgstr "قیمت حراجی محصول"
-
-#: inc/WoocommerceWPTP.php:205
-msgid "The width of this product"
-msgstr "عرض محصول"
-
-#: inc/WoocommerceWPTP.php:206
-msgid "The length of this product"
-msgstr "طول محصول"
-
-#: inc/WoocommerceWPTP.php:207
-msgid "The height of this product"
-msgstr "ارتفاع محصول"
-
-#: inc/WoocommerceWPTP.php:208
-msgid "The weight of this product"
-msgstr "وزن محصول"
-
-#: inc/WoocommerceWPTP.php:209
-msgid "The dimensions of this product"
-msgstr "اندازه محصول"
-
-#: inc/WoocommerceWPTP.php:210
-msgid "The average rating of this product"
-msgstr "متوسط امتیاز محصول"
-
-#: inc/WoocommerceWPTP.php:211
-msgid "The SKU (Stock Keeping Unit) of this product"
-msgstr "واحد انبارداری محصول (SKU)"
-
-#: inc/WoocommerceWPTP.php:212
-msgid "Is this product downloadable? (Yes or No)"
-msgstr "این محصول قابل دانلود هست؟ (بله یا خیر)"
-
-#: inc/WoocommerceWPTP.php:213
-msgid "Is this product virtual? (Yes or No)"
-msgstr "این محصول مجازی هست؟ (بله یا خیر)"
-
-#: inc/WoocommerceWPTP.php:214
-msgid "Is this product sold individually? (Yes or No)"
-msgstr "این محصول به صورت تکی فروش میرود؟ (بله یا خیر)"
-
-#: inc/WoocommerceWPTP.php:215
-msgid "The tax status of this product"
-msgstr "وضعیت مالیات محصول"
-
-#: inc/WoocommerceWPTP.php:216
-msgid "The tax class of this product"
-msgstr "دسته مالیات محصول"
-
-#: inc/WoocommerceWPTP.php:217
-msgid "The stock amount of this product"
-msgstr "تعداد موجودی محصول"
-
-#: inc/WoocommerceWPTP.php:218
-msgid "The stock status of this product"
-msgstr "وضعیت موجودی محصول"
-
-#: inc/WoocommerceWPTP.php:219
-msgid "Whether or not backorders allowed?"
-msgstr "اجازه پیش‌ فروش محصول؟"
-
-#: inc/WoocommerceWPTP.php:220
-msgid "Is this a featured product? (Yes or No)"
-msgstr "این محصول شاخص است؟ (بله یا خیر)"
-
-#: inc/WoocommerceWPTP.php:221
-msgid "Is this product visible? (Yes or No)"
-msgstr "این محصول قالب نمایش است؟ (بله یا خیر)"
-
-#: inc/WoocommerceWPTP.php:296
-msgid "Galleries"
-msgstr "گالری"
-
-#: inc/WoocommerceWPTP.php:313
-msgid "Back to Product"
-msgstr "برگشت به محصول"
-
-#: inc/WoocommerceWPTP.php:323 inc/WoocommerceWPTP.php:353 inc/WoocommerceWPTP.php:363
-msgid "The product does not exist"
-msgstr "محصول یافت نشد"
-
-#: inc/WoocommerceWPTP.php:334
-msgid "Remove from Cart:"
-msgstr "حذف از سبدخرید:"
-
-#: inc/WoocommerceWPTP.php:337
-msgid "Add to Cart:"
-msgstr "افزودن به سبدخرید:"
-
-#: inc/WoocommerceWPTP.php:339
-msgid "Please select product variations:"
-msgstr "متغیرهای محصول را انتخاب کنید:"
-
-#: inc/WoocommerceWPTP.php:359
-msgid "Product"
-msgstr "محصول"
-
-#: inc/WoocommerceWPTP.php:373 inc/WordPressWPTP.php:343
-msgid "Page"
-msgstr "برگه"
-
-#: inc/WoocommerceWPTP.php:396 inc/WordPressWPTP.php:365
+#: inc/WordPressWPTP.php:368 inc/WoocommerceWPTP.php:404
 msgid "Category"
 msgstr "دسته"
 
-#: inc/WoocommerceWPTP.php:400
-msgid "Product Category Invalid!"
-msgstr "دسته محصول معتبر نیست!"
+#: inc/WordPressWPTP.php:346 inc/WoocommerceWPTP.php:381
+msgid "Page"
+msgstr "برگه"
 
-#: inc/WoocommerceWPTP.php:438
-msgid "WooCommerce"
-msgstr "ووکامرس"
+#: inc/WoocommerceWPTP.php:367
+msgid "Product"
+msgstr "محصول"
 
-#: inc/WoocommerceWPTP.php:450
-msgid "Products Per Page"
-msgstr "محصولات در هر برگه"
+#: inc/WoocommerceWPTP.php:298
+msgid "Galleries"
+msgstr "گالری"
 
-#: inc/WoocommerceWPTP.php:458
-msgid "Exclude Categories"
-msgstr "دسته‌های استثنا"
+#: WPTelegramPro.php:88
+msgid "< Previous Page"
+msgstr "« صفحه قبلی"
 
-#: inc/WoocommerceWPTP.php:464
-msgid "Exclude Display Categories"
-msgstr "نمایش ندادن دسته‌ها"
+#: WPTelegramPro.php:87
+msgid "Next Page >"
+msgstr "صفحه بعدی »"
 
-#: inc/WoocommerceWPTP.php:469
-msgid "Empty the cart"
-msgstr "سبدخرید را خالی کن"
+#: WPTelegramPro.php:86
+msgid "< Previous"
+msgstr "« قبلی"
 
-#: inc/WoocommerceWPTP.php:473
-msgid "After Redirect to Cart Page"
-msgstr "بعد از هدایت کاربر به سبدخرید"
+#: WPTelegramPro.php:85
+msgid "Next >"
+msgstr "بعدی »"
 
-#: inc/WoocommerceWPTP.php:483
-msgid "After Payment Complete"
-msgstr "بعد از کامل شدن پرداخت"
+#: inc/ChannelWPTP.php:426
+msgid "[API Token or Channel Username Invalid]"
+msgstr "[کلید API یا نام‌کاربری معتبر نیست]"
 
-#: inc/WoocommerceWPTP.php:492
-msgid "Display"
-msgstr "نمایش"
+#: inc/ChannelWPTP.php:686
+msgid "- Select a Tag -"
+msgstr "- برچسبی را انتخاب کنید -"
 
-#: inc/WoocommerceWPTP.php:495
-msgid "Meta Data"
-msgstr "دیگر داده‌ها"
+#: inc/ChannelWPTP.php:654
+msgid "Disable web page preview"
+msgstr "غیرفعال کردن پیش‌نمایش لینک‌ها"
 
-#: inc/WoocommerceWPTP.php:498 inc/WoocommerceWPTP.php:838
-msgid "Weight"
-msgstr "وزن"
+#: inc/ChannelWPTP.php:649
+msgid "Web page preview in messages"
+msgstr "پیش‌نمایش لینک در پیام‌ها"
 
-#: inc/WoocommerceWPTP.php:501 inc/WoocommerceWPTP.php:842
-msgid "Dimensions"
-msgstr "اندازه"
+#: inc/ChannelWPTP.php:644
+msgid "Words"
+msgstr "کلمات"
 
-#: inc/WoocommerceWPTP.php:504
-msgid "Attributes"
-msgstr "خواص"
+#: inc/ChannelWPTP.php:638
+msgid "Excerpt length"
+msgstr "طول چکیده متن"
 
-#: inc/WoocommerceWPTP.php:507
-msgid "Rating"
-msgstr "امتیاز"
+#: inc/ChannelWPTP.php:632
+msgid "HTML"
+msgstr "HTML"
 
-#: inc/WoocommerceWPTP.php:512
-msgid "Keyboard"
-msgstr "کیبورد"
+#: inc/ChannelWPTP.php:631
+msgid "Markdown"
+msgstr "Markdown (زبان نشانه‌گذاری)"
 
-#: inc/WoocommerceWPTP.php:515
-msgid "Gallery Button"
-msgstr "دکمه گالری"
+#: inc/ChannelWPTP.php:630
+msgid "Simple"
+msgstr "ساده"
 
-#: inc/WoocommerceWPTP.php:518
-msgid "Category Buttons"
-msgstr "دکمه دسته"
+#: inc/ChannelWPTP.php:626
+msgid "Telegram Bot API"
+msgstr "API بات تلگرام"
 
-#: inc/WoocommerceWPTP.php:618 inc/WoocommerceWPTP.php:624
-msgid "Select"
-msgstr "انتخاب"
+#: inc/ChannelWPTP.php:624
+msgid "Telegram supports basic markdown and some HTML tags (bold, italic, inline links). By checking one of the following options, your messages will be compatible with Telegram format."
+msgstr "تلگرام از زبان نشانه‌گذاری/Markdown و چندی از HTML Tags (ضخیم, کج, لینک) پشتیبانی می‌کند. با انتخاب هر گزینه زیر، پیام شما با قالب تلگرام سازگار می‌شود."
 
-#: inc/WoocommerceWPTP.php:826 inc/WordPressWPTP.php:268
-msgid "Your request without result!"
-msgstr "درخواست شما پاسخی ندارد!"
+#: inc/ChannelWPTP.php:621
+msgid "Formatting messages"
+msgstr "قالب‌بندی پیام‌ها"
 
-#: inc/WoocommerceWPTP.php:841
-msgid "N/A"
-msgstr "N/A"
+#: inc/ChannelWPTP.php:610
+msgid "With featured image?"
+msgstr "همراه تصویر شاخص؟"
 
-#: inc/WordPressWPTP.php:37
-msgid "User connect to:"
-msgstr "اتصال کاربر به:"
+#: inc/ChannelWPTP.php:587
+msgid "Active on PostType"
+msgstr "فعال در نوع نوشته"
 
-#: inc/WordPressWPTP.php:60
-msgid "Start Bot"
-msgstr "شروع بات"
+#: inc/ChannelWPTP.php:577
+msgid "Send to channel (Default)"
+msgstr "ارسال به کانال (پیشفرض)"
 
-#: inc/WordPressWPTP.php:62
-msgid "Categories List"
-msgstr "لیست دسته‌ها"
+#: inc/ChannelWPTP.php:565
+msgid "Channel Username"
+msgstr "نام‌کاربری کانال"
 
-#: inc/WordPressWPTP.php:91
-msgid "Set Webhook Successfully."
-msgstr "وب‌هوک با موفقیت تنظیم شد."
+#: inc/ChannelWPTP.php:548
+msgid "Add Channel"
+msgstr "افزودن کانال"
+
+#: inc/ChannelWPTP.php:487
+msgid "Work with <a href=\"%s\" target=\"_blank\">WP-Cron</a>."
+msgstr "اجرا با <a href=\"%s\" target=\"_blank\">WP-Cron</a>."
+
+#: inc/ChannelWPTP.php:485 inc/ChannelWPTP.php:499
+msgid "Minutes"
+msgstr "دقیقه"
+
+#: inc/ChannelWPTP.php:479
+msgid "Check send every"
+msgstr "بررسی ارسال هر"
+
+#: inc/ChannelWPTP.php:468
+msgid "Send to Channels"
+msgstr "ارسال به کانال"
+
+#: inc/ChannelWPTP.php:441
+msgid "API Token or Channel Username Invalid, It may not have access to the channel! (Read Help)"
+msgstr "کلید API یا نام‌کاربری معتبر نیست، شاید امکان دسترسی به کانال وجود ندارد! (راهنما را بخوانید)"
+
+#: inc/ChannelWPTP.php:439
+msgid "Channel Member Count:"
+msgstr "تعداد اعضای کانال:"
+
+#: inc/ChannelWPTP.php:380
+msgid "Attache featured Image"
+msgstr "پیوست تصویر شاخص"
+
+#: inc/ChannelWPTP.php:367 inc/ChannelWPTP.php:598
+msgid "Message Pattern"
+msgstr "الگوی پیام"
+
+#: inc/ChannelWPTP.php:348
+msgid "Send to Channel"
+msgstr "ارسال به کانال"
+
+#: inc/WordPressWPTP.php:473
+msgid "Post Type"
+msgstr "نوع نوشته"
+
+#: inc/WordPressWPTP.php:456
+msgid "Notification"
+msgstr "اطلاع‌رسانی"
+
+#: inc/WordPressWPTP.php:448
+msgid "Start Command<br>(Welcome Message)"
+msgstr "دستور شروع<br>(پیام خوش‌آمدگویی)"
+
+#: inc/WordPressWPTP.php:444
+msgid "Messages"
+msgstr "پیامها"
+
+#: inc/WordPressWPTP.php:439
+msgid "Image Size"
+msgstr "اندازه تصویر"
+
+#: inc/WordPressWPTP.php:431
+msgid "Posts Per Page"
+msgstr "تعداد نوشته در هر برگه"
+
+#: inc/WordPressWPTP.php:421
+msgid "Telegram Bot API Token"
+msgstr "کلید API بات تلگرام"
+
+#: inc/WordPressWPTP.php:409
+msgid "WordPress"
+msgstr "وردپرس"
+
+#: inc/WordPressWPTP.php:402
+msgid "Not Found Comment!"
+msgstr "نظری پیدا نشد!"
+
+#: inc/WordPressWPTP.php:394
+msgid "Spam"
+msgstr "جفنگ"
+
+#: inc/WordPressWPTP.php:392
+msgid "Approve"
+msgstr "تایید"
+
+#: inc/WordPressWPTP.php:390
+msgid "Unapprove"
+msgstr "تایید نکردن"
+
+#: inc/WordPressWPTP.php:387
+msgid "Restore from Trash"
+msgstr "بازگردانی از زباله‌دان"
+
+#: inc/WordPressWPTP.php:384
+msgid "Trash"
+msgstr "زباله‌دان"
+
+#: inc/WordPressWPTP.php:381
+msgid "New Status:"
+msgstr "وضعیت جدید:"
+
+#: inc/WordPressWPTP.php:372
+msgid "Post Category Invalid!"
+msgstr "دسته نوشته معتبر نیست!"
+
+#: inc/WordPressWPTP.php:303
+msgid "Enter word for search:"
+msgstr "واژه‌ای برای جستجو وارد کنید:"
+
+#: inc/WordPressWPTP.php:155
+msgid "Comment"
+msgstr "دیدگاه"
+
+#: inc/WordPressWPTP.php:153
+msgid "Website"
+msgstr "وبسایت"
+
+#: inc/WordPressWPTP.php:151
+msgid "Email"
+msgstr "ایمیل"
+
+#: inc/WordPressWPTP.php:149
+msgid "Author"
+msgstr "نویسنده"
+
+#: inc/WordPressWPTP.php:147 inc/WordPressWPTP.php:460
+msgid "New Comment"
+msgstr "دیدگاه جدید"
+
+#: inc/WordPressWPTP.php:120
+msgid "The featured image URL"
+msgstr "لینک تصویر شاخص"
+
+#: inc/WordPressWPTP.php:119
+msgid "The categories of this post. Categories are automatically separated by | symbol"
+msgstr "دسته‌های نوشته، دسته‌ها به صورت خودکار با حرف | جدا می‌شوند"
+
+#: inc/WordPressWPTP.php:118
+msgid "The tags of this post. Tags are automatically converted to Telegram hashtags"
+msgstr "برچسب‌های نوشته، برچسب‌ها به صورت خودکاربه هشتگ تبدیل می‌شوند"
+
+#: inc/WordPressWPTP.php:117
+msgid "The short url of this post"
+msgstr "لینک کوتاه نوشته"
+
+#: inc/WordPressWPTP.php:116
+msgid "The permalink of this post"
+msgstr "لینک نوشته"
+
+#: inc/WordPressWPTP.php:115
+msgid "The permalink of this author posts"
+msgstr "لینک برگه نویسنده نوشته"
+
+#: inc/WordPressWPTP.php:114
+msgid "The display name of author of this post"
+msgstr "نمایش نام نویسنده نوشته"
+
+#: inc/WordPressWPTP.php:113
+msgid "The whole content of this post"
+msgstr "محتوای کامل نوشته"
+
+#: inc/WordPressWPTP.php:112
+msgid "The first 55 words of this post"
+msgstr "۵۵ کلمه اول نوشته"
+
+#: inc/WordPressWPTP.php:111
+msgid "The Slug of this post"
+msgstr "پیوند یکتای نوشته"
+
+#: inc/WordPressWPTP.php:110
+msgid "The title of this post"
+msgstr "عنوان نوشته"
+
+#: inc/WordPressWPTP.php:109
+msgid "The ID of this post"
+msgstr "شناسه (ID) نوشته"
+
+#: inc/WordPressWPTP.php:107
+msgid "WordPress Tags"
+msgstr "برچسب‌های وردپرس"
 
 #: inc/WordPressWPTP.php:94
 msgid "Set Webhook with Error!"
 msgstr "خطا در تنظیم وب‌هوک!"
 
-#: inc/WordPressWPTP.php:106
-msgid "WordPress Tags"
-msgstr "برچسب‌های وردپرس"
+#: inc/WordPressWPTP.php:91
+msgid "Set Webhook Successfully."
+msgstr "وب‌هوک با موفقیت تنظیم شد."
 
-#: inc/WordPressWPTP.php:108
-msgid "The ID of this post"
-msgstr "شناسه (ID) نوشته"
+#: inc/WordPressWPTP.php:62
+msgid "Categories List"
+msgstr "لیست دسته‌ها"
 
-#: inc/WordPressWPTP.php:109
-msgid "The title of this post"
-msgstr "عنوان نوشته"
+#: inc/WordPressWPTP.php:60
+msgid "Start Bot"
+msgstr "شروع بات"
 
-#: inc/WordPressWPTP.php:110
-msgid "The Slug of this post"
-msgstr "پیوند یکتای نوشته"
+#: inc/WordPressWPTP.php:37
+msgid "User connect to:"
+msgstr "اتصال کاربر به:"
 
-#: inc/WordPressWPTP.php:111
-msgid "The first 55 words of this post"
-msgstr "۵۵ کلمه اول نوشته"
+#: inc/WordPressWPTP.php:33
+msgid "Telegram User"
+msgstr "کاربر تلگرام"
 
-#: inc/WordPressWPTP.php:112
-msgid "The whole content of this post"
-msgstr "محتوای کامل نوشته"
+#: inc/WoocommerceWPTP.php:850
+msgid "N/A"
+msgstr "N/A"
 
-#: inc/WordPressWPTP.php:113
-msgid "The display name of author of this post"
-msgstr "نمایش نام نویسنده نوشته"
+#: inc/WordPressWPTP.php:271 inc/WoocommerceWPTP.php:834
+msgid "Your request without result!"
+msgstr "درخواست شما پاسخی ندارد!"
 
-#: inc/WordPressWPTP.php:114
-msgid "The permalink of this author posts"
-msgstr "لینک برگه نویسنده نوشته"
+#: inc/WoocommerceWPTP.php:626 inc/WoocommerceWPTP.php:630
+msgid "Select"
+msgstr "انتخاب"
 
-#: inc/WordPressWPTP.php:115
-msgid "The permalink of this post"
-msgstr "لینک نوشته"
+#: inc/WoocommerceWPTP.php:526
+msgid "Category Buttons"
+msgstr "دکمه دسته"
 
-#: inc/WordPressWPTP.php:116
-msgid "The short url of this post"
-msgstr "لینک کوتاه نوشته"
+#: inc/WoocommerceWPTP.php:523
+msgid "Gallery Button"
+msgstr "دکمه گالری"
 
-#: inc/WordPressWPTP.php:117
-msgid "The tags of this post. Tags are automatically converted to Telegram hashtags"
-msgstr "برچسب‌های نوشته، برچسب‌ها به صورت خودکاربه هشتگ تبدیل می‌شوند"
+#: inc/WoocommerceWPTP.php:520
+msgid "Keyboard"
+msgstr "کیبورد"
 
-#: inc/WordPressWPTP.php:118
-msgid ""
-"The categories of this post. Categories are automatically separated by | symbol"
-msgstr "دسته‌های نوشته، دسته‌ها به صورت خودکار با حرف | جدا می‌شوند"
+#: inc/WoocommerceWPTP.php:515
+msgid "Rating"
+msgstr "امتیاز"
 
-#: inc/WordPressWPTP.php:119
-msgid "The featured image URL"
-msgstr "لینک تصویر شاخص"
+#: inc/WoocommerceWPTP.php:512
+msgid "Attributes"
+msgstr "خواص"
 
-#: inc/WordPressWPTP.php:120
-msgid "The custom field of this post, Example {cf:price}"
-msgstr "زمینه دلخواه این نوشته، نمونه {cf:price}"
+#: inc/WoocommerceWPTP.php:509 inc/WoocommerceWPTP.php:851
+msgid "Dimensions"
+msgstr "اندازه"
 
-#: inc/WordPressWPTP.php:121
-msgid "The Taxonomy Terms of this post: {terms:taxonomy}, Example {terms:category}"
-msgstr "مقدارهای تاکسونامی این نوشته: {terms:taxonomy}، نمونه: {terms:category}"
+#: inc/WoocommerceWPTP.php:506 inc/WoocommerceWPTP.php:847
+msgid "Weight"
+msgstr "وزن"
 
-#: inc/WordPressWPTP.php:122
-msgid "IF Statement for custom field, Example: {if='cf:price'}Price: {cf:price}{/if}"
-msgstr "شرط برای زمینه دلخواه، نمونه: {if='cf:price'}هزینه: {cf:price}{/if}"
+#: inc/WoocommerceWPTP.php:503
+msgid "Meta Data"
+msgstr "دیگر داده‌ها"
 
-#: inc/WordPressWPTP.php:146 inc/WordPressWPTP.php:457
-msgid "New Comment"
-msgstr "دیدگاه جدید"
+#: inc/WoocommerceWPTP.php:500
+msgid "Display"
+msgstr "نمایش"
 
-#: inc/WordPressWPTP.php:147
-msgid "Post"
-msgstr "نوشته"
+#: inc/WoocommerceWPTP.php:491
+msgid "After Payment Complete"
+msgstr "بعد از کامل شدن پرداخت"
 
-#: inc/WordPressWPTP.php:148
-msgid "Author"
-msgstr "نویسنده"
+#: inc/ChannelWPTP.php:473 inc/ChannelWPTP.php:582 inc/WordPressWPTP.php:464
+#: inc/WoocommerceWPTP.php:485 inc/WoocommerceWPTP.php:495
+msgid "Active"
+msgstr "فعال"
 
-#: inc/WordPressWPTP.php:150
-msgid "Email"
-msgstr "ایمیل"
+#: inc/WoocommerceWPTP.php:481
+msgid "After Redirect to Cart Page"
+msgstr "بعد از هدایت کاربر به سبدخرید"
 
-#: inc/WordPressWPTP.php:152
-msgid "Website"
-msgstr "وبسایت"
+#: inc/WoocommerceWPTP.php:472
+msgid "Exclude Display Categories"
+msgstr "نمایش ندادن دسته‌ها"
 
-#: inc/WordPressWPTP.php:154
-msgid "Comment"
-msgstr "دیدگاه"
+#: inc/WoocommerceWPTP.php:466
+msgid "Exclude Categories"
+msgstr "دسته‌های استثنا"
 
-#: inc/WordPressWPTP.php:280 inc/WordPressWPTP.php:492
-msgid "Update"
-msgstr "بروزرسانی"
+#: inc/WoocommerceWPTP.php:458
+msgid "Products Per Page"
+msgstr "محصولات در هر برگه"
 
-#: inc/WordPressWPTP.php:294
-msgid "Welcome!"
-msgstr "خوش‌آمدید!"
+#: inc/WoocommerceWPTP.php:446
+msgid "WooCommerce"
+msgstr "ووکامرس"
 
-#: inc/WordPressWPTP.php:300
-msgid "Enter word for search:"
-msgstr "واژه‌ای برای جستجو وارد کنید:"
+#: inc/WoocommerceWPTP.php:408
+msgid "Product Category Invalid!"
+msgstr "دسته محصول معتبر نیست!"
 
-#: inc/WordPressWPTP.php:369
-msgid "Post Category Invalid!"
-msgstr "دسته نوشته معتبر نیست!"
+#: inc/WoocommerceWPTP.php:347
+msgid "Please select product variations:"
+msgstr "متغیرهای محصول را انتخاب کنید:"
 
-#: inc/WordPressWPTP.php:378
-msgid "New Status:"
-msgstr "وضعیت جدید:"
+#: inc/WoocommerceWPTP.php:345
+msgid "Add to Cart:"
+msgstr "افزودن به سبدخرید:"
 
-#: inc/WordPressWPTP.php:381
-msgid "Trash"
-msgstr "زباله‌دان"
+#: inc/WoocommerceWPTP.php:342
+msgid "Remove from Cart:"
+msgstr "حذف از سبدخرید:"
 
-#: inc/WordPressWPTP.php:384
-msgid "Restore from Trash"
-msgstr "بازگردانی از زباله‌دان"
+#: inc/WoocommerceWPTP.php:331 inc/WoocommerceWPTP.php:361
+#: inc/WoocommerceWPTP.php:371
+msgid "The product does not exist"
+msgstr "محصول یافت نشد"
 
-#: inc/WordPressWPTP.php:387
-msgid "Unapprove"
-msgstr "تایید نکردن"
+#: inc/WoocommerceWPTP.php:321
+msgid "Back to Product"
+msgstr "برگشت به محصول"
 
-#: inc/WordPressWPTP.php:389
-msgid "Approve"
-msgstr "تایید"
+#: inc/WoocommerceWPTP.php:221
+msgid "Is this product visible? (Yes or No)"
+msgstr "این محصول قالب نمایش است؟ (بله یا خیر)"
 
-#: inc/WordPressWPTP.php:391
-msgid "Spam"
-msgstr "جفنگ"
+#: inc/WoocommerceWPTP.php:220
+msgid "Is this a featured product? (Yes or No)"
+msgstr "این محصول شاخص است؟ (بله یا خیر)"
 
-#: inc/WordPressWPTP.php:399
-msgid "Not Found Comment!"
-msgstr "نظری پیدا نشد!"
+#: inc/WoocommerceWPTP.php:219
+msgid "Whether or not backorders allowed?"
+msgstr "اجازه پیش‌ فروش محصول؟"
 
-#: inc/WordPressWPTP.php:406
-msgid "WordPress"
-msgstr "وردپرس"
+#: inc/WoocommerceWPTP.php:218
+msgid "The stock status of this product"
+msgstr "وضعیت موجودی محصول"
 
-#: inc/WordPressWPTP.php:418
-msgid "Telegram Bot API Token"
-msgstr "کلید API بات تلگرام"
+#: inc/WoocommerceWPTP.php:217
+msgid "The stock amount of this product"
+msgstr "تعداد موجودی محصول"
 
-#: inc/WordPressWPTP.php:428
-msgid "Posts Per Page"
-msgstr "تعداد نوشته در هر برگه"
+#: inc/WoocommerceWPTP.php:216
+msgid "The tax class of this product"
+msgstr "دسته مالیات محصول"
 
-#: inc/WordPressWPTP.php:436
-msgid "Image Size"
-msgstr "اندازه تصویر"
+#: inc/WoocommerceWPTP.php:215
+msgid "The tax status of this product"
+msgstr "وضعیت مالیات محصول"
 
-#: inc/WordPressWPTP.php:441
-msgid "Messages"
-msgstr "پیامها"
+#: inc/WoocommerceWPTP.php:214
+msgid "Is this product sold individually? (Yes or No)"
+msgstr "این محصول به صورت تکی فروش میرود؟ (بله یا خیر)"
 
-#: inc/WordPressWPTP.php:445
-msgid "Start Command<br>(Welcome Message)"
-msgstr "دستور شروع<br>(پیام خوش‌آمدگویی)"
+#: inc/WoocommerceWPTP.php:213
+msgid "Is this product virtual? (Yes or No)"
+msgstr "این محصول مجازی هست؟ (بله یا خیر)"
 
-#: inc/WordPressWPTP.php:453
-msgid "Notification"
-msgstr "اطلاع‌رسانی"
+#: inc/WoocommerceWPTP.php:212
+msgid "Is this product downloadable? (Yes or No)"
+msgstr "این محصول قابل دانلود هست؟ (بله یا خیر)"
 
-#: inc/WordPressWPTP.php:470
-msgid "Post Type"
-msgstr "نوع نوشته"
+#: inc/WoocommerceWPTP.php:211
+msgid "The SKU (Stock Keeping Unit) of this product"
+msgstr "واحد انبارداری محصول (SKU)"
 
-#: inc/WordPressWPTP.php:483
-msgid "Telegram Keyboard"
-msgstr "کیبورد تلگرام"
+#: inc/WoocommerceWPTP.php:210
+msgid "The average rating of this product"
+msgstr "متوسط امتیاز محصول"
 
-#: inc/WordPressWPTP.php:487
-msgid "Force update keyboard"
-msgstr "بروزرسانی اجباری کیبورد"
+#: inc/WoocommerceWPTP.php:209
+msgid "The dimensions of this product"
+msgstr "اندازه محصول"
 
-#: inc/WordPressWPTP.php:495
-msgid ""
-"You should update keyboard for users when change WordPress language, active "
-"Woocommerce plugin, search setting changed. (Status don't save)"
-msgstr ""
-"در هر زمانی که زبان وردپرس را تغییر دادید، یا افزونه ووکامرس را فعال کردید، یا "
-"تظیمات جستجو را تغییر دادید نیاز هست که کیبورد را بروز کنید. (وضعیت این گزینه ذخیره "
-"نمی‌شود)"
+#: inc/WoocommerceWPTP.php:208
+msgid "The weight of this product"
+msgstr "وزن محصول"
 
-#~ msgid "Telegram User"
-#~ msgstr "کاربر تلگرام"
+#: inc/WoocommerceWPTP.php:207
+msgid "The height of this product"
+msgstr "ارتفاع محصول"
 
-#~ msgid "http://parsa.ws"
-#~ msgstr "http://parsa.ws"
+#: inc/WoocommerceWPTP.php:206
+msgid "The length of this product"
+msgstr "طول محصول"
 
-#~ msgid "Parsa Kafi"
-#~ msgstr "پارسا کافی"
+#: inc/WoocommerceWPTP.php:205
+msgid "The width of this product"
+msgstr "عرض محصول"
 
-#~ msgid "https://github.com/parsakafi/wp-telegram-pro"
-#~ msgstr "https://github.com/parsakafi/wp-telegram-pro"
+#: inc/WoocommerceWPTP.php:204
+msgid "The sale price of this product"
+msgstr "قیمت حراجی محصول"
+
+#: inc/WoocommerceWPTP.php:203
+msgid "The regular price of this product"
+msgstr "قیمت عادی محصول"
+
+#: inc/WoocommerceWPTP.php:202
+msgid "The price of this product"
+msgstr "قیمت محصول"
+
+#: inc/WoocommerceWPTP.php:199
+msgid "WooCommerce Tags"
+msgstr "برچسب‌های ووکامرس"
+
+#: inc/WoocommerceWPTP.php:73
+msgid "Out of stock"
+msgstr "موجود نیست"
+
+#: inc/WoocommerceWPTP.php:72
+msgid "In stock"
+msgstr "موجود هست"
+
+#: inc/WoocommerceWPTP.php:71
+msgid "Refresh Cart"
+msgstr "بروزرسانی سبدخرید"
+
+#: inc/WoocommerceWPTP.php:70
+msgid "Cart has been empty."
+msgstr "سبدخرید خالی است."
+
+#: inc/WoocommerceWPTP.php:69
+msgid "Empty Cart?"
+msgstr "خالی کردن سبدخرید؟"
+
+#: inc/WoocommerceWPTP.php:68
+msgid "Your cart is empty."
+msgstr "سبدخرید شما خالی است."
+
+#: inc/WoocommerceWPTP.php:67
+msgid "Checkout"
+msgstr "پرداخت"
+
+#: inc/WoocommerceWPTP.php:65
+msgid "Product Categories"
+msgstr "دسته‌های محصول"
+
+#: inc/WoocommerceWPTP.php:44 inc/WoocommerceWPTP.php:66
+msgid "Cart"
+msgstr "سبدخرید"
+
+#: inc/WoocommerceWPTP.php:43
+msgid "Product Categories List"
+msgstr "لیست دسته‌های محصول"
+
+#: inc/WoocommerceWPTP.php:42 inc/WoocommerceWPTP.php:64
+msgid "Products"
+msgstr "محصولات"
+
+#: WPTelegramPro.php:803
+msgid "Every % Minutes"
+msgstr "هر % دقیقه"
+
+#: WPTelegramPro.php:747
+msgid "- Category Select -"
+msgstr "- انتخاب دسته -"
+
+#: WPTelegramPro.php:706
+msgid "Crop"
+msgstr "بُرِش خورده"
+
+#: WPTelegramPro.php:704
+msgid "Full"
+msgstr "کامل"
+
+#: WPTelegramPro.php:369
+msgid "Save"
+msgstr "ذخیره"
+
+#: WPTelegramPro.php:324
+msgid "Settings saved."
+msgstr "تنظیمات ذخیره شد."
+
+#: WPTelegramPro.php:298
+msgid "Remove % Channel?"
+msgstr "حذف کانال %؟"
+
+#: inc/ChannelWPTP.php:560 WPTelegramPro.php:297
+msgid "New Channel"
+msgstr "کانال جدید"
+
+#: inc/WoocommerceWPTP.php:993 WPTelegramPro.php:262
+msgid "Welcome, your user is successfully connected to the store."
+msgstr "خوش‌ آمدید، کاربری شما با موفقیت به فروشگاه متصل شد."
+
+#: WPTelegramPro.php:247
+msgid "API Token Invalid (Need to save settings)"
+msgstr "کلید API معتبر نیست (نیازمند ذخیره تنظیمات)"
+
+#: WPTelegramPro.php:245
+msgid "Bot Name:"
+msgstr "نام بات:"
+
+#: WPTelegramPro.php:195
+msgid "Keep in touch with me:"
+msgstr "با من در تماس باشید:"
+
+#: WPTelegramPro.php:190
+msgid "Give it a rating"
+msgstr "امتیاز دهید"
+
+#: WPTelegramPro.php:187
+msgid "Do you like WP Telegram Pro?"
+msgstr "WP Telegram Pro را دوست دارید؟"
+
+#: WPTelegramPro.php:169
+msgid "Yes! Now, whenever you publish or update a post you can choose whether send it to Telegram (from post editor page)"
+msgstr "بله! اکنون هر وقت نوشته‌ای را منتشر یا بروز می‌کنید، می‌توانید انتخاب کنید چگونه به تلگرام ارسال شود (از برگه ویرایش نوشته)"
+
+#: WPTelegramPro.php:168
+msgid "Enter the username of the channel and hit SAVE button!!!"
+msgstr "نام کاربری کانال را وارد کنید و دکمه ذخیره را فشار دهید!"
+
+#: WPTelegramPro.php:167
+msgid "Allow 'Post Messages' Permission"
+msgstr "مجوز 'Post Messages' را بدهید"
+
+#: WPTelegramPro.php:166
+msgid "Search the username of your bot and add it as administrator."
+msgstr "نام‌کاربری بات خود را جستجو کنید و به عنوان Administrator به کانال اضافه کنید."
+
+#: WPTelegramPro.php:165
+msgid "Select 'Add Administrator' option."
+msgstr "گزینه 'Add Administrator' را انتخاب کنید."
+
+#: WPTelegramPro.php:164
+msgid "Go to channel options and select 'Administrator' option."
+msgstr "به تنظیمات کانال بروید و گزینه 'Administrator' را انتخاب کنید."
+
+#: WPTelegramPro.php:163
+msgid "Create a bot (if you don't already have one)."
+msgstr "باتی ایجاد کنید (اگر در حال حاضر ندارید)"
+
+#: WPTelegramPro.php:162
+msgid "Create a channel (if you don't already have one)."
+msgstr "کانالی ایجاد کنید (اگر در حال حاضر ندارید)"
+
+#: WPTelegramPro.php:159
+msgid "Telegram channel is a great way for attracting people to your site.<br> This option allows you to send posts to your Telegram channel."
+msgstr "کانال تلگرام روش خوبی برای جذب افراد به سایت شما است.<br>با این گزینه شما می‌توانید نوشته‌های خود را به کانال تلگرام ارسال کنید."
+
+#: inc/ChannelWPTP.php:455 WPTelegramPro.php:156
+msgid "Channel"
+msgstr "کانال"
+
+#: WPTelegramPro.php:143
+msgid "How to set bot commands: Start %s and select your bot > \"Edit Bot\" > \"Edit Commands\" > Send text below."
+msgstr "چگونه دستورهای بات را تنظیم کنیم: با شروع %s و انتخاب بات خود » دکمه \"Edit Bot\" » دکمه \"Edit Commands\" » متن زیر را ارسال کنید."
+
+#: WPTelegramPro.php:130
+msgid "Default command list:"
+msgstr "لیست دستورهای پیشفرض:"
+
+#: WPTelegramPro.php:118
+msgid "About"
+msgstr "درباره"
+
+#: WPTelegramPro.php:117
+msgid "Help"
+msgstr "راهنما"
+
+#: WPTelegramPro.php:94
+msgid "More"
+msgstr "بیشتر"
+
+#: inc/WoocommerceWPTP.php:22 WPTelegramPro.php:93
+msgid "Detail"
+msgstr "جزییات"
+
+#: WPTelegramPro.php:92
+msgid "Categories"
+msgstr "دسته‌ها"
+
+#: inc/WordPressWPTP.php:63 inc/WordPressWPTP.php:469 WPTelegramPro.php:91
+msgid "Search"
+msgstr "جستجو"
+
+#: inc/WordPressWPTP.php:61 WPTelegramPro.php:90
+msgid "Posts"
+msgstr "نوشته‌ها"
+
+#: WPTelegramPro.php:89
+msgid "Back"
+msgstr "بازگشت"
+
+#: inc/ChannelWPTP.php:360 inc/ChannelWPTP.php:392 WPTelegramPro.php:84
+msgid "No"
+msgstr "خیر"
+
+#: inc/ChannelWPTP.php:355 inc/ChannelWPTP.php:387 inc/ChannelWPTP.php:615
+#: WPTelegramPro.php:83
+msgid "Yes"
+msgstr "بله"
+
+#. Author URI of the plugin
+msgid "http://parsa.ws"
+msgstr "http://parsa.ws"
+
+#. Author of the plugin
+msgid "Parsa Kafi"
+msgstr "پارسا کافی"
+
+#. Description of the plugin
+#: WPTelegramPro.php:185
+msgid "Integrate WordPress with Telegram"
+msgstr "یکپارچه‌سازی وردپرس با تلگرام"
+
+#. Plugin URI of the plugin
+msgid "https://github.com/parsakafi/wp-telegram-pro"
+msgstr "https://github.com/parsakafi/wp-telegram-pro"
+
+#. Plugin Name of the plugin
+#: WPTelegramPro.php:55
+msgid "WP Telegram Pro"
+msgstr "WP Telegram Pro"
