@@ -660,7 +660,7 @@ class WPTelegramPro
      * @param array $exclude Exclude Terms, Default: array()
      * @return array|boolean Terms list with Telegram Inline Keyboard Structure
      */
-    function get_tax_keyboard($command, $taxonomy, $order_by = 'count', $exclude = array())
+    function get_tax_keyboard($command, $taxonomy, $order_by = 'parent', $exclude = array())
     {
         $terms = get_terms($taxonomy, [
             'hide_empty' => true,

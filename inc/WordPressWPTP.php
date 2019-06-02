@@ -325,7 +325,7 @@ class WordPressWPTP extends WPTelegramPro
             $this->send_posts($posts);
             
         } elseif ($user_text == '/categories' || $user_text == $words['categories']) {
-            $posts_category = $this->get_tax_keyboard('category', 'category', 'count');
+            $posts_category = $this->get_tax_keyboard('category', 'category', 'parent');
             $keyboard = $this->telegram->keyboard($posts_category, 'inline_keyboard');
             $this->telegram->sendMessage($words['categories'] . ":", $keyboard);
         }
