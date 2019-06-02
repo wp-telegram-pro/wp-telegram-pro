@@ -14,7 +14,7 @@ class WoocommerceWPTP extends WPTelegramPro
         
         add_filter('wptelegrampro_words', [$this, 'words']);
         add_filter('wptelegrampro_patterns_tags', [$this, 'patterns_tags']);
-        add_filter('wptelegrampro_query_args', [$this, 'query_args']);
+        add_filter('wptelegrampro_query_args', [$this, 'query_args'], 10, 2);
         add_filter('wptelegrampro_post_info', [$this, 'product_info'], 10, 4);
         add_filter('wptelegrampro_default_keyboard', [$this, 'default_keyboard'], 20);
         
@@ -251,7 +251,8 @@ class WoocommerceWPTP extends WPTelegramPro
             );
             
             $products = $this->query($args);
-            //$this->telegram->sendMessage(serialize($products));
+            $this->telegram->sendMessage(serialize($args));
+            
             $this->send_products($products);
             
         } elseif ($user_text == '/product_categories' || $user_text == $words['product_categories']) {
