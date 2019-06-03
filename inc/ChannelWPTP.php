@@ -245,10 +245,15 @@ class ChannelWPTP extends WPTelegramPro
     
     function meta_save($post_id, $post)
     {
-        if (!isset($_POST['wptp-nonce']))
-            return $post_id;
-        if (!isset($_POST["wptp-nonce"]) || !wp_verify_nonce($_POST["wptp-nonce"], basename(__FILE__)))
-            return $post_id;
+        $display_metabox = $this->check_metabox_display();
+        
+        if($display_metabox) {
+            if (!isset($_POST['wptp-nonce']))
+                return $post_id;
+            if (!isset($_POST["wptp-nonce"]) || !wp_verify_nonce($_POST["wptp-nonce"], basename(__FILE__)))
+                return $post_id;
+        }
+        
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
             return $post_id;
         if (false !== wp_is_post_revision($post_id))
@@ -272,18 +277,26 @@ class ChannelWPTP extends WPTelegramPro
             if (empty($v) || !isset($options['channel_post_type'][$k]) || isset($options['channel_post_type'][$k]) && is_array($options['channel_post_type'][$k]) && !in_array($post_type, array_keys($options['channel_post_type'][$k])))
                 continue;
             
-            $posted_status = get_post_meta($post_id, '_retry_posted_' . $options['channel_username'][$k] . '_wptp', true);
+            if ($display_metabox) {
+                $posted_status = get_post_meta($post_id, '_retry_posted_' . $options['channel_username'][$k] . '_wptp', true);
+                if ($posted_status == 1 && $_POST['send_to_channel'][$options['channel_username'][$k]] == 1)
+                    delete_post_meta($post_id, '_retry_posted_' . $options['channel_username'][$k] . '_wptp');
+                
+                if (!empty($_POST['channel_message_pattern'][$options['channel_username'][$k]]) && stripslashes($options['channel_message_pattern'][$k]) != $_POST['channel_message_pattern'][$options['channel_username'][$k]])
+                    update_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$k] . '_wptp', $_POST['channel_message_pattern'][$options['channel_username'][$k]]);
+                elseif (empty($_POST['channel_message_pattern'][$options['channel_username'][$k]]))
+                    delete_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$k] . '_wptp');
+                
+                $send_to_channel = $_POST['send_to_channel'][$options['channel_username'][$k]];
+                $featured_image = $_POST['channel_with_featured_image'][$options['channel_username'][$k]];
+           
+            } else {
+                $send_to_channel = isset($options['send_to_channel'][$k]) ? 1 : 2;
+                $featured_image = isset($options['channel_with_featured_image'][$k]) ? 1 : 2;
+            }
             
-            if ($posted_status == 1 && $_POST['send_to_channel'][$options['channel_username'][$k]] == 1)
-                delete_post_meta($post_id, '_retry_posted_' . $options['channel_username'][$k] . '_wptp');
-            
-            if (!empty($_POST['channel_message_pattern'][$options['channel_username'][$k]]) && stripslashes($options['channel_message_pattern'][$k]) != $_POST['channel_message_pattern'][$options['channel_username'][$k]])
-                update_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$k] . '_wptp', $_POST['channel_message_pattern'][$options['channel_username'][$k]]);
-            elseif (empty($_POST['channel_message_pattern'][$options['channel_username'][$k]]))
-                delete_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$k] . '_wptp');
-            
-            update_post_meta($post_id, '_send_to_channel_' . $options['channel_username'][$k] . '_wptp', $_POST['send_to_channel'][$options['channel_username'][$k]]);
-            update_post_meta($post_id, '_featured_image_' . $options['channel_username'][$k] . '_wptp', $_POST['channel_with_featured_image'][$options['channel_username'][$k]]);
+            update_post_meta($post_id, '_send_to_channel_' . $options['channel_username'][$k] . '_wptp', $send_to_channel);
+            update_post_meta($post_id, '_featured_image_' . $options['channel_username'][$k] . '_wptp', $featured_image);
         }
         return $post_id;
     }
@@ -292,9 +305,7 @@ class ChannelWPTP extends WPTelegramPro
     {
         $options = $this->options;
         if (isset($options['channel_username'])) {
-            $user_role = $this->get_current_user_role();
-            $channels_user_roles = array_keys($options['channels_metabox_user_roles']);
-            if (!in_array($user_role, $channels_user_roles)) return;
+            if (!$this->check_metabox_display()) return;
             
             $post_types = array();
             foreach ($options['channel_username'] as $k => $v) {
@@ -728,6 +739,13 @@ class ChannelWPTP extends WPTelegramPro
         }
         $select .= '</select>';
         echo $select;
+    }
+    
+    function check_metabox_display()
+    {
+        $user_role = $this->get_current_user_role();
+        $channels_user_roles = array_keys($this->options['channels_metabox_user_roles']);
+        return in_array($user_role, $channels_user_roles);
     }
     
     /**

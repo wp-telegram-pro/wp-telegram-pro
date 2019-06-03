@@ -24,6 +24,7 @@ Useful Tools:
 Changelog
 -----------
 **V 1.6**
+- New option for display channels metabox base on user role
 - Add currency symbol to channel pattern tags, `{currency-symbol}`
 - Fixed some bugs
 
