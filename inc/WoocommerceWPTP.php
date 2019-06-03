@@ -160,6 +160,7 @@ class WoocommerceWPTP extends WPTelegramPro
             
             $product_args = array(
                 'slug' => $_product->get_slug(),
+                'currency-symbol' => html_entity_decode(get_woocommerce_currency_symbol()),
                 'price' => $price,
                 'regularprice' => $regularprice,
                 'saleprice' => $saleprice,
@@ -170,7 +171,7 @@ class WoocommerceWPTP extends WPTelegramPro
                 'dimensions' => $dimensions,
                 'sku' => $_product->get_sku(),
                 'stock' => $_product->get_stock_quantity(),
-                'stock-status' => $_product->get_stock_status(),
+                'stock_status' => $_product->get_stock_status(),
                 'downloadable' => $_product->get_downloadable(),
                 'virtual' => $_product->get_virtual(),
                 'sold-individually' => $_product->get_sold_individually(),
@@ -199,6 +200,7 @@ class WoocommerceWPTP extends WPTelegramPro
             'title' => __('WooCommerce Tags', $this->plugin_key),
             'plugin' => 'woocommerce',
             'tags' => array(
+                'currency-symbol' => __('The currency symbol', $this->plugin_key),
                 'price' => __('The price of this product', $this->plugin_key),
                 'regularprice' => __('The regular price of this product', $this->plugin_key),
                 'saleprice' => __('The sale price of this product', $this->plugin_key),
@@ -449,6 +451,7 @@ class WoocommerceWPTP extends WPTelegramPro
     
     function settings_content()
     {
+        echo utf8_decode(get_woocommerce_currency_symbol());
         $this->options = get_option($this->plugin_key);
         ?>
         <div id="<?php echo $this->tabID ?>-content" class="wptp-tab-content hidden">
@@ -874,7 +877,6 @@ class WoocommerceWPTP extends WPTelegramPro
             }
         }
         
-        // http://www.i2symbol.com/symbols/stars
         if ($this->get_option('rating_display') == 1 && !empty($product['average_rating']) && intval($product['average_rating']) > 0) {
             $star = '';
             for ($i = 1; $i <= intval($product['average_rating']); $i++)
@@ -907,7 +909,6 @@ class WoocommerceWPTP extends WPTelegramPro
         $price = !empty($price) ? strip_tags(html_entity_decode(wc_price($price))) : $price;
         return $price;
     }
-    
     
     function cart($message_id = null, $refresh = false)
     {
