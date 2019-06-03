@@ -451,7 +451,6 @@ class WoocommerceWPTP extends WPTelegramPro
     
     function settings_content()
     {
-        echo utf8_decode(get_woocommerce_currency_symbol());
         $this->options = get_option($this->plugin_key);
         ?>
         <div id="<?php echo $this->tabID ?>-content" class="wptp-tab-content hidden">

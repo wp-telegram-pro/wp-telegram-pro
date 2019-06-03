@@ -162,6 +162,8 @@ class ChannelWPTP extends WPTelegramPro
             if (empty($text))
                 $text = $options['channel_message_pattern'][$index];
             
+            $text = stripslashes($text);
+            
             if (isset($options['channel_inline_button_title'][$index]) && !empty($options['channel_inline_button_title'][$index])) {
                 $keyboard = array(array(
                     array('text' => $options['channel_inline_button_title'][$index], 'url' => $post['short-link'])
@@ -275,7 +277,7 @@ class ChannelWPTP extends WPTelegramPro
             if ($posted_status == 1 && $_POST['send_to_channel'][$options['channel_username'][$k]] == 1)
                 delete_post_meta($post_id, '_retry_posted_' . $options['channel_username'][$k] . '_wptp');
             
-            if (!empty($_POST['channel_message_pattern'][$options['channel_username'][$k]]) && $options['channel_message_pattern'][$k] != $_POST['channel_message_pattern'][$options['channel_username'][$k]])
+            if (!empty($_POST['channel_message_pattern'][$options['channel_username'][$k]]) && stripslashes($options['channel_message_pattern'][$k]) != $_POST['channel_message_pattern'][$options['channel_username'][$k]])
                 update_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$k] . '_wptp', $_POST['channel_message_pattern'][$options['channel_username'][$k]]);
             elseif (empty($_POST['channel_message_pattern'][$options['channel_username'][$k]]))
                 delete_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$k] . '_wptp');
@@ -322,6 +324,7 @@ class ChannelWPTP extends WPTelegramPro
                 $channel_message_pattern = get_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$k] . '_wptp', true);
                 if (empty($channel_message_pattern))
                     $channel_message_pattern = $options['channel_message_pattern'][$k];
+                $channel_message_pattern = stripslashes($channel_message_pattern);
                 
                 $featured_image = get_post_meta($post_id, '_featured_image_' . $options['channel_username'][$k] . '_wptp', true);
                 if (empty($featured_image))
@@ -604,7 +607,7 @@ class ChannelWPTP extends WPTelegramPro
                             <br>
                             <textarea name="channel_message_pattern[<?php echo $item['index'] ?>]" cols="50"
                                       class="message-pattern-wptp emoji"
-                                      rows="4"><?php echo isset($item['message_pattern']) ? $item['message_pattern'] : '' ?></textarea>
+                                      rows="4"><?php echo isset($item['message_pattern']) ? stripslashes($item['message_pattern']) : '' ?></textarea>
                         </td>
                     </tr>
                     <tr>

@@ -1,4 +1,4 @@
-WP Telegram Pro [[Download Stable Version](https://wordpress.org/plugins/wp-telegram-pro)]
+## WP Telegram Pro [[Download Stable Version](https://wordpress.org/plugins/wp-telegram-pro)]
 
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg)](https://opensource.org/licenses/mit-license.php)   
 
@@ -20,7 +20,34 @@ Development Source:
 Useful Tools:
 - [Json Parser](http://json.parser.online.fr/)
 
-Done:
+
+Changelog
+-----------
+**V 1.6**
+- Add currency symbol to channel pattern tags, `{currency-symbol}`
+- Fixed some bugs
+
+**V 1.5**
+- Inline button for channel message
+- Fixed some bugs
+
+**V 1.4**
+- Delay time to send channels
+- Fixed some bugs
+
+**V 1.3**
+- Add proxy settings
+
+**V 1.2**
+- Compatible with RTL languages
+- Add custom field and terms to pattern tags: `{cf:price}`, `{terms:taxonomy}`
+- Add if statement to pattern tags: `{if='cf:price'}Price: {cf:price}{/if}`
+- Admin can force update telegram keyboard
+
+**V 1.1**
+- Display Telegram channel members count with shortcode: `[channel_members_wptp channel="channel username" formatting="1"]`
+
+**V 1.0**
 - Receive command from Telegram
 - Settings Page
 - WooCommerce product list (with pagination)
@@ -34,24 +61,11 @@ Done:
 - Comment notification
 - Send post types to channel
 - Gutenberg editor compatible
-- Display Telegram channel members count with shortcode: `[channel_members_wptp channel="channel username" formatting="1"]`
-- Compatible with RTL languages
-- Add custom field and terms to pattern tags: `{cf:price}`, `{terms:taxonomy}`
-- Add if statement to pattern tags: `{if='cf:price'}Price: {cf:price}{/if}`
-- Admin can force update telegram keyboard
-- Add proxy settings
-- Delay time to send channels
-- Inline button for channel message
 
-Develop Plan:
-
-
-
-
-
-
-
+Develop Plan
+-----------
+-
 
 Warning
--
+-----------
 The plugin is in development, Not recommended in the product. You can download stable version in [WordPress.org plugins repository](https://wordpress.org/plugins/wp-telegram-pro)
