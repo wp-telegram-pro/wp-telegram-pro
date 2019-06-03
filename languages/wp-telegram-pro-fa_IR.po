@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - WP Telegram Pro - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2019-05-12 00:49+0430\n"
+"PO-Revision-Date: 2019-06-04 00:03+0430\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,37 +14,53 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 
-#: inc/ChannelWPTP.php:500
+#: inc/ChannelWPTP.php:666
+msgid "Disable"
+msgstr "غیرفعال"
+
+#: inc/ChannelWPTP.php:646
+msgid "Word"
+msgstr "کلمه"
+
+#: inc/ProxyWPTP.php:293
+msgid "Goto <a href=\"%s\">script.google.com</a> and sign in if required."
+msgstr "به <a href=\"%s\">script.google.com</a> بروید و در صورت نیاز وارد شوید."
+
+#: inc/ChannelWPTP.php:651
+msgid "Inline button title"
+msgstr "عنوان دکمه درون خطی"
+
+#: inc/ProxyWPTP.php:307
+msgid "Copy the \"Current web app URL\" and paste it in plugin"
+msgstr "مقدار \"Current web app URL\" کپی کنید و در افزونه بچسبانید"
+
+#: inc/ChannelWPTP.php:501
 msgid "Least 5 minutes recommended."
 msgstr "حداقل 5 دقیقه پیشنهاد می‌شود."
 
-#: inc/ChannelWPTP.php:493
+#: inc/ChannelWPTP.php:494
 msgid "Delay in send"
 msgstr "تاخیر در ارسال"
 
-#: inc/ProxyWPTP.php:307
-msgid "Copy the \"Current web app URL:\" and paste it in your app or plugin"
-msgstr "مقدار \"Current web app URL:\" را کپی و در افزونه قرار دهید"
-
 #: inc/ProxyWPTP.php:306
-msgid "After redirection, you should see \"This project is now deployed as a web app.\""
+msgid "After redirection, you should see \"This project is now deployed as a web app\""
 msgstr "بعد از هدایت به صفحه، شما باید \"This project is now deployed as a web app.\" را ببینید"
 
 #: inc/ProxyWPTP.php:305
-msgid "On the next screen, click \"Allow\"."
+msgid "On the next screen, click \"Allow\""
 msgstr "در صفحه بعد، برروی \"Allow\" کلیک کنید."
 
 #: inc/ProxyWPTP.php:304
-msgid "In the popup window select your Google Account."
-msgstr "در پنجره باز شده حساب کاربری گوگل خود را انتخاب کنید."
+msgid "In the popup window select your Google Account"
+msgstr "در پنجره باز شده حساب کاربری گوگل خود را انتخاب کنید"
 
 #: inc/ProxyWPTP.php:303
-msgid "Click \"Review Permissions\" to authorize the script."
-msgstr "برای مجوز دادن به اسکریپت برروی \"Review Permissions\" کلیک کنید."
+msgid "Click \"Review Permissions\" to authorize the script"
+msgstr "برای مجوز دادن به اسکریپت برروی \"Review Permissions\" کلیک کنید"
 
 #: inc/ProxyWPTP.php:302
-msgid "Click \"Deploy\" to open the Authorization box."
-msgstr "برای بازد شدن جعبه تایید مجوز برروی \"Deploy\" کلیک کنید."
+msgid "Click \"Deploy\" to open the Authorization box"
+msgstr "برای بازد شدن جعبه تایید مجوز برروی \"Deploy\" کلیک کنید"
 
 #: inc/ProxyWPTP.php:301
 msgid "In \"Who has access to the app:\", select \"Anyone, even anonymous\" [IMPORTANT]"
@@ -67,16 +83,16 @@ msgid "Click File > Save or press Ctrl+S"
 msgstr "منوی File » گزینه Save یا کلیدهای Ctrl+S فشار دهید"
 
 #: inc/ProxyWPTP.php:296
-msgid "Copy the contents of below code and paste into your project file (Code.gs)."
+msgid "Copy the contents of below code and paste into your project file (Code.gs)"
 msgstr "محتوای کدهای زیر را کپی و در فایل پروژه خود بچسبانید (Code.gs)."
 
 #: inc/ProxyWPTP.php:295
-msgid "It should open a file (Code.gs by default). Remove the contents of this file."
-msgstr "باید فایل را باز کند (پیشفرض Code.gs). محتویات این فایل را حذف کنید."
+msgid "It should open a file (Code.gs by default). Remove the contents of this file"
+msgstr "باید فایل را باز کند (پیشفرض Code.gs). محتویات این فایل را حذف کنید"
 
 #: inc/ProxyWPTP.php:294
-msgid "Create a new project and give it a name."
-msgstr "یک پروژه جدید ایجاد کنید و نام برای آن انتخاب کنید."
+msgid "Create a new project and give it a name"
+msgstr "یک پروژه جدید ایجاد کنید و نام برای آن انتخاب کنید"
 
 #: inc/ProxyWPTP.php:291
 msgid "How to Deploy"
@@ -90,7 +106,7 @@ msgstr "شما می‌توانید از این اسکریپت برای جلوگ�
 msgid "See help tab"
 msgstr "زبانه راهنما را ببینید"
 
-#: WPTelegramPro.php:827
+#: WPTelegramPro.php:828
 msgid "The plugin requires SSL in the domain of your website!"
 msgstr "افزونه نیاز به SSL برای دامنه سایت شما دارد!"
 
@@ -218,7 +234,7 @@ msgstr "مقدارهای تاکسونامی این نوشته: {terms:taxonomy}�
 msgid "The custom field of this post, Example {cf:price}"
 msgstr "زمینه دلخواه این نوشته، نمونه {cf:price}"
 
-#: inc/ChannelWPTP.php:413
+#: inc/ChannelWPTP.php:414
 msgid "[Set 'channel' attribute]"
 msgstr "[مشخصه 'channel' را تنظیم کنید]"
 
@@ -238,123 +254,115 @@ msgstr "محصول"
 msgid "Galleries"
 msgstr "گالری"
 
-#: WPTelegramPro.php:88
+#: WPTelegramPro.php:89
 msgid "< Previous Page"
 msgstr "« صفحه قبلی"
 
-#: WPTelegramPro.php:87
+#: WPTelegramPro.php:88
 msgid "Next Page >"
 msgstr "صفحه بعدی »"
 
-#: WPTelegramPro.php:86
+#: WPTelegramPro.php:87
 msgid "< Previous"
 msgstr "« قبلی"
 
-#: WPTelegramPro.php:85
+#: WPTelegramPro.php:86
 msgid "Next >"
 msgstr "بعدی »"
 
-#: inc/ChannelWPTP.php:426
+#: inc/ChannelWPTP.php:427
 msgid "[API Token or Channel Username Invalid]"
 msgstr "[کلید API یا نام‌کاربری معتبر نیست]"
 
-#: inc/ChannelWPTP.php:686
+#: inc/ChannelWPTP.php:698
 msgid "- Select a Tag -"
 msgstr "- برچسبی را انتخاب کنید -"
 
-#: inc/ChannelWPTP.php:654
-msgid "Disable web page preview"
-msgstr "غیرفعال کردن پیش‌نمایش لینک‌ها"
-
-#: inc/ChannelWPTP.php:649
+#: inc/ChannelWPTP.php:661
 msgid "Web page preview in messages"
 msgstr "پیش‌نمایش لینک در پیام‌ها"
 
-#: inc/ChannelWPTP.php:644
-msgid "Words"
-msgstr "کلمات"
-
-#: inc/ChannelWPTP.php:638
+#: inc/ChannelWPTP.php:640
 msgid "Excerpt length"
 msgstr "طول چکیده متن"
 
-#: inc/ChannelWPTP.php:632
+#: inc/ChannelWPTP.php:634
 msgid "HTML"
 msgstr "HTML"
 
-#: inc/ChannelWPTP.php:631
+#: inc/ChannelWPTP.php:633
 msgid "Markdown"
 msgstr "Markdown (زبان نشانه‌گذاری)"
 
-#: inc/ChannelWPTP.php:630
+#: inc/ChannelWPTP.php:632
 msgid "Simple"
 msgstr "ساده"
 
-#: inc/ChannelWPTP.php:626
+#: inc/ChannelWPTP.php:628
 msgid "Telegram Bot API"
 msgstr "API بات تلگرام"
 
-#: inc/ChannelWPTP.php:624
+#: inc/ChannelWPTP.php:626
 msgid "Telegram supports basic markdown and some HTML tags (bold, italic, inline links). By checking one of the following options, your messages will be compatible with Telegram format."
 msgstr "تلگرام از زبان نشانه‌گذاری/Markdown و چندی از HTML Tags (ضخیم, کج, لینک) پشتیبانی می‌کند. با انتخاب هر گزینه زیر، پیام شما با قالب تلگرام سازگار می‌شود."
 
-#: inc/ChannelWPTP.php:621
+#: inc/ChannelWPTP.php:623
 msgid "Formatting messages"
 msgstr "قالب‌بندی پیام‌ها"
 
-#: inc/ChannelWPTP.php:610
+#: inc/ChannelWPTP.php:612
 msgid "With featured image?"
 msgstr "همراه تصویر شاخص؟"
 
-#: inc/ChannelWPTP.php:587
+#: inc/ChannelWPTP.php:589
 msgid "Active on PostType"
 msgstr "فعال در نوع نوشته"
 
-#: inc/ChannelWPTP.php:577
+#: inc/ChannelWPTP.php:579
 msgid "Send to channel (Default)"
 msgstr "ارسال به کانال (پیشفرض)"
 
-#: inc/ChannelWPTP.php:565
+#: inc/ChannelWPTP.php:567
 msgid "Channel Username"
 msgstr "نام‌کاربری کانال"
 
-#: inc/ChannelWPTP.php:548
+#: inc/ChannelWPTP.php:550
 msgid "Add Channel"
 msgstr "افزودن کانال"
 
-#: inc/ChannelWPTP.php:487
+#: inc/ChannelWPTP.php:488
 msgid "Work with <a href=\"%s\" target=\"_blank\">WP-Cron</a>."
 msgstr "اجرا با <a href=\"%s\" target=\"_blank\">WP-Cron</a>."
 
-#: inc/ChannelWPTP.php:485 inc/ChannelWPTP.php:499
+#: inc/ChannelWPTP.php:486 inc/ChannelWPTP.php:500
 msgid "Minutes"
 msgstr "دقیقه"
 
-#: inc/ChannelWPTP.php:479
+#: inc/ChannelWPTP.php:480
 msgid "Check send every"
 msgstr "بررسی ارسال هر"
 
-#: inc/ChannelWPTP.php:468
+#: inc/ChannelWPTP.php:469
 msgid "Send to Channels"
 msgstr "ارسال به کانال"
 
-#: inc/ChannelWPTP.php:441
+#: inc/ChannelWPTP.php:442
 msgid "API Token or Channel Username Invalid, It may not have access to the channel! (Read Help)"
 msgstr "کلید API یا نام‌کاربری معتبر نیست، شاید امکان دسترسی به کانال وجود ندارد! (راهنما را بخوانید)"
 
-#: inc/ChannelWPTP.php:439
+#: inc/ChannelWPTP.php:440
 msgid "Channel Member Count:"
 msgstr "تعداد اعضای کانال:"
 
-#: inc/ChannelWPTP.php:380
+#: inc/ChannelWPTP.php:381
 msgid "Attache featured Image"
 msgstr "پیوست تصویر شاخص"
 
-#: inc/ChannelWPTP.php:367 inc/ChannelWPTP.php:598
+#: inc/ChannelWPTP.php:368 inc/ChannelWPTP.php:600
 msgid "Message Pattern"
 msgstr "الگوی پیام"
 
-#: inc/ChannelWPTP.php:348
+#: inc/ChannelWPTP.php:349
 msgid "Send to Channel"
 msgstr "ارسال به کانال"
 
@@ -574,7 +582,7 @@ msgstr "نمایش"
 msgid "After Payment Complete"
 msgstr "بعد از کامل شدن پرداخت"
 
-#: inc/ChannelWPTP.php:473 inc/ChannelWPTP.php:582 inc/WordPressWPTP.php:464
+#: inc/ChannelWPTP.php:474 inc/ChannelWPTP.php:584 inc/WordPressWPTP.php:464
 #: inc/WoocommerceWPTP.php:485 inc/WoocommerceWPTP.php:495
 msgid "Active"
 msgstr "فعال"
@@ -752,148 +760,148 @@ msgstr "لیست دسته‌های محصول"
 msgid "Products"
 msgstr "محصولات"
 
-#: WPTelegramPro.php:803
+#: WPTelegramPro.php:804
 msgid "Every % Minutes"
 msgstr "هر % دقیقه"
 
-#: WPTelegramPro.php:747
+#: WPTelegramPro.php:748
 msgid "- Category Select -"
 msgstr "- انتخاب دسته -"
 
-#: WPTelegramPro.php:706
+#: WPTelegramPro.php:707
 msgid "Crop"
 msgstr "بُرِش خورده"
 
-#: WPTelegramPro.php:704
+#: WPTelegramPro.php:705
 msgid "Full"
 msgstr "کامل"
 
-#: WPTelegramPro.php:369
+#: WPTelegramPro.php:370
 msgid "Save"
 msgstr "ذخیره"
 
-#: WPTelegramPro.php:324
+#: WPTelegramPro.php:325
 msgid "Settings saved."
 msgstr "تنظیمات ذخیره شد."
 
-#: WPTelegramPro.php:298
+#: WPTelegramPro.php:299
 msgid "Remove % Channel?"
 msgstr "حذف کانال %؟"
 
-#: inc/ChannelWPTP.php:560 WPTelegramPro.php:297
+#: inc/ChannelWPTP.php:562 WPTelegramPro.php:298
 msgid "New Channel"
 msgstr "کانال جدید"
 
-#: inc/WoocommerceWPTP.php:993 WPTelegramPro.php:262
+#: inc/WoocommerceWPTP.php:993 WPTelegramPro.php:263
 msgid "Welcome, your user is successfully connected to the store."
 msgstr "خوش‌ آمدید، کاربری شما با موفقیت به فروشگاه متصل شد."
 
-#: WPTelegramPro.php:247
+#: WPTelegramPro.php:248
 msgid "API Token Invalid (Need to save settings)"
 msgstr "کلید API معتبر نیست (نیازمند ذخیره تنظیمات)"
 
-#: WPTelegramPro.php:245
+#: WPTelegramPro.php:246
 msgid "Bot Name:"
 msgstr "نام بات:"
 
-#: WPTelegramPro.php:195
+#: WPTelegramPro.php:196
 msgid "Keep in touch with me:"
 msgstr "با من در تماس باشید:"
 
-#: WPTelegramPro.php:190
+#: WPTelegramPro.php:191
 msgid "Give it a rating"
 msgstr "امتیاز دهید"
 
-#: WPTelegramPro.php:187
+#: WPTelegramPro.php:188
 msgid "Do you like WP Telegram Pro?"
 msgstr "WP Telegram Pro را دوست دارید؟"
 
-#: WPTelegramPro.php:169
+#: WPTelegramPro.php:170
 msgid "Yes! Now, whenever you publish or update a post you can choose whether send it to Telegram (from post editor page)"
 msgstr "بله! اکنون هر وقت نوشته‌ای را منتشر یا بروز می‌کنید، می‌توانید انتخاب کنید چگونه به تلگرام ارسال شود (از برگه ویرایش نوشته)"
 
-#: WPTelegramPro.php:168
+#: WPTelegramPro.php:169
 msgid "Enter the username of the channel and hit SAVE button!!!"
 msgstr "نام کاربری کانال را وارد کنید و دکمه ذخیره را فشار دهید!"
 
-#: WPTelegramPro.php:167
+#: WPTelegramPro.php:168
 msgid "Allow 'Post Messages' Permission"
 msgstr "مجوز 'Post Messages' را بدهید"
 
-#: WPTelegramPro.php:166
+#: WPTelegramPro.php:167
 msgid "Search the username of your bot and add it as administrator."
 msgstr "نام‌کاربری بات خود را جستجو کنید و به عنوان Administrator به کانال اضافه کنید."
 
-#: WPTelegramPro.php:165
+#: WPTelegramPro.php:166
 msgid "Select 'Add Administrator' option."
 msgstr "گزینه 'Add Administrator' را انتخاب کنید."
 
-#: WPTelegramPro.php:164
+#: WPTelegramPro.php:165
 msgid "Go to channel options and select 'Administrator' option."
 msgstr "به تنظیمات کانال بروید و گزینه 'Administrator' را انتخاب کنید."
 
-#: WPTelegramPro.php:163
+#: WPTelegramPro.php:164
 msgid "Create a bot (if you don't already have one)."
 msgstr "باتی ایجاد کنید (اگر در حال حاضر ندارید)"
 
-#: WPTelegramPro.php:162
+#: WPTelegramPro.php:163
 msgid "Create a channel (if you don't already have one)."
 msgstr "کانالی ایجاد کنید (اگر در حال حاضر ندارید)"
 
-#: WPTelegramPro.php:159
+#: WPTelegramPro.php:160
 msgid "Telegram channel is a great way for attracting people to your site.<br> This option allows you to send posts to your Telegram channel."
 msgstr "کانال تلگرام روش خوبی برای جذب افراد به سایت شما است.<br>با این گزینه شما می‌توانید نوشته‌های خود را به کانال تلگرام ارسال کنید."
 
-#: inc/ChannelWPTP.php:455 WPTelegramPro.php:156
+#: inc/ChannelWPTP.php:456 WPTelegramPro.php:157
 msgid "Channel"
 msgstr "کانال"
 
-#: WPTelegramPro.php:143
+#: WPTelegramPro.php:144
 msgid "How to set bot commands: Start %s and select your bot > \"Edit Bot\" > \"Edit Commands\" > Send text below."
 msgstr "چگونه دستورهای بات را تنظیم کنیم: با شروع %s و انتخاب بات خود » دکمه \"Edit Bot\" » دکمه \"Edit Commands\" » متن زیر را ارسال کنید."
 
-#: WPTelegramPro.php:130
+#: WPTelegramPro.php:131
 msgid "Default command list:"
 msgstr "لیست دستورهای پیشفرض:"
 
-#: WPTelegramPro.php:118
+#: WPTelegramPro.php:119
 msgid "About"
 msgstr "درباره"
 
-#: WPTelegramPro.php:117
+#: WPTelegramPro.php:118
 msgid "Help"
 msgstr "راهنما"
 
-#: WPTelegramPro.php:94
+#: WPTelegramPro.php:95
 msgid "More"
 msgstr "بیشتر"
 
-#: inc/WoocommerceWPTP.php:22 WPTelegramPro.php:93
+#: inc/WoocommerceWPTP.php:22 WPTelegramPro.php:94
 msgid "Detail"
 msgstr "جزییات"
 
-#: WPTelegramPro.php:92
+#: WPTelegramPro.php:93
 msgid "Categories"
 msgstr "دسته‌ها"
 
-#: inc/WordPressWPTP.php:63 inc/WordPressWPTP.php:469 WPTelegramPro.php:91
+#: inc/WordPressWPTP.php:63 inc/WordPressWPTP.php:469 WPTelegramPro.php:92
 msgid "Search"
 msgstr "جستجو"
 
-#: inc/WordPressWPTP.php:61 WPTelegramPro.php:90
+#: inc/WordPressWPTP.php:61 WPTelegramPro.php:91
 msgid "Posts"
 msgstr "نوشته‌ها"
 
-#: WPTelegramPro.php:89
+#: WPTelegramPro.php:90
 msgid "Back"
 msgstr "بازگشت"
 
-#: inc/ChannelWPTP.php:360 inc/ChannelWPTP.php:392 WPTelegramPro.php:84
+#: inc/ChannelWPTP.php:361 inc/ChannelWPTP.php:393 WPTelegramPro.php:85
 msgid "No"
 msgstr "خیر"
 
-#: inc/ChannelWPTP.php:355 inc/ChannelWPTP.php:387 inc/ChannelWPTP.php:615
-#: WPTelegramPro.php:83
+#: inc/ChannelWPTP.php:356 inc/ChannelWPTP.php:388 inc/ChannelWPTP.php:617
+#: WPTelegramPro.php:84
 msgid "Yes"
 msgstr "بله"
 
@@ -906,7 +914,7 @@ msgid "Parsa Kafi"
 msgstr "پارسا کافی"
 
 #. Description of the plugin
-#: WPTelegramPro.php:185
+#: WPTelegramPro.php:186
 msgid "Integrate WordPress with Telegram"
 msgstr "یکپارچه‌سازی وردپرس با تلگرام"
 
@@ -915,6 +923,6 @@ msgid "https://github.com/parsakafi/wp-telegram-pro"
 msgstr "https://github.com/parsakafi/wp-telegram-pro"
 
 #. Plugin Name of the plugin
-#: WPTelegramPro.php:55
+#: WPTelegramPro.php:56
 msgid "WP Telegram Pro"
 msgstr "WP Telegram Pro"

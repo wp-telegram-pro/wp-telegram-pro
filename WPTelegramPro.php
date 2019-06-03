@@ -830,6 +830,25 @@ class WPTelegramPro
         return $message;
     }
     
+    function get_current_user_role()
+    {
+        if (is_user_logged_in()) {
+            $user = wp_get_current_user();
+            $roles = ( array )$user->roles;
+            return $roles[0];
+        } else
+            return false;
+    }
+    
+    function wp_user_roles()
+    {
+        $editable_roles = get_editable_roles();
+        $roles = [];
+        foreach ($editable_roles as $role => $details)
+            $roles[$role] = translate_user_role($details['name']);
+        return $roles;
+    }
+    
     static function install()
     {
         global $table_prefix, $wpdb;

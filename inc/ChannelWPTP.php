@@ -292,6 +292,10 @@ class ChannelWPTP extends WPTelegramPro
     {
         $options = $this->options;
         if (isset($options['channel_username'])) {
+            $user_role = $this->get_current_user_role();
+            $channels_user_roles = array_keys($options['channels_metabox_user_roles']);
+            if (!in_array($user_role, $channels_user_roles)) return;
+            
             $post_types = array();
             foreach ($options['channel_username'] as $k => $v) {
                 if (!empty($v) && isset($options['channel_post_type'][$k]) && is_array($options['channel_post_type'][$k]))
@@ -464,6 +468,7 @@ class ChannelWPTP extends WPTelegramPro
     {
         $this->post_types = get_post_types(['public' => true, 'exclude_from_search' => false, 'show_ui' => true], "objects");
         $this->options = get_option($this->plugin_key);
+        
         ?>
         <div id="<?php echo $this->tabID ?>-content" class="wptp-tab-content hidden">
             <table>
@@ -502,6 +507,19 @@ class ChannelWPTP extends WPTelegramPro
                                placeholder="0" min="0"
                                class="small excerpt_length ltr"> <?php _e('Minutes', $this->plugin_key) ?>,
                         <span class="description"><?php _e('Least 5 minutes recommended.', $this->plugin_key) ?></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label><?php _e('Display Metabox for', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <?php
+                        $user_roles = $this->wp_user_roles();
+                        $channels_user_roles = $this->get_option('channels_metabox_user_roles');
+                        foreach ($user_roles as $role => $name)
+                            echo '<label><input type="checkbox" name="channels_metabox_user_roles[' . $role . ']" value="1" ' . checked(isset($channels_user_roles[$role]), true, false) . '>' . $name . '</label>'
+                        ?>
                     </td>
                 </tr>
             </table>
