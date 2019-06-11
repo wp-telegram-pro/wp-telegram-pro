@@ -146,6 +146,13 @@ class TelegramWPTP
         if (!$result) return false;
         return isset($result['result']) ? $result['result'] : false;
     }
+
+    function getWebhook()
+    {
+        $result = $this->last_result = $this->request('getWebhookInfo');
+        if (!$result) return false;
+        return isset($result['result']) ? $result['result'] : false;
+    }
     
     function sendMessage($message, $keyboard = null, $chat_id = null, $parse_mode = null)
     {

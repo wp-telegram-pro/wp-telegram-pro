@@ -33,6 +33,7 @@ require_once WPTELEGRAMPRO_INC_DIR . 'WordPressWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'WoocommerceWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'ChannelWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'ProxyWPTP.php';
+require_once WPTELEGRAMPRO_INC_DIR . 'DebugsWPTP.php';
 
 class WPTelegramPro
 {
