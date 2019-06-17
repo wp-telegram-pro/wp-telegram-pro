@@ -26,17 +26,13 @@ define('WPTELEGRAMPRO_DIR', untrailingslashit(plugin_dir_path(__FILE__)));
 define('WPTELEGRAMPRO_URL', untrailingslashit(plugins_url('', __FILE__)));
 define('WPTELEGRAMPRO_INC_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR);
 define('WPTELEGRAMPRO_MOD_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR);
+define('WPTELEGRAMPRO_MODINC_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR);
 
+require_once WPTELEGRAMPRO_INC_DIR . 'HelpersWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'TelegramWPTP.php';
-require_once WPTELEGRAMPRO_INC_DIR . 'DebugsWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'WordPressWPTP.php';
 
-foreach (scandir(WPTELEGRAMPRO_MOD_DIR) as $filename) {
-    $path = WPTELEGRAMPRO_MOD_DIR . $filename;
-    if (is_file($path)) {
-        require_once $path;
-    }
-}
+HelpersWPTP::requireAll(WPTELEGRAMPRO_MOD_DIR);
 
 class WPTelegramPro
 {
@@ -886,28 +882,6 @@ class WPTelegramPro
         
         update_option('wptelegrampro_version', WPTELEGRAMPRO_VERSION, false);
         update_option('update_keyboard_time_wptp', time(), false);
-    }
-    
-    /**
-     * Recursive copy files
-     * https://gist.github.com/gserrano/4c9648ec9eb293b9377b
-     * @param $src string Source Directory
-     * @param $dst string Destination Directory
-     */
-    static function recursiveCopy($src, $dst)
-    {
-        $dir = opendir($src);
-        @mkdir($dst);
-        while (($file = readdir($dir))) {
-            if (($file != '.') && ($file != '..')) {
-                if (is_dir($src . DIRECTORY_SEPARATOR . $file)) {
-                    self::recursiveCopy($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file);
-                } else {
-                    copy($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file);
-                }
-            }
-        }
-        closedir($dir);
     }
     
     /**

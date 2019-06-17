@@ -42,7 +42,7 @@ class DebugsWPTP extends WPTelegramPro
             __('WordPress') => array(
                 __('WordPress Version', $this->plugin_key) => $wp_version,
                 __('WordPress Debugging Mode', $this->plugin_key) => $debugMode,
-                __('WordPress Address (URL)', $this->plugin_key) => get_bloginfo('siteurl'),
+                __('WordPress Address (URL)', $this->plugin_key) => get_bloginfo('url'),
                 __('Locale', $this->plugin_key) => $locale,
                 __('Is RTL', $this->plugin_key) => $isRTL,
                 __('SSL', $this->plugin_key) => $ssl
@@ -53,7 +53,7 @@ class DebugsWPTP extends WPTelegramPro
             )
         );
         
-        self::dd($this->checkSSL('parsa.ws'));
+        self::dd($this->checkSSLCertificate(get_bloginfo('url')));
         ?>
         <div class="wrap wptp-wrap">
             <h1 class="wp-heading-inline"><?php echo $this->plugin_name . $this->page_title_divider . $this->page_title ?></h1>
@@ -71,26 +71,20 @@ class DebugsWPTP extends WPTelegramPro
         <?php
     }
     
-    function checkSSL($url)
+    /**
+     * Check SSL Certificate
+     *
+     * @return boolean|array
+     */
+    function checkSSLCertificate($host)
     {
-        $timeout = 60;
-        $streamContext = stream_context_create([
-            'ssl' => [
-                'capture_peer_cert' => true,
-            ],
-        ]);
-        $client = stream_socket_client(
-            "ssl://{$url}:443",
-            $errorNumber,
-            $errorDescription,
-            $timeout,
-            STREAM_CLIENT_CONNECT,
-            $streamContext);
-        
-        $response = stream_context_get_params($client);
-        
-        $certificateProperties = openssl_x509_parse($response['options']['ssl']['peer_certificate']);
-        return $certificateProperties;
+        if (!is_ssl()) return false;
+        try {
+            $SSLCertificate = new SSLCertificateWPTP($host);
+            return $SSLCertificate->request()->response();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
     
     public static function dd($data)
