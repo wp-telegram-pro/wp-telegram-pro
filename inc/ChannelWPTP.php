@@ -247,7 +247,7 @@ class ChannelWPTP extends WPTelegramPro
     {
         $display_metabox = $this->check_metabox_display();
         
-        if($display_metabox) {
+        if ($display_metabox) {
             if (!isset($_POST['wptp-nonce']))
                 return $post_id;
             if (!isset($_POST["wptp-nonce"]) || !wp_verify_nonce($_POST["wptp-nonce"], basename(__FILE__)))
@@ -289,7 +289,7 @@ class ChannelWPTP extends WPTelegramPro
                 
                 $send_to_channel = $_POST['send_to_channel'][$options['channel_username'][$k]];
                 $featured_image = $_POST['channel_with_featured_image'][$options['channel_username'][$k]];
-           
+                
             } else {
                 $send_to_channel = isset($options['send_to_channel'][$k]) ? 1 : 2;
                 $featured_image = isset($options['channel_with_featured_image'][$k]) ? 1 : 2;
@@ -527,7 +527,7 @@ class ChannelWPTP extends WPTelegramPro
                     <td>
                         <?php
                         $user_roles = $this->wp_user_roles();
-                        $channels_user_roles = $this->get_option('channels_metabox_user_roles');
+                        $channels_user_roles = $this->get_option('channels_metabox_user_roles', ['administrator' => true]);
                         foreach ($user_roles as $role => $name)
                             echo '<label><input type="checkbox" name="channels_metabox_user_roles[' . $role . ']" value="1" ' . checked(isset($channels_user_roles[$role]), true, false) . '>' . $name . '</label>'
                         ?>

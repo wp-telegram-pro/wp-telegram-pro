@@ -76,17 +76,17 @@
     margin-bottom: 20px;
 }
 
-.wptp-wrap .wptp-tab-content th {
+.wptp-wrap th {
     text-align: left;
     padding: 15px 0 5px;
     vertical-align: top;
 }
 
-body.rtl .wptp-wrap .wptp-tab-content th {
+body.rtl .wptp-wrap th {
     text-align: right;
 }
 
-.wptp-wrap .wptp-tab-content textarea, .wptp-metabox textarea, .wptp-metabox select {
+.wptp-wrap textarea, .wptp-metabox textarea, .wptp-metabox select {
     width: 100%;
 }
 

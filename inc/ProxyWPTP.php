@@ -165,7 +165,7 @@ class ProxyWPTP extends WPTelegramPro
                         <fieldset>
                             <label>
                                 <input type="radio" value=""
-                                       name="proxy_status" <?php checked($proxy_status, '') ?>> <?php _e('Deactive', $this->plugin_key) ?>
+                                       name="proxy_status" <?php checked($proxy_status, '') ?>> <?php _e('Inactive', $this->plugin_key) ?>
                             </label>
                             <label>
                                 <input type="radio" value="google_script"

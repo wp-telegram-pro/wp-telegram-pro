@@ -26,7 +26,6 @@ define('WPTELEGRAMPRO_BASENAME', plugin_basename(__FILE__));
 define('WPTELEGRAMPRO_DIR', untrailingslashit(plugin_dir_path(__FILE__)));
 define('WPTELEGRAMPRO_URL', untrailingslashit(plugins_url('', __FILE__)));
 define('WPTELEGRAMPRO_INC_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR);
-define('WPTELEGRAMPRO_LANG_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'languages');
 
 require_once WPTELEGRAMPRO_INC_DIR . 'TelegramWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'WordPressWPTP.php';
@@ -42,7 +41,7 @@ class WPTelegramPro
         $rand_id_length = 10, $now, $db_table, $words = array(), $options, $telegram,
         $telegram_input, $user, $default_keyboard, $plugin_name,
         $ignore_post_types = array("attachment", "revision", "nav_menu_item", "custom_css", "customize_changeset", "oembed_cache", "product_variation");
-    protected $helpTabID = 'help-wptp-tab', $aboutTabID = 'about-wptp-tab';
+    protected $helpTabID = 'help-wptp-tab', $aboutTabID = 'about-wptp-tab', $page_title_divider;
     
     public function __construct($bypass = false)
     {
@@ -50,8 +49,7 @@ class WPTelegramPro
         
         date_default_timezone_set(get_option('timezone_string'));
         
-        load_plugin_textdomain($this->plugin_key, false, basename(dirname(__FILE__)) . '/languages');
-        
+        $this->page_title_divider = is_rtl() ? ' < ' : ' > ';
         $this->options = get_option($this->plugin_key);
         $this->telegram = new TelegramWPTP($this->get_option('api_token'));
         $this->db_table = $wpdb->prefix . 'wptelegrampro_users';
@@ -85,6 +83,8 @@ class WPTelegramPro
         $new_words = array(
             'yes' => __('Yes', $this->plugin_key),
             'no' => __('No', $this->plugin_key),
+            'active' => __('Active', $this->plugin_key),
+            'inactive' => __('Inactive', $this->plugin_key),
             'next' => __('Next >', $this->plugin_key),
             'prev' => __('< Previous', $this->plugin_key),
             'next_page' => __('Next Page >', $this->plugin_key),
@@ -882,8 +882,6 @@ class WPTelegramPro
         
         update_option('wptelegrampro_version', WPTELEGRAMPRO_VERSION, false);
         update_option('update_keyboard_time_wptp', time(), false);
-        
-        self::recursiveCopy(WPTELEGRAMPRO_LANG_DIR, WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . 'plugins');
     }
     
     /**
