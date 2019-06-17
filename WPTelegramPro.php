@@ -13,7 +13,6 @@
 
 if (!defined('ABSPATH')) exit;
 
-// Define
 if (!function_exists('get_plugin_data'))
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
 /**
@@ -26,13 +25,18 @@ define('WPTELEGRAMPRO_BASENAME', plugin_basename(__FILE__));
 define('WPTELEGRAMPRO_DIR', untrailingslashit(plugin_dir_path(__FILE__)));
 define('WPTELEGRAMPRO_URL', untrailingslashit(plugins_url('', __FILE__)));
 define('WPTELEGRAMPRO_INC_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR);
+define('WPTELEGRAMPRO_MOD_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR);
 
 require_once WPTELEGRAMPRO_INC_DIR . 'TelegramWPTP.php';
-require_once WPTELEGRAMPRO_INC_DIR . 'WordPressWPTP.php';
-require_once WPTELEGRAMPRO_INC_DIR . 'WoocommerceWPTP.php';
-require_once WPTELEGRAMPRO_INC_DIR . 'ChannelWPTP.php';
-require_once WPTELEGRAMPRO_INC_DIR . 'ProxyWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'DebugsWPTP.php';
+require_once WPTELEGRAMPRO_INC_DIR . 'WordPressWPTP.php';
+
+foreach (scandir(WPTELEGRAMPRO_MOD_DIR) as $filename) {
+    $path = WPTELEGRAMPRO_MOD_DIR . $filename;
+    if (is_file($path)) {
+        require_once $path;
+    }
+}
 
 class WPTelegramPro
 {
