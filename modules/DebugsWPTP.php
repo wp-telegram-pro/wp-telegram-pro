@@ -4,7 +4,7 @@ class DebugsWPTP extends WPTelegramPro
 {
     public static $instance = null;
     protected $page_key, $page_title;
-    
+
     public function __construct()
     {
         parent::__construct(true);
@@ -12,39 +12,40 @@ class DebugsWPTP extends WPTelegramPro
         $this->page_title = __('Debugs', $this->plugin_key);
         add_action('admin_menu', array($this, 'menu'), 999999);
     }
-    
+
     function menu()
     {
         add_submenu_page($this->plugin_key, $this->plugin_name . $this->page_title_divider . $this->page_title, $this->page_title, 'manage_options', $this->page_key, array($this, 'pageContent'));
     }
-    
+
     function pageContent()
     {
         global $wp_version, $wpdb;
-        
+
         $phpversion = phpversion();
         $curl = function_exists('curl_version') ? curl_version()['version'] : $this->words['inactive'];
-        
+
         $debug = defined('WP_DEBUG') ? WP_DEBUG : false;
         $debugMode = $debug ? $this->words['active'] : $this->words['inactive'];
         $ssl = is_ssl() ? $this->words['active'] : $this->words['inactive'];
-        $locale = get_locale();
-        $isRTL = is_rtl() ? $this->words['yes'] : $this->words['no'];
-        
+        $language = get_bloginfo('language');
+        $charset = get_bloginfo('charset');
+        $text_direction = strtoupper(get_bloginfo('text_direction'));
         $checkDBTable = $wpdb->get_var("show tables like '$this->db_table'") === $this->db_table;
         $checkDBTable = $checkDBTable ? $this->words['yes'] : $this->words['no'];
-        
+
         $debugs = array(
             'PHP' => array(
                 __('PHP Version', $this->plugin_key) => $phpversion,
                 __('PHP CURL', $this->plugin_key) => $curl
             ),
             __('WordPress') => array(
-                __('WordPress Version', $this->plugin_key) => $wp_version,
-                __('WordPress Debugging Mode', $this->plugin_key) => $debugMode,
-                __('WordPress Address', $this->plugin_key) => get_bloginfo('url'),
-                __('Locale', $this->plugin_key) => $locale,
-                __('Is RTL', $this->plugin_key) => $isRTL,
+                __('Version', $this->plugin_key) => $wp_version,
+                __('Debugging Mode', $this->plugin_key) => $debugMode,
+                __('Address', $this->plugin_key) => get_bloginfo('url'),
+                __('Language', $this->plugin_key) => $language,
+                __('Charset', $this->plugin_key) => $charset,
+                __('Text Direction', $this->plugin_key) => $text_direction,
                 __('SSL', $this->plugin_key) => $ssl
             ),
             $this->plugin_name => array(
@@ -52,8 +53,8 @@ class DebugsWPTP extends WPTelegramPro
                 __('Plugin DB Table Created', $this->plugin_key) => $checkDBTable
             )
         );
-        
-        self::dd($this->checkSSLCertificate(get_bloginfo('url')));
+
+        HelpersWPTP::dd($this->checkSSLCertificate(get_bloginfo('url')));
         ?>
         <div class="wrap wptp-wrap">
             <h1 class="wp-heading-inline"><?php echo $this->plugin_name . $this->page_title_divider . $this->page_title ?></h1>
@@ -70,7 +71,7 @@ class DebugsWPTP extends WPTelegramPro
         </div>
         <?php
     }
-    
+
     /**
      * Check SSL Certificate
      *
@@ -86,14 +87,7 @@ class DebugsWPTP extends WPTelegramPro
             return $e->getMessage();
         }
     }
-    
-    public static function dd($data)
-    {
-        echo '<pre>';
-        var_dump($data);
-        echo '</pre>';
-    }
-    
+
     /**
      * Returns an instance of class
      * @return  DebugsWPTP

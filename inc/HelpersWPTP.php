@@ -14,6 +14,16 @@ use function Spatie\SslCertificate\substr;
  */
 class HelpersWPTP
 {
+    public static function dd($data, $return = false)
+    {
+        if ($return)
+            ob_start();
+        echo '<pre>';
+        var_dump($data);
+        echo '</pre>';
+        if ($return)
+            return ob_get_clean();
+    }
 
     /**
      * Remove Unused Shortcodes
