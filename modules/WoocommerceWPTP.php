@@ -15,7 +15,7 @@ class WoocommerceWPTP extends WPTelegramPro
         add_filter('wptelegrampro_words', [$this, 'words']);
         add_filter('wptelegrampro_patterns_tags', [$this, 'patterns_tags']);
         add_filter('wptelegrampro_query_args', [$this, 'query_args'], 10, 2);
-        add_filter('wptelegrampro_post_info', [$this, 'product_info'], 10, 4);
+        add_filter('wptelegrampro_post_info', [$this, 'product_info'], 10, 3);
         add_filter('wptelegrampro_default_keyboard', [$this, 'default_keyboard'], 20);
         
         $this->default_products_keyboard = array(array(
@@ -24,8 +24,8 @@ class WoocommerceWPTP extends WPTelegramPro
         
         add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 30);
         add_action('wptelegrampro_settings_content', [$this, 'settings_content']);
-        add_action('wptelegrampro_inline_keyboard_response', array($this, 'inline_keyboard'));
-        add_action('wptelegrampro_keyboard_response', array($this, 'keyboard'));
+        add_action('wptelegrampro_inline_keyboard_response', array($this, 'inline_keyboard_response'));
+        add_action('wptelegrampro_keyboard_response', array($this, 'keyboard_response'));
         
         add_action('init', array($this, 'cart_init'), 99999);
         add_action('woocommerce_payment_complete', array($this, 'woocommerce_payment_complete'));
@@ -107,7 +107,7 @@ class WoocommerceWPTP extends WPTelegramPro
         return $args;
     }
     
-    function product_info($items, $product_id, $query, $c)
+    function product_info($item, $product_id, $query)
     {
         if (!is_array($query['post_type']) && $query['post_type'] == 'product' && $this->check_plugin_active('woocommerce')) {
             $product_type = 'simple';
@@ -129,9 +129,9 @@ class WoocommerceWPTP extends WPTelegramPro
             if ($product_type_)
                 $product_type = $product_type_[0]->slug;
             
-            $items[$query['post_type']][$c]['content'] = $_product->get_description();
-            $items[$query['post_type']][$c]['excerpt'] = empty($_product->get_short_description()) ? get_the_excerpt() : $_product->get_short_description();
-            $items[$query['post_type']][$c]['title'] = $_product->get_name();
+            $item['content'] = $_product->get_description();
+            $item['excerpt'] = empty($_product->get_short_description()) ? get_the_excerpt() : $_product->get_short_description();
+            $item['title'] = $_product->get_name();
             $dimensions = wc_format_dimensions($_product->get_dimensions(false));
             $price = $_product->get_price();
             $regularprice = $_product->get_regular_price();
@@ -155,8 +155,8 @@ class WoocommerceWPTP extends WPTelegramPro
             $categories = $_product->get_category_ids();
             $galleries = $_product->get_gallery_image_ids();
             
-            $items[$query['post_type']][$c]['tags'] = $this->get_taxonomy_terms('product_tag', $product_id);
-            $items[$query['post_type']][$c]['categories'] = $this->get_taxonomy_terms('product_cat', $product_id);
+            $item['tags'] = $this->get_taxonomy_terms('product_tag', $product_id);
+            $item['categories'] = $this->get_taxonomy_terms('product_cat', $product_id);
             
             $product_args = array(
                 'slug' => $_product->get_slug(),
@@ -189,9 +189,9 @@ class WoocommerceWPTP extends WPTelegramPro
                 'product_type' => $product_type
             );
             
-            $items[$query['post_type']][$c] = array_merge($items[$query['post_type']][$c], $product_args);
+            $item = array_merge($item, $product_args);
         }
-        return $items;
+        return $item;
     }
     
     function patterns_tags($tags)
@@ -231,11 +231,10 @@ class WoocommerceWPTP extends WPTelegramPro
         add_filter('woocommerce_short_description', array($this, 'woocommerce_short_description'), 10, 1);
     }
     
-    function keyboard($user_text)
+    function keyboard_response($user_text)
     {
         $words = $this->words;
         $this->words = apply_filters('wptelegrampro_words', $this->words);
-        //$this->telegram->sendMessage(serialize($this->words));
         if ($user_text == '/products' || $user_text == $words['products']) {
             $this->update_user(array('page' => 1));
             $this->update_user_meta('product_category_id', null);
@@ -246,7 +245,7 @@ class WoocommerceWPTP extends WPTelegramPro
                     array(
                         'taxonomy' => 'product_cat',
                         'field' => 'term_id',
-                        'terms' => $this->get_option('exclude_categories'),
+                        'terms' => $this->get_option('exclude_categories', []),
                         'operator' => 'NOT IN',
                     )
                 )
@@ -266,7 +265,7 @@ class WoocommerceWPTP extends WPTelegramPro
         }
     }
     
-    function inline_keyboard($data)
+    function inline_keyboard_response($data)
     {
         $this->words = apply_filters('wptelegrampro_words', $this->words);
         $button_data = $data['data'];

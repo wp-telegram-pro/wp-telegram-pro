@@ -14,6 +14,31 @@ use function Spatie\SslCertificate\substr;
  */
 class HelpersWPTP
 {
+
+    /**
+     * Remove Unused Shortcodes
+     * https://www.maketecheasier.com/remove-unused-shortcode-from-posts-wordpress/
+     * @param string $content | String to strip shortcodes
+     * @return string | String with strip shortcodes
+     */
+    public static function strip_shortcodes($content)
+    {
+        $pattern = self::get_unused_shortcode_regex();
+        $content = preg_replace_callback('/' . $pattern . '/s', 'strip_shortcode_tag', $content);
+        return $content;
+    }
+
+    private static function get_unused_shortcode_regex()
+    {
+        global $shortcode_tags;
+        $tagnames = array_keys($shortcode_tags);
+        $tagregexp = join('|', array_map('preg_quote', $tagnames));
+        $regex = '\\[(\\[?)';
+        $regex .= "(?!$tagregexp)";
+        $regex .= '\\b([^\\]\\/]*(?:\\/(?!\\])[^\\]\\/]*)*?)(?:(\\/)\\]|\\](?:([^\\[]*+(?:\\[(?!\\/\\2\\])[^\\[]*+)*+)\\[\\/\\2\\])?)(\\]?)';
+        return $regex;
+    }
+
     /**
      * Scan the api path, recursively including all PHP files
      * https://gist.github.com/pwenzel/3438784
@@ -32,7 +57,7 @@ class HelpersWPTP
             }
         }
     }
-    
+
     /**
      * Recursive copy files
      * https://gist.github.com/gserrano/4c9648ec9eb293b9377b
@@ -54,8 +79,8 @@ class HelpersWPTP
         }
         closedir($dir);
     }
-    
-    
+
+
     public static function startsWith($haystack, $needles): bool
     {
         foreach ((array)$needles as $needle) {
@@ -63,10 +88,10 @@ class HelpersWPTP
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Determine if a given string ends with a given substring.
      *
@@ -82,10 +107,10 @@ class HelpersWPTP
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Returns the portion of string specified by the start and length parameters.
      *
@@ -99,7 +124,7 @@ class HelpersWPTP
     {
         return mb_substr($string, $start, $length, 'UTF-8');
     }
-    
+
     /**
      * Return the length of the given string.
      *
@@ -111,7 +136,7 @@ class HelpersWPTP
     {
         return mb_strlen($value);
     }
-    
+
     /**
      * Determine if a given string contains a given substring.
      *
@@ -127,18 +152,18 @@ class HelpersWPTP
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     public static function localeDate($time, $format = "Y/m/d H:i:s")
     {
         if (function_exists('parsidate'))
             return parsidate($format, $time, 'en');
-        
+
         if (function_exists('jdate'))
             return jdate($format, $time, false, false);
-        
+
         return $time;
     }
 }

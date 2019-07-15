@@ -42,13 +42,13 @@ class WPTelegramPro
         $telegram_input, $user, $default_keyboard, $plugin_name,
         $ignore_post_types = array("attachment", "revision", "nav_menu_item", "custom_css", "customize_changeset", "oembed_cache", "product_variation");
     protected $helpTabID = 'help-wptp-tab', $aboutTabID = 'about-wptp-tab', $page_title_divider;
-    
+
     public function __construct($bypass = false)
     {
         global $wpdb;
-        
+
         date_default_timezone_set(get_option('timezone_string'));
-        
+
         $this->page_title_divider = is_rtl() ? ' < ' : ' > ';
         $this->options = get_option($this->plugin_key);
         $this->telegram = new TelegramWPTP($this->get_option('api_token'));
@@ -58,9 +58,9 @@ class WPTelegramPro
         $this->init($bypass);
         $this->words = apply_filters('wptelegrampro_words', $this->words);
         $this->patterns_tags = apply_filters('wptelegrampro_patterns_tags', $this->patterns_tags);
-        
+
         add_filter('wptelegrampro_words', [$this, 'words']);
-        
+
         if (!$bypass) {
             add_action('wptelegrampro_keyboard_response', array($this, 'change_user_status'), 1);
             add_filter('wptelegrampro_after_settings_update_message', array($this, 'after_settings_updated_message'), 10);
@@ -70,14 +70,15 @@ class WPTelegramPro
             add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
             add_action('wp_ajax_bot_info_wptp', array($this, 'get_bot_info'));
             add_filter('cron_schedules', array($this, 'add_every_minutes'));
-            
+
             add_filter('wptelegrampro_settings_update_message', [$this, 'check_ssl'], 100);
             add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 100);
             add_action('wptelegrampro_settings_content', [$this, 'help_settings_content']);
             add_action('wptelegrampro_settings_content', [$this, 'about_settings_content']);
+            add_filter('wptelegrampro_post_info', [$this, 'fix_post_info'], 1000, 3);
         }
     }
-    
+
     function words($words)
     {
         $new_words = array(
@@ -97,10 +98,10 @@ class WPTelegramPro
             'more' => __('More', $this->plugin_key),
         );
         $words = array_merge($words, $new_words);
-        
+
         return $words;
     }
-    
+
     function init($bypass = false)
     {
         if (isset($_GET['wptp']) && $_GET['wptp'] == get_option('wptp-rand-url')) {
@@ -114,14 +115,14 @@ class WPTelegramPro
             }
         }
     }
-    
+
     function settings_tab($tabs)
     {
         $tabs[$this->helpTabID] = __('Help', $this->plugin_key);
         $tabs[$this->aboutTabID] = __('About', $this->plugin_key);
         return $tabs;
     }
-    
+
     function help_settings_content()
     {
         $commands = apply_filters('wptelegrampro_default_commands', array());
@@ -179,7 +180,7 @@ class WPTelegramPro
         </div>
         <?php
     }
-    
+
     function about_settings_content()
     {
         ?>
@@ -201,12 +202,12 @@ class WPTelegramPro
         </div>
         <?php
     }
-    
+
     function get_init()
     {
         $data = $this->telegram_input;
         $user_text = $data['text'];
-        
+
         // When pressed inline keyboard button
         if (isset($data['data'])) {
             do_action('wptelegrampro_inline_keyboard_response', $data);
@@ -215,7 +216,7 @@ class WPTelegramPro
         }
         exit;
     }
-    
+
     function change_user_status($user_text)
     {
         $allow_status = array('search');
@@ -227,19 +228,19 @@ class WPTelegramPro
                 $new_status = $words[$user_text];
             else
                 $new_status = 'start';
-            
+
             $this->update_user_meta('search_query', null);
-            
+
             $this->update_user(array('status' => $new_status));
             $this->set_user();
         }
     }
-    
+
     function button_data_check($button_data, $word)
     {
         return substr($button_data, 0, strlen($word)) == $word;
     }
-    
+
     function get_bot_info()
     {
         $this->telegram->bot_info();
@@ -251,7 +252,7 @@ class WPTelegramPro
         }
         exit;
     }
-    
+
     function check_user_id($user_id = null)
     {
         if (!isset($_COOKIE['wptpwc_user_id']) || empty($_COOKIE['wptpwc_user_id']) || strlen($_COOKIE['wptpwc_user_id']) != $this->rand_id_length)
@@ -266,7 +267,7 @@ class WPTelegramPro
         setcookie('wptpwc_user_id', null, -1);
         unset($_COOKIE['wptpwc_user_id']);
     }
-    
+
     function keyboard_columns($length, $count)
     {
         if ($length >= 3 && $length <= 5)
@@ -286,7 +287,7 @@ class WPTelegramPro
             }
         return $columns;
     }
-    
+
     function enqueue_scripts()
     {
         $version = rand(100, 200) . rand(200, 300);
@@ -304,50 +305,50 @@ class WPTelegramPro
         wp_localize_script('wptp-js', 'wptp', $translation_array);
         wp_enqueue_style('wptp-css', plugin_dir_url(__FILE__) . 'assets/css/wptp.css', array(), $version, false);
     }
-    
+
     function message($message, $type = 'updated', $is_dismissible = true)
     {
         return '<div id="setting-error-settings_updated" class="' . $type . ($is_dismissible ? ' is-dismissible ' : '') . ' settings-error notice " ><p>' . $message . '</p></div> ';
     }
-    
+
     function webHookURL()
     {
         $rand = 'wptp-' . rand(1000, 2000) . rand(2000, 3000) . rand(3000, 4000);
         $url = get_bloginfo('url') . '/' . '?wptp=' . $rand;
         return array('url' => $url, 'rand' => $rand);
     }
-    
+
     function menu()
     {
         add_menu_page($this->plugin_name, $this->plugin_name, 'manage_options', $this->plugin_key, array($this, 'settings'), 'dashicons-wptp-telegram');
     }
-    
+
     function after_settings_updated_message($update_message)
     {
         $update_message .= $this->message(__('Settings saved.', $this->plugin_key));
         return $update_message;
     }
-    
+
     function settings()
     {
         $tabs_title_list = array();
         $tabs_title = apply_filters('wptelegrampro_settings_tabs', $tabs_title_list);
-        
+
         $update_message = apply_filters('wptelegrampro_settings_update_message', '');
-        
+
         if (isset($_POST['wpt_nonce_field']) && wp_verify_nonce($_POST['wpt_nonce_field'], 'settings_submit')) {
             unset($_POST['wpt_nonce_field']);
             unset($_POST['_wp_http_referer']);
-            
+
             do_action('wptelegrampro_before_settings_updated', $this->options, $_POST);
             $update_message = apply_filters('wptelegrampro_before_settings_update_message', $update_message, $this->options, $_POST);
-            
+
             update_option($this->plugin_key, $_POST, false);
-            
+
             do_action('wptelegrampro_after_settings_updated', $this->options, $_POST);
             $update_message = apply_filters('wptelegrampro_after_settings_update_message', $update_message, $this->options, $_POST);
         }
-        
+
         $this->options = get_option($this->plugin_key);
         add_filter('wp_dropdown_cats', array($this, 'dropdown_filter'), 10, 2);
         ?>
@@ -375,7 +376,7 @@ class WPTelegramPro
         </div>
         <?php
     }
-    
+
     /**
      * Get Plugin Option
      * @param string $key Option Name
@@ -386,7 +387,7 @@ class WPTelegramPro
     {
         return isset($this->options[$key]) ? $this->options[$key] : $default;
     }
-    
+
     function query($query = array())
     {
         global $post;
@@ -395,14 +396,14 @@ class WPTelegramPro
             if (!isset($query[$key]))
                 $query[$key] = null;
         }
-        
+
         if ($query['post_type'] === null)
             $query['post_type'] = 'post';
-        
+
         $temp = $post;
         $per_page = $query['per_page'] == null ? $this->per_page : $query['per_page'];
         $page = $this->user['page'];
-        
+
         $image_size = $this->get_option('image_size');
         $items = array();
         $args = array(
@@ -418,37 +419,37 @@ class WPTelegramPro
                 'order' => 'DESC',
                 'orderby' => 'modified'
             ));
-            
+
             $args['tax_query'] = array('relation' => 'AND');
-            
+
             if (isset($query['s']) && !empty(trim($query['s']))) {
                 $args['s'] = $query['s'] . ' ' . mb_strtolower($query['s'], 'UTF-8');
                 $args['sentence'] = '';
             }
-            
+
             if (isset($query['tax_query']))
                 $args['tax_query'] = array_merge($args['tax_query'], $query['tax_query']);
-            
+
             if ($query['post_type'] == 'post') {
                 if ($query['category_id'] !== null)
                     $args['cat'] = intval($query['category_id']);
             }
         }
-        
+
         $args = apply_filters('wptelegrampro_query_args', $args, $query);
-        
+
         $query_ = new WP_Query($args);
-        
+
         $max_num_pages = $query_->max_num_pages;
         if (!$max_num_pages) $max_num_pages = 1;
         $items['max_num_pages'] = $max_num_pages;
-        
+
         $items['parameter'] = array(
             'category_id' => $query['category_id'],
             'post_type' => $query['post_type'],
             's' => $query['s']
         );
-        
+
         $c = 0;
         if ($query_->have_posts()) {
             while ($query_->have_posts()) {
@@ -458,7 +459,7 @@ class WPTelegramPro
                 $post_type = get_post_type($post_id);
                 if (!isset($items[$post_type]))
                     $items[$post_type] = array();
-                
+
                 if (has_post_thumbnail($post_id) && !empty($image_size)) {
                     $image = get_the_post_thumbnail_url($post_id, $image_size);
                     $meta_data = wp_get_attachment_metadata(get_post_thumbnail_id());
@@ -471,7 +472,7 @@ class WPTelegramPro
                         }
                     }
                 }
-                
+
                 $items[$post_type][$c] = array(
                     'ID' => $post_id,
                     'title' => get_the_title(),
@@ -487,28 +488,40 @@ class WPTelegramPro
                     'tags' => null,
                     'categories' => null
                 );
-                
+
                 if ($post_type == 'post') {
                     $items[$post_type][$c]['tags'] = $this->get_taxonomy_terms('post_tag', $post_id);
                     $items[$post_type][$c]['categories'] = $this->get_taxonomy_terms('category', $post_id);
                 }
-                
-                $items = apply_filters('wptelegrampro_post_info', $items, $post_id, $query, $c);
-                
+
+                $items[$post_type][$c] = apply_filters('wptelegrampro_post_info', $items[$post_type][$c], $post_id, $query);
+
                 $c++;
             }
         }
-        
+
         wp_reset_postdata();
         wp_reset_query();
         $post = $temp;
-        
+
         if (isset($query['p']) && !is_array($query['post_type']) && count($items[$query['post_type']]) == 1)
             $items = current($items[$query['post_type']]);
-        
+
         return $items;
     }
-    
+
+    function fix_post_info($item, $product_id, $query)
+    {
+        $item['excerpt'] = do_shortcode($item['excerpt']);
+        $item['excerpt'] = HelpersWPTP::strip_shortcodes($item['excerpt']);
+        $item['excerpt'] = wp_strip_all_tags($item['excerpt']);
+
+        $item['content'] = do_shortcode($item['content']);
+        $item['content'] = HelpersWPTP::strip_shortcodes($item['content']);
+
+        return $item;
+    }
+
     /**
      * Get Taxonomy Terms
      * @param $taxonomy string Taxonomy Name
@@ -530,20 +543,20 @@ class WPTelegramPro
         }
         return $terms_;
     }
-    
+
     function get_user_meta($key)
     {
         $meta = $this->user['meta'];
         if (empty($meta))
             return null;
-        
+
         $meta = unserialize($meta);
         if (isset($meta[$key]))
             return $meta[$key];
         else
             return null;
     }
-    
+
     function update_user_meta($key, $value)
     {
         $meta = $this->user['meta'];
@@ -551,22 +564,22 @@ class WPTelegramPro
             $meta = array();
         else
             $meta = unserialize($meta);
-        
+
         $meta[$key] = $value;
         $this->update_user(array('meta' => serialize($meta)));
     }
-    
+
     function user_field($key)
     {
         return $this->user[$key];
     }
-    
+
     function update_user($update_field)
     {
         global $wpdb;
         if (!is_array($update_field))
             return false;
-        
+
         $result = $wpdb->update(
             $this->db_table,
             array_merge($update_field, array('updated_at' => $this->now)),
@@ -575,11 +588,11 @@ class WPTelegramPro
         if ($result)
             $this->set_user(array('user_id' => $this->telegram_input['form']['id']));
     }
-    
+
     function set_user($args = array())
     {
         global $wpdb;
-        
+
         if (isset($args['id']) && $args['id'] != null && is_numeric($args['id']))
             return $this->user = $wpdb->get_row("SELECT * FROM {$this->db_table} WHERE id = '{$args['id']}'", ARRAY_A);
         if (isset($args['user_id']) && $args['user_id'] != null && is_numeric($args['user_id']))
@@ -588,7 +601,7 @@ class WPTelegramPro
             return $this->user = $wpdb->get_row("SELECT * FROM {$this->db_table} WHERE rand_id = '{$args['rand_id']}'", ARRAY_A);
         if (isset($args['wp_id']) && $args['wp_id'] != null && is_numeric($args['wp_id']))
             return $this->user = $wpdb->get_row("SELECT * FROM {$this->db_table} WHERE wp_id = {$args['wp_id']}", ARRAY_A);
-        
+
         $from = $this->telegram_input['from'];
         if (isset($from['id'])) {
             $sql = "SELECT * FROM {$this->db_table} WHERE user_id = '{$from['id']}'";
@@ -621,22 +634,22 @@ class WPTelegramPro
                     )
                 );
             }
-            
+
             $this->user = $wpdb->get_row($sql, ARRAY_A);
         }
         return false;
     }
-    
+
     function check_plugin_active($plugin)
     {
         if ($plugin == 'woocommerce')
             $plugin = 'woocommerce/woocommerce.php';
-        
+
         if (!function_exists('is_plugin_active'))
             require_once($this->get_admin_path() . 'includes' . DIRECTORY_SEPARATOR . 'plugin.php');
         return is_plugin_active($plugin);
     }
-    
+
     /**
      * Obtain the path to the admin directory.
      * Thanks @andrezrv & @tazziedave, https://gist.github.com/tazziedave/72e03cecd0cd756785e0f28f652f7d8c
@@ -652,7 +665,7 @@ class WPTelegramPro
         $admin_path = apply_filters('wptelegrampro_get_admin_path', $admin_path);
         return $admin_path;
     }
-    
+
     /**
      * Get Taxonomy Terms Keyboard
      *
@@ -690,7 +703,7 @@ class WPTelegramPro
         }
         return false;
     }
-    
+
     /**
      * WordPress Image Size Select
      * @param string $name Select Name
@@ -710,7 +723,7 @@ class WPTelegramPro
         $select .= '</select>';
         return $select;
     }
-    
+
     /** https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
      * Get size information for all currently-registered image sizes.
      *
@@ -741,7 +754,7 @@ class WPTelegramPro
         }
         return $sizes;
     }
-    
+
     function dropdown_categories($name, $taxonomy, $selected = array())
     {
         $select = wp_dropdown_categories(array(
@@ -753,21 +766,21 @@ class WPTelegramPro
             'hierarchical' => true,
             'echo' => false
         ));
-        
+
         if (is_array($selected))
             foreach ($selected as $sel)
                 if (!empty($sel) && $sel != '-1')
                     $select = str_replace('value="' . $sel . '"', 'value="' . $sel . '" selected', $select);
-        
+
         return $select;
     }
-    
+
     function dropdown_filter($output, $r)
     {
         $output = preg_replace('/<select (.*?) >/', '<select $1 size="5" multiple>', $output);
         return $output;
     }
-    
+
     private function random_id()
     {
         global $wpdb;
@@ -781,7 +794,7 @@ class WPTelegramPro
         }
         return $id;
     }
-    
+
     private function random_strings($length, $string_type = array('NUMBER'))
     {
         $original_string = array();
@@ -794,12 +807,12 @@ class WPTelegramPro
         if (in_array("CUCASE", $string_type)) {
             $original_string = array_merge(range('A', 'Z'), $original_string);
         }
-        
+
         $original_string = implode("", $original_string);
         $original_string = strlen($original_string) < $length ? str_repeat($original_string, intval($length / strlen($original_string) + 1)) : $original_string;
         return substr(str_shuffle($original_string), 0, $length);
     }
-    
+
     function add_every_minutes($schedules)
     {
         for ($i = 1; $i <= 60; $i++) {
@@ -811,7 +824,7 @@ class WPTelegramPro
         }
         return $schedules;
     }
-    
+
     function check_remote_post($r, $url)
     {
         $bot_api_url = 'https://api.telegram.org/bot';
@@ -819,18 +832,18 @@ class WPTelegramPro
         $pattern = '/^(?:' . preg_quote($bot_api_url, '/') . '|' . preg_quote($user_link, '/') . ')/i';
         $to_telegram = preg_match($pattern, $url);
         $by_wptelegrampro = (isset($r['headers']['wptelegrampro']) && $r['headers']['wptelegrampro']);
-        
+
         // if the request is sent to Telegram by WP Telegram Pro
         return $to_telegram && $by_wptelegrampro;
     }
-    
+
     function check_ssl($message)
     {
         if (!is_ssl())
             $message .= $this->message(__('The plugin requires SSL in the domain of your website!', $this->plugin_key), 'error');
         return $message;
     }
-    
+
     function get_current_user_role()
     {
         if (is_user_logged_in()) {
@@ -840,7 +853,7 @@ class WPTelegramPro
         } else
             return false;
     }
-    
+
     function wp_user_roles()
     {
         $editable_roles = get_editable_roles();
@@ -849,14 +862,14 @@ class WPTelegramPro
             $roles[$role] = translate_user_role($details['name']);
         return $roles;
     }
-    
+
     static function install()
     {
         global $table_prefix, $wpdb;
-        
+
         $table_name = 'wptelegrampro_users';
         $wp_table = $table_prefix . $table_name;
-        
+
         if ($wpdb->get_var("show tables like '$wp_table'") != $wp_table) {
             $sql = "CREATE TABLE `{$wp_table}` (
                   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -879,11 +892,11 @@ class WPTelegramPro
             require_once(ABSPATH . '/wp-admin/includes/upgrade.php');
             dbDelta($sql);
         }
-        
+
         update_option('wptelegrampro_version', WPTELEGRAMPRO_VERSION, false);
         update_option('update_keyboard_time_wptp', time(), false);
     }
-    
+
     /**
      * Returns an instance of class
      * @return  WPTelegramPro

@@ -5,7 +5,7 @@
  *
  * @link       https://wordpress.org/plugins/wp-telegram-pro
  * @since      1.0.0
- * @copyright Based on https://github.com/spatie/ssl-certificate
+ * @copyright  Based on https://github.com/spatie/ssl-certificate
  *
  * @package    WPTelegramPro
  * @subpackage WPTelegramPro/modules/inc
@@ -61,7 +61,6 @@ class SSLCertificateWPTP
         if (isset($this->rawResponse['options']['ssl']['peer_certificate'])) {
             $this->rawResponse = openssl_x509_parse($this->rawResponse['options']['ssl']['peer_certificate']);
             $this->response = array(
-                'country' => 1,
                 'validFromDate' => $this->validFromDate(),
                 'expirationDate' => $this->expirationDate(),
                 'isExpired' => $this->isExpired(),

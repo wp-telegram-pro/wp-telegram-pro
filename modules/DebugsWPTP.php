@@ -42,7 +42,7 @@ class DebugsWPTP extends WPTelegramPro
             __('WordPress') => array(
                 __('WordPress Version', $this->plugin_key) => $wp_version,
                 __('WordPress Debugging Mode', $this->plugin_key) => $debugMode,
-                __('WordPress Address (URL)', $this->plugin_key) => get_bloginfo('url'),
+                __('WordPress Address', $this->plugin_key) => get_bloginfo('url'),
                 __('Locale', $this->plugin_key) => $locale,
                 __('Is RTL', $this->plugin_key) => $isRTL,
                 __('SSL', $this->plugin_key) => $ssl
