@@ -52,7 +52,7 @@ class DebugsWPTP extends WPTelegramPro
                 __('Plugin DB Table Created', $this->plugin_key) => $checkDBTable
             ),
             'SSL' => array(
-                __('Enable', $this->plugin_key) => $ssl,
+                __('Status', $this->plugin_key) => $ssl,
             )
         );
         if (is_ssl()) {
