@@ -23,6 +23,11 @@ Useful Tools:
 
 Changelog
 -----------
+**V 1.7**
+- Add debugs page
+- Add helps page
+- Cleans post excerpt from tags and unused shortcodes
+
 **V 1.6**
 - New option for display channels metabox base on user role
 - Add currency symbol to channel pattern tags, `{currency-symbol}`

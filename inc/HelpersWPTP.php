@@ -27,7 +27,7 @@ class HelpersWPTP
      * @param string $content | String to strip shortcodes
      * @return string | String with strip shortcodes
      */
-    public static function strip_shortcodes($content)
+    public static function stripShortCodes($content)
     {
         $pattern = self::get_unused_shortcode_regex();
         $content = preg_replace_callback('/' . $pattern . '/s', 'strip_shortcode_tag', $content);

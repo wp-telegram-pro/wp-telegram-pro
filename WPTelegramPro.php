@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/parsakafi/wp-telegram-pro
  * Description: Integrate WordPress with Telegram
  * Author: Parsa Kafi
- * Version: 1.6
+ * Version: 1.7
  * Author URI: http://parsa.ws
  * Text Domain: wp-telegram-pro
  * WC requires at least: 3.0.0
@@ -490,11 +490,11 @@ class WPTelegramPro
     function fix_post_info($item, $product_id, $query)
     {
         $item['excerpt'] = do_shortcode($item['excerpt']);
-        $item['excerpt'] = HelpersWPTP::strip_shortcodes($item['excerpt']);
+        $item['excerpt'] = HelpersWPTP::stripShortCodes($item['excerpt']);
         $item['excerpt'] = wp_strip_all_tags($item['excerpt']);
 
         $item['content'] = do_shortcode($item['content']);
-        $item['content'] = HelpersWPTP::strip_shortcodes($item['content']);
+        $item['content'] = HelpersWPTP::stripShortCodes($item['content']);
 
         return $item;
     }
