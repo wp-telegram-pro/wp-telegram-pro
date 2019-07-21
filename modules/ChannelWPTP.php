@@ -8,7 +8,7 @@ class ChannelWPTP extends WPTelegramPro
     public $excerpt_length = 100;
     public $max_channel = 10;
     protected $post_types;
-    
+
     public function __construct()
     {
         parent::__construct(true);
@@ -19,7 +19,8 @@ class ChannelWPTP extends WPTelegramPro
         add_Shortcode('channel_members_wptp', [$this, 'channel_members_shortcode']);
         add_Shortcode('if_statement_wptp', [$this, 'if_statement_shortcode']);
         add_filter('wptelegrampro_channel_text', [$this, 'replace_channel_text'], 999999, 2);
-        
+        add_action('wptelegrampro_helps_content', [$this, 'helps_channel']);
+
         if ($this->get_option('send_to_channels') == 1) {
             add_action('init', [$this, 'schedule']);
             add_action('auto_channels_wptp', [$this, 'auto_update']);
@@ -28,26 +29,53 @@ class ChannelWPTP extends WPTelegramPro
         } else
             wp_clear_scheduled_hook('auto_channels_wptp');
     }
-    
+
+    function helps_channel()
+    {
+        ?>
+        <div class="item">
+            <button class="toggle" type="button"> <?php _e('Telegram Channel', $this->plugin_key) ?></button>
+            <div class="panel">
+                <div>
+                    <strong>
+                        <?php _e('Telegram channel is a great way for attracting people to your site.<br> This option allows you to send posts to your Telegram channel.', $this->plugin_key) ?>
+                    </strong>
+                    <ol>
+                        <li><?php _e("Create a channel (if you don't already have one).", $this->plugin_key) ?></li>
+                        <li><?php _e("Create a bot (if you don't already have one).", $this->plugin_key) ?></li>
+                        <li><?php _e("Go to channel options and select 'Administrator' option.", $this->plugin_key) ?></li>
+                        <li><?php _e("Select 'Add Administrator' option.", $this->plugin_key) ?></li>
+                        <li><?php _e("Search the username of your bot and add it as administrator.", $this->plugin_key) ?></li>
+                        <li><?php _e("Allow 'Post Messages' Permission", $this->plugin_key) ?></li>
+                        <li><?php _e("Enter the username of the channel and hit SAVE button!!!", $this->plugin_key) ?></li>
+                        <li><?php _e("Yes! Now, whenever you publish or update a post you can choose whether send it to Telegram (from post editor page)", $this->plugin_key) ?>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
     function if_statement_shortcode($atts, $content = "")
     {
         $atts = shortcode_atts(array(
             'field' => '',
             'post_id' => false
         ), $atts);
-        
+
         if (!$atts['post_id'] || empty($atts['field']))
             return '';
-        
+
         $_field = explode(':', $atts['field']);
         if ($_field[0] == 'cf') {
             $value = get_post_meta($atts['post_id'], $_field[1], true);
             if (!$value) return '';
         }
-        
+
         return $content;
     }
-    
+
     function replace_channel_text($template, $post_id)
     {
         /**
@@ -71,17 +99,17 @@ class ChannelWPTP extends WPTelegramPro
                 }
             }
         }
-        
+
         /**
          * Check if statement
          */
         $template = preg_replace('/{if=\'(.*?)\'}(.*?){\/if}/', '[if_statement_wptp field="$1" post_id="' . $post_id . '"]$2[/if_statement_wptp]', $template);
-        
+
         $template = do_shortcode($template);
-        
+
         return $template;
     }
-    
+
     function auto_update($post_id = null)
     {
         $options = $this->options;
@@ -111,7 +139,7 @@ class ChannelWPTP extends WPTelegramPro
                 if (isset($options['channel_post_type'][$k]) && count($options['channel_post_type'][$k]) > 0) {
                     $post_types = array_keys($options['channel_post_type'][$k]);
                     $delay = intval($this->get_option('channels_delay_send', 0));
-                    
+
                     $args = array(
                         'posts_per_page' => 1,
                         'post_status' => 'publish',
@@ -148,29 +176,29 @@ class ChannelWPTP extends WPTelegramPro
             }
         }
     }
-    
+
     function send_to_channel($post_id, $channel, $index = 0)
     {
         $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
         $keyboards = null;
         $options = $this->options;
-        
+
         if ($options['channel_username'][$index] == $channel) {
             $post = $this->query(array('p' => $post_id, 'post_type' => get_post_type($post_id)));
-            
+
             $text = get_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$index] . '_wptp', true);
             if (empty($text))
                 $text = $options['channel_message_pattern'][$index];
-            
+
             $text = stripslashes($text);
-            
+
             if (isset($options['channel_inline_button_title'][$index]) && !empty($options['channel_inline_button_title'][$index])) {
                 $keyboard = array(array(
                     array('text' => $options['channel_inline_button_title'][$index], 'url' => $post['short-link'])
                 ));
                 $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
             }
-            
+
             if ($post['image'] !== null) {
                 $featured_image = get_post_meta($post_id, '_featured_image_' . $options['channel_username'][$index] . '_wptp', true);
                 if (empty($featured_image))
@@ -178,7 +206,7 @@ class ChannelWPTP extends WPTelegramPro
             } else {
                 $featured_image = false;
             }
-            
+
             $excerpt_length = isset($options['channel_excerpt_length'][$index]) && !empty($options['channel_excerpt_length'][$index]) ? $options['channel_excerpt_length'][$index] : $this->excerpt_length;
             add_filter('excerpt_length', function () use ($excerpt_length) {
                 return $excerpt_length;
@@ -186,26 +214,26 @@ class ChannelWPTP extends WPTelegramPro
             add_filter('excerpt_more', function () {
                 return '...';
             });
-            
+
             $disable_web_page_preview = isset($options['channel_disable_web_page_preview'][$index]) ? true : false;
             //$image_position = $options['channel_image_position'][$index];
             $formatting_messages = $options['channel_formatting_messages'][$index];
             $formatting_messages = $formatting_messages == 'simple' ? null : $formatting_messages;
-            
+
             $post['content'] = $formatting_messages != 'HTML' ? strip_tags($post['content']) : $post['content'];
-            
+
             if (isset($post['tags']) && is_array($post['tags']))
                 if (count($post['tags']) > 0)
                     $post['tags'] = '#' . implode(' #', array_keys($post['tags']));
                 else
                     $post['tags'] = '';
-            
+
             if (isset($post['categories']) && is_array($post['categories']))
                 if (count($post['categories']) > 0)
                     $post['categories'] = implode(' | ', array_keys($post['categories']));
                 else
                     $post['categories'] = '';
-            
+
             foreach ($this->patterns_tags as $group => $group_item) {
                 if (isset($group_item['plugin']) && !$this->check_plugin_active($group_item['plugin']))
                     continue;
@@ -219,15 +247,15 @@ class ChannelWPTP extends WPTelegramPro
                     $text = str_replace('{' . $tag . '}', $replace, $text);
                 }
             }
-            
+
             $text = apply_filters('wptelegrampro_channel_text', $text, $post_id);
-            
+
             $this->telegram->disable_web_page_preview($disable_web_page_preview);
             if ($featured_image && $post[$image_send_mode] !== null)
                 $this->telegram->sendFile('sendPhoto', $post[$image_send_mode], $text, $keyboards, '@' . $channel);
             else
                 $this->telegram->sendMessage($text, $keyboards, '@' . $channel, $formatting_messages);
-            
+
             $result = $this->telegram->get_last_result();
             if (isset($result['ok']) && $result['ok']) {
                 update_post_meta($post_id, '_posted_status_' . $channel . '_wptp', 1);
@@ -236,24 +264,24 @@ class ChannelWPTP extends WPTelegramPro
             }
         }
     }
-    
+
     function schedule()
     {
         if (isset($this->options['send_to_channels']) && !wp_next_scheduled('auto_channels_wptp'))
             wp_schedule_event(time(), 'every_' . (intval($this->options['channels_cron_interval']) != 0 ? $this->options['channels_cron_interval'] : 1) . '_minutes', 'auto_channels_wptp');
     }
-    
+
     function meta_save($post_id, $post)
     {
         $display_metabox = $this->check_metabox_display();
-        
+
         if ($display_metabox) {
             if (!isset($_POST['wptp-nonce']))
                 return $post_id;
             if (!isset($_POST["wptp-nonce"]) || !wp_verify_nonce($_POST["wptp-nonce"], basename(__FILE__)))
                 return $post_id;
         }
-        
+
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
             return $post_id;
         if (false !== wp_is_post_revision($post_id))
@@ -269,44 +297,44 @@ class ChannelWPTP extends WPTelegramPro
             return $post_id;
         if (strpos($post->post_name, 'revision') !== false)
             return $post_id;
-        
+
         $options = $this->options;
         $post_type = $post->post_type;
-        
+
         foreach ($options['channel_username'] as $k => $v) {
             if (empty($v) || !isset($options['channel_post_type'][$k]) || isset($options['channel_post_type'][$k]) && is_array($options['channel_post_type'][$k]) && !in_array($post_type, array_keys($options['channel_post_type'][$k])))
                 continue;
-            
+
             if ($display_metabox) {
                 $posted_status = get_post_meta($post_id, '_retry_posted_' . $options['channel_username'][$k] . '_wptp', true);
                 if ($posted_status == 1 && $_POST['send_to_channel'][$options['channel_username'][$k]] == 1)
                     delete_post_meta($post_id, '_retry_posted_' . $options['channel_username'][$k] . '_wptp');
-                
+
                 if (!empty($_POST['channel_message_pattern'][$options['channel_username'][$k]]) && stripslashes($options['channel_message_pattern'][$k]) != $_POST['channel_message_pattern'][$options['channel_username'][$k]])
                     update_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$k] . '_wptp', $_POST['channel_message_pattern'][$options['channel_username'][$k]]);
                 elseif (empty($_POST['channel_message_pattern'][$options['channel_username'][$k]]))
                     delete_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$k] . '_wptp');
-                
+
                 $send_to_channel = $_POST['send_to_channel'][$options['channel_username'][$k]];
                 $featured_image = $_POST['channel_with_featured_image'][$options['channel_username'][$k]];
-                
+
             } else {
                 $send_to_channel = isset($options['send_to_channel'][$k]) ? 1 : 2;
                 $featured_image = isset($options['channel_with_featured_image'][$k]) ? 1 : 2;
             }
-            
+
             update_post_meta($post_id, '_send_to_channel_' . $options['channel_username'][$k] . '_wptp', $send_to_channel);
             update_post_meta($post_id, '_featured_image_' . $options['channel_username'][$k] . '_wptp', $featured_image);
         }
         return $post_id;
     }
-    
+
     function register_meta_boxes($post_type)
     {
         $options = $this->options;
         if (isset($options['channel_username'])) {
             if (!$this->check_metabox_display()) return;
-            
+
             $post_types = array();
             foreach ($options['channel_username'] as $k => $v) {
                 if (!empty($v) && isset($options['channel_post_type'][$k]) && is_array($options['channel_post_type'][$k]))
@@ -316,14 +344,14 @@ class ChannelWPTP extends WPTelegramPro
                 add_meta_box('WPTBMetaBox', $this->plugin_name, array($this, 'post_display'), $post_type);
         }
     }
-    
+
     function post_display()
     {
         $options = $this->options;
         $post_id = get_the_ID();
         wp_nonce_field(basename(__FILE__), "wptp-nonce");
         ?>
-        <div class="wrap wptp-metabox channel-list-wptp">
+        <div class="wrap wptp-metabox channel-list-wptp accordion-wptp">
             <?php
             $current_channel = array();
             foreach ($options['channel_username'] as $k => $v) {
@@ -332,33 +360,33 @@ class ChannelWPTP extends WPTelegramPro
                     continue;
                 $current_channel[] = $options['channel_username'][$k];
                 $send_to_channel = get_post_meta($post_id, '_send_to_channel_' . $options['channel_username'][$k] . '_wptp', true);
-                
+
                 if (empty($send_to_channel))
                     $send_to_channel = isset($options['send_to_channel'][$k]) ? 1 : 2;
-                
+
                 $channel_message_pattern = get_post_meta($post_id, '_channel_message_pattern_' . $options['channel_username'][$k] . '_wptp', true);
                 if (empty($channel_message_pattern))
                     $channel_message_pattern = $options['channel_message_pattern'][$k];
                 $channel_message_pattern = stripslashes($channel_message_pattern);
-                
+
                 $featured_image = get_post_meta($post_id, '_featured_image_' . $options['channel_username'][$k] . '_wptp', true);
                 if (empty($featured_image))
                     $featured_image = isset($options['channel_with_featured_image'][$k]) ? 1 : 2;
-                
+
                 $posted_status = get_post_meta($post_id, '_posted_status_' . $options['channel_username'][$k] . '_wptp', true);
                 $posted = '';
-                
+
                 if ($send_to_channel == 1)
                     $send_to_channel_status = '<span class="dashicons dashicons-yes"></span>';
                 else
                     $send_to_channel_status = '<span class="dashicons dashicons-no-alt"></span>';
-                
+
                 if (!empty($posted_status) && $posted_status == 1)
                     $posted = '<span class="dashicons dashicons-megaphone posted-to-channel"></span>';
-                
+
                 ?>
                 <div class="item">
-                    <button class="accordion-wptp" type="button">
+                    <button class="toggle" type="button">
                         <?php echo $send_to_channel_status . $posted . ' @' . $options['channel_username'][$k] ?></button>
                     <div class="panel">
                         <table>
@@ -420,23 +448,23 @@ class ChannelWPTP extends WPTelegramPro
         </div>
         <?php
     }
-    
+
     function channel_members_shortcode($atts)
     {
         $atts = shortcode_atts(array(
             'channel' => '',
             'formatting' => 1
         ), $atts);
-        
+
         if (!$atts['channel'] || empty($atts['channel']))
             return __("[Set 'channel' attribute]", $this->plugin_key);
-        
+
         $transient_key = 'channel_members_' . $atts['channel'] . '_wptp';
-        
+
         if (WP_DEBUG || false === ($count = get_transient($transient_key))) {
             $channel = $this->telegram->get_members_count('@' . $atts['channel']);
             $channel_member = $this->telegram->get_last_result();
-            
+
             if ($channel && $channel_member['ok'] && isset($channel_member['result'])) {
                 $count = $atts['formatting'] == 1 ? number_format($channel_member['result']) : $channel_member['result'];
                 set_transient($transient_key, $count, 60 * 60);
@@ -448,7 +476,7 @@ class ChannelWPTP extends WPTelegramPro
             return get_transient($transient_key);
         }
     }
-    
+
     function channel_members_count()
     {
         $channel_username = $_POST['channel_username'];
@@ -461,25 +489,25 @@ class ChannelWPTP extends WPTelegramPro
         }
         exit;
     }
-    
+
     function before_settings_updated()
     {
         if (!isset($_POST['send_to_channels']) || $_POST['channels_cron_interval'] != $this->options['channels_cron_interval']) {
             wp_clear_scheduled_hook('auto_channels_wptp');
         }
     }
-    
+
     function settings_tab($tabs)
     {
         $tabs[$this->tabID] = __('Channel', $this->plugin_key);
         return $tabs;
     }
-    
+
     function settings_content()
     {
         $this->post_types = get_post_types(['public' => true, 'exclude_from_search' => false, 'show_ui' => true], "objects");
         $this->options = get_option($this->plugin_key);
-        
+
         ?>
         <div id="<?php echo $this->tabID ?>-content" class="wptp-tab-content hidden">
             <table>
@@ -535,7 +563,7 @@ class ChannelWPTP extends WPTelegramPro
                 </tr>
             </table>
             <br>
-            <div class="channel-list-wptp">
+            <div class="channel-list-wptp accordion-wptp">
                 <?php
                 $options = $this->options;
                 $c = 0;
@@ -585,12 +613,12 @@ class ChannelWPTP extends WPTelegramPro
         </div>
         <?php
     }
-    
+
     private function item($item)
     {
         ?>
         <div class="item" data-index="<?php echo $item['index'] ?>">
-            <button class="accordion-wptp"
+            <button class="toggle"
                     type="button"><?php echo isset($item['channel_username']) && !empty($item['channel_username']) ? '@' . $item['channel_username'] : __('New Channel', $this->plugin_key); ?></button>
             <div class="panel">
                 <table>
@@ -723,7 +751,7 @@ class ChannelWPTP extends WPTelegramPro
         </div>
         <?php
     }
-    
+
     private function select_tags()
     {
         $select = '<select class="patterns-select-wptp">';
@@ -740,14 +768,14 @@ class ChannelWPTP extends WPTelegramPro
         $select .= '</select>';
         echo $select;
     }
-    
+
     function check_metabox_display()
     {
         $user_role = $this->get_current_user_role();
         $channels_user_roles = array_keys($this->options['channels_metabox_user_roles']);
         return in_array($user_role, $channels_user_roles);
     }
-    
+
     /**
      * Returns an instance of class
      * @return  ChannelWPTP

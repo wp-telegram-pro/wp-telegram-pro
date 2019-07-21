@@ -45,20 +45,37 @@ class DebugsWPTP extends WPTelegramPro
                 __('Address', $this->plugin_key) => get_bloginfo('url'),
                 __('Language', $this->plugin_key) => $language,
                 __('Charset', $this->plugin_key) => $charset,
-                __('Text Direction', $this->plugin_key) => $text_direction,
-                __('SSL', $this->plugin_key) => $ssl
+                __('Text Direction', $this->plugin_key) => $text_direction
             ),
             $this->plugin_name => array(
                 __('Plugin Version', $this->plugin_key) => WPTELEGRAMPRO_VERSION,
                 __('Plugin DB Table Created', $this->plugin_key) => $checkDBTable
+            ),
+            'SSL' => array(
+                __('Enable', $this->plugin_key) => $ssl,
             )
         );
+        if (is_ssl()) {
+            $ssl_info = array();
+            $info = $this->checkSSLCertificate(get_bloginfo('url'));
+            if (is_array($info)) {
+                $ssl_info[__('Issuer', $this->plugin_key)] = $info['issuer'];
+                $ssl_info[__('Valid', $this->plugin_key)] = $info['isValid'] ? __('Yes', $this->plugin_key) : __('No', $this->plugin_key);
+                $ssl_info[__('Valid from', $this->plugin_key)] = HelpersWPTP::localeDate($info['validFromDate']);
+                $ssl_info[__('Valid until', $this->plugin_key)] = HelpersWPTP::localeDate($info['expirationDate']);
+                $ssl_info[__('Is expired', $this->plugin_key)] = $info['isExpired'] ? __('Yes', $this->plugin_key) : __('No', $this->plugin_key);
+                $ssl_info[__('Remaining days to expiration', $this->plugin_key)] = $info['daysUntilExpirationDate'];
+                $ssl_info[__('Key', $this->plugin_key)] = $info['signatureAlgorithm'];
+            } elseif (is_string($info))
+                $ssl_info[__('SSL Info', $this->plugin_key)] = $info;
 
-        HelpersWPTP::dd($this->checkSSLCertificate(get_bloginfo('url')));
+            $debugs['SSL'] = array_merge($debugs['SSL'], $ssl_info);
+        }
         ?>
         <div class="wrap wptp-wrap">
             <h1 class="wp-heading-inline"><?php echo $this->plugin_name . $this->page_title_divider . $this->page_title ?></h1>
-            <table>
+            <table class="table table-light table-th-bold table-bordered">
+                <tbody>
                 <?php
                 foreach ($debugs as $key => $debug) {
                     echo '<tr><th colspan="2">' . $key . '</th></tr>';
@@ -67,6 +84,7 @@ class DebugsWPTP extends WPTelegramPro
                     }
                 }
                 ?>
+                </tbody>
             </table>
         </div>
         <?php
@@ -79,7 +97,7 @@ class DebugsWPTP extends WPTelegramPro
      */
     function checkSSLCertificate($host)
     {
-        if (!is_ssl()) return false;
+        if (!is_ssl() || !class_exists('SSLCertificateWPTP')) return false;
         try {
             $SSLCertificate = new SSLCertificateWPTP($host);
             return $SSLCertificate->request()->response();

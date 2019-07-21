@@ -79,9 +79,9 @@ jQuery(function ($) {
         });
 
         function wptp_init() {
-            $('.accordion-wptp').unbind('click').on('click', function () {
+            $('.accordion-wptp .toggle').unbind('click').on('click', function () {
                 let $this = $(this);
-                $(".accordion-wptp").each(function (index) {
+                $(".accordion-wptp .toggle").each(function (index) {
                     if ($(this).parent().index() != $this.parent().index())
                         $(this).removeClass('active').parent().find('.panel').slideUp();
                 });
@@ -100,7 +100,7 @@ jQuery(function ($) {
                     title = '@' + $(this).val();
                     $(this).parent().find('.channel-info-wptp').show();
                 }
-                $(this).closest('.item').find('.accordion-wptp').html(title);
+                $(this).closest('.item').find('.toggle').html(title);
             });
 
             $('.remove-channel-wptp').unbind('click').on('click', function () {

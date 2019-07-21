@@ -1,8 +1,4 @@
 <?php
-
-use function Spatie\SslCertificate\length;
-use function Spatie\SslCertificate\substr;
-
 /**
  * WPTelegramPro Helper functions
  *

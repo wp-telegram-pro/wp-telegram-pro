@@ -5,25 +5,25 @@ class ProxyWPTP extends WPTelegramPro
     public static $instance = null;
     private static $proxy;
     protected $tabID = 'proxy-wptp-tab';
-    
+
     public function __construct()
     {
         parent::__construct(true);
-        
+
         add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 35);
         add_action('wptelegrampro_settings_content', [$this, 'settings_content']);
-        add_action('wptelegrampro_help_tab_content', [$this, 'help_content']);
+        add_action('wptelegrampro_helps_content', [$this, 'helps_google_proxy']);
         add_filter('wptelegrampro_image_send_mode', [$this, 'image_send_mode'], 35);
         add_filter('wptelegrampro_proxy_status', [$this, 'proxy_status'], 35);
-        
+
         $this->setup_proxy();
     }
-    
+
     function proxy_status($status)
     {
         return $this->get_option('proxy_status', $status);
     }
-    
+
     function image_send_mode($mode)
     {
         $proxy_status = $this->get_option('proxy_status');
@@ -31,27 +31,27 @@ class ProxyWPTP extends WPTelegramPro
             $mode = 'image';
         return $mode;
     }
-    
+
     /**
      * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram
      */
     function setup_proxy()
     {
         $proxy_status = $this->get_option('proxy_status');
-        
+
         if (empty($proxy_status)) return;
-        
+
         if ($proxy_status === 'google_script') {
             $google_script_url = $this->get_option('google_script_url');
             if (!empty($google_script_url)) {
                 add_filter('wptelegrampro_api_remote_post_args', [$this, 'google_script_request_args'], 10, 3);
                 add_filter('wptelegrampro_api_request_url', [$this, 'google_script_request_url']);
             }
-            
+
         } elseif ($proxy_status === 'php_proxy')
             $this->setup_php_proxy();
     }
-    
+
     /**
      * Setup PHP proxy
      * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram
@@ -65,15 +65,15 @@ class ProxyWPTP extends WPTelegramPro
             'username' => '',
             'password' => ''
         );
-        
+
         // get the values from settings/defaults
         foreach ($defaults as $key => $value)
             self::$proxy[$key] = $this->get_option('proxy_' . $key, '');
-        
+
         // modify curl
         add_action('http_api_curl', [$this, 'modify_http_api_curl'], 10, 3);
     }
-    
+
     /**
      * Returns The proxy options
      * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram
@@ -83,7 +83,7 @@ class ProxyWPTP extends WPTelegramPro
     {
         return (array)apply_filters('wptelegrampro_api_curl_proxy', self::$proxy);
     }
-    
+
     /**
      * Modify cURL handle
      * The method is not used by default but can be used to modify the behavior of cURL requests
@@ -102,13 +102,13 @@ class ProxyWPTP extends WPTelegramPro
         if ($this->check_remote_post($r, $url)) {
             foreach (self::get_proxy() as $option => $value)
                 ${'proxy_' . $option} = apply_filters("wptelegrampro_api_curl_proxy_{$option}", $value);
-            
+
             if (!empty($proxy_host) && !empty($proxy_port)) {
                 if (!empty($proxy_type))
                     curl_setopt($handle, CURLOPT_PROXYTYPE, constant($proxy_type));
                 curl_setopt($handle, CURLOPT_PROXY, $proxy_host);
                 curl_setopt($handle, CURLOPT_PROXYPORT, $proxy_port);
-                
+
                 if (!empty($proxy_username) && !empty($proxy_password)) {
                     $authentication = $proxy_username . ':' . $proxy_password;
                     curl_setopt($handle, CURLOPT_PROXYAUTH, CURLAUTH_ANY);
@@ -117,7 +117,7 @@ class ProxyWPTP extends WPTelegramPro
             }
         }
     }
-    
+
     /**
      * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram
      */
@@ -129,10 +129,10 @@ class ProxyWPTP extends WPTelegramPro
             'args' => json_encode($args['body']),
         );
         $args['method'] = 'GET';
-        
+
         return $args;
     }
-    
+
     /**
      * @copyright Base on WPTelegram_Proxy_Handler class in WP Telegram plugin, https://wordpress.org/plugins/wptelegram
      */
@@ -140,13 +140,13 @@ class ProxyWPTP extends WPTelegramPro
     {
         return $this->get_option('google_script_url', $url);
     }
-    
+
     function settings_tab($tabs)
     {
         $tabs[$this->tabID] = __('Proxy', $this->plugin_key);
         return $tabs;
     }
-    
+
     function settings_content()
     {
         $this->options = get_option($this->plugin_key);
@@ -191,7 +191,7 @@ class ProxyWPTP extends WPTelegramPro
                                value="<?php echo $this->get_option('google_script_url') ?>"
                                class="regular-text ltr"><br>
                         <span class="description"> &nbsp;<?php _e('The requests to Telegram will be sent via your Google Script.', $this->plugin_key) ?>
-                        (<?php _e('See help tab', $this->plugin_key) ?>)
+                        (<?php _e('See help page', $this->plugin_key) ?>)
                         </span>
                     </td>
                 </tr>
@@ -274,41 +274,42 @@ class ProxyWPTP extends WPTelegramPro
         </div>
         <?php
     }
-    
+
     /**
      * @copyright Help base on @manzoorwanijk gist for WP Telegram plugin, https://gist.github.com/manzoorwanijk/ee9ed032caedf2bb0c83dea73bc9a28e
      */
-    function help_content()
+    function helps_google_proxy()
     {
         ?>
-        <tr>
-            <th><?php _e('Google Script', $this->plugin_key) ?></th>
-            <td>
-                <strong>
-                    <?php _e('You can use this script to bypass the bans on Telegram API by different hosts. Simply send the request to this script instead of the Telegram Bot API after deploying it as a web app and allowing anonymous access.', $this->plugin_key); ?>
-                </strong>
-                <br><br>
-                <strong><?php _e('How to Deploy', $this->plugin_key) ?></strong>
-                <ol>
-                    <li><?php printf(__('Goto <a href="%s">script.google.com</a> and sign in if required'), 'https://script.google.com'); ?></li>
-                    <li><?php _e('Create a new project and give it a name', $this->plugin_key); ?></li>
-                    <li><?php _e('It should open a file (Code.gs by default). Remove the contents of this file', $this->plugin_key); ?></li>
-                    <li><?php _e('Copy the contents of below code and paste into your project file (Code.gs)', $this->plugin_key); ?></li>
-                    <li><?php _e('Click File > Save or press Ctrl+S', $this->plugin_key); ?></li>
-                    <li><?php _e('Click "Publish" from the menu and select "Deploy as web app..."', $this->plugin_key); ?></li>
-                    <li><?php _e('If asked, Enter any name for the project and click "OK"', $this->plugin_key); ?></li>
-                    <li><?php _e('In "Execute the app as:", select "Me (your email)" [IMPORTANT]', $this->plugin_key); ?></li>
-                    <li><?php _e('In "Who has access to the app:", select "Anyone, even anonymous" [IMPORTANT]', $this->plugin_key); ?></li>
-                    <li><?php _e('Click "Deploy" to open the Authorization box', $this->plugin_key); ?></li>
-                    <li><?php _e('Click "Review Permissions" to authorize the script', $this->plugin_key); ?></li>
-                    <li><?php _e('In the popup window select your Google Account', $this->plugin_key); ?></li>
-                    <li><?php _e('On the next screen, click "Allow"', $this->plugin_key); ?></li>
-                    <li><?php _e('After redirection, you should see "This project is now deployed as a web app"', $this->plugin_key); ?></li>
-                    <li><?php _e('Copy the "Current web app URL" and paste it in plugin', $this->plugin_key); ?></li>
-                </ol>
-                </span>
-                <textarea cols="30" class="ltr" rows="5"
-                          onfocus="this.select();" onmouseup="return false;" readonly>function doGet(e) {
+        <div class="item">
+            <button class="toggle" type="button"> <?php _e('Google Script', $this->plugin_key) ?></button>
+            <div class="panel">
+                <div>
+                    <strong>
+                        <?php _e('You can use this script to bypass the bans on Telegram API by different hosts. Simply send the request to this script instead of the Telegram Bot API after deploying it as a web app and allowing anonymous access.', $this->plugin_key); ?>
+                    </strong>
+                    <br><br>
+                    <strong><?php _e('How to Deploy', $this->plugin_key) ?></strong>
+                    <ol>
+                        <li><?php printf(__('Goto <a href="%s">script.google.com</a> and sign in if required'), 'https://script.google.com'); ?></li>
+                        <li><?php _e('Create a new project and give it a name', $this->plugin_key); ?></li>
+                        <li><?php _e('It should open a file (Code.gs by default). Remove the contents of this file', $this->plugin_key); ?></li>
+                        <li><?php _e('Copy the contents of below code and paste into your project file (Code.gs)', $this->plugin_key); ?></li>
+                        <li><?php _e('Click File > Save or press Ctrl+S', $this->plugin_key); ?></li>
+                        <li><?php _e('Click "Publish" from the menu and select "Deploy as web app..."', $this->plugin_key); ?></li>
+                        <li><?php _e('If asked, Enter any name for the project and click "OK"', $this->plugin_key); ?></li>
+                        <li><?php _e('In "Execute the app as:", select "Me (your email)" [IMPORTANT]', $this->plugin_key); ?></li>
+                        <li><?php _e('In "Who has access to the app:", select "Anyone, even anonymous" [IMPORTANT]', $this->plugin_key); ?></li>
+                        <li><?php _e('Click "Deploy" to open the Authorization box', $this->plugin_key); ?></li>
+                        <li><?php _e('Click "Review Permissions" to authorize the script', $this->plugin_key); ?></li>
+                        <li><?php _e('In the popup window select your Google Account', $this->plugin_key); ?></li>
+                        <li><?php _e('On the next screen, click "Allow"', $this->plugin_key); ?></li>
+                        <li><?php _e('After redirection, you should see "This project is now deployed as a web app"', $this->plugin_key); ?></li>
+                        <li><?php _e('Copy the "Current web app URL" and paste it in plugin', $this->plugin_key); ?></li>
+                    </ol>
+                    </span>
+                    <textarea cols="30" class="ltr" rows="5"
+                              onfocus="this.select();" onmouseup="return false;" readonly>function doGet(e) {
   if(typeof e !== 'undefined'){
     return requestHandler(e);
   }
@@ -345,11 +346,12 @@ function handleRequest(e) {
   var res = UrlFetchApp.fetch('https://api.telegram.org/bot' + bot_token + '/' + tg_method, data);
   return res.getContentText();
 }</textarea>
-            </td>
-        </tr>
+                </div>
+            </div>
+        </div>
         <?php
     }
-    
+
     /**
      * Returns an instance of class
      * @return  ProxyWPTP

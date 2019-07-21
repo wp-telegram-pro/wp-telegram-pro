@@ -31,6 +31,7 @@ define('WPTELEGRAMPRO_MODINC_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'mo
 require_once WPTELEGRAMPRO_INC_DIR . 'HelpersWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'TelegramWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'WordPressWPTP.php';
+require_once WPTELEGRAMPRO_INC_DIR . 'HelpsWPTP.php';
 
 HelpersWPTP::requireAll(WPTELEGRAMPRO_MOD_DIR);
 
@@ -41,7 +42,7 @@ class WPTelegramPro
         $rand_id_length = 10, $now, $db_table, $words = array(), $options, $telegram,
         $telegram_input, $user, $default_keyboard, $plugin_name,
         $ignore_post_types = array("attachment", "revision", "nav_menu_item", "custom_css", "customize_changeset", "oembed_cache", "product_variation");
-    protected $helpTabID = 'help-wptp-tab', $aboutTabID = 'about-wptp-tab', $page_title_divider;
+    protected $aboutTabID = 'about-wptp-tab', $page_title_divider;
 
     public function __construct($bypass = false)
     {
@@ -73,7 +74,7 @@ class WPTelegramPro
 
             add_filter('wptelegrampro_settings_update_message', [$this, 'check_ssl'], 100);
             add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 100);
-            add_action('wptelegrampro_settings_content', [$this, 'help_settings_content']);
+            add_action('wptelegrampro_helps_content', [$this, 'helps_command_list'], 1);
             add_action('wptelegrampro_settings_content', [$this, 'about_settings_content']);
             add_filter('wptelegrampro_post_info', [$this, 'fix_post_info'], 1000, 3);
         }
@@ -118,65 +119,41 @@ class WPTelegramPro
 
     function settings_tab($tabs)
     {
-        $tabs[$this->helpTabID] = __('Help', $this->plugin_key);
         $tabs[$this->aboutTabID] = __('About', $this->plugin_key);
         return $tabs;
     }
 
-    function help_settings_content()
+    function helps_command_list()
     {
         $commands = apply_filters('wptelegrampro_default_commands', array());
+        $textRows = count($commands) > 7 ? 7 : count($commands);
         ?>
-        <div id="<?php echo $this->helpTabID ?>-content" class="wptp-tab-content hidden">
-            <table>
-                <tr>
-                    <th>
-                        <?php _e('Default command list:', $this->plugin_key) ?>
-                    </th>
-                    <td>
-                        <pre class="ltr"><?php
-                            $list = array();
-                            foreach ($commands as $command => $desc)
-                                $list[] = '/' . $command . ': ' . $desc;
-                            echo implode('<br>', $list);
-                            ?>
+        <div class="item">
+            <button class="toggle" type="button"> <?php _e('Default command list', $this->plugin_key) ?></button>
+            <div class="panel">
+                <div>
+                <pre class="ltr"><?php
+                    $list = array();
+                    foreach ($commands as $command => $desc)
+                        $list[] = '/' . $command . ': ' . $desc;
+                    echo implode('<br>', $list);
+                    ?>
                         </pre>
 
-                        <span class="description">
+                    <span class="description">
                             <?php
                             echo sprintf(__('How to set bot commands: Start %s and select your bot > "Edit Bot" > "Edit Commands" > Send text below.', $this->plugin_key), '<a href="https://t.me/BotFather" target="_blank">@BotFather</a>');
                             ?>
                         </span>
-                        <textarea cols="30" class="ltr" rows="<?php echo count($commands) ?>"
-                                  onfocus="this.select();" onmouseup="return false;" readonly><?php
-                            $list = array();
-                            foreach ($commands as $command => $desc)
-                                $list[] = $command . ' - ' . $desc;
-                            echo implode("\n", $list);
-                            ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><?php _e('Channel', $this->plugin_key) ?></th>
-                    <td>
-                        <strong>
-                            <?php _e('Telegram channel is a great way for attracting people to your site.<br> This option allows you to send posts to your Telegram channel.', $this->plugin_key) ?>
-                        </strong>
-                        <ol>
-                            <li><?php _e("Create a channel (if you don't already have one).", $this->plugin_key) ?></li>
-                            <li><?php _e("Create a bot (if you don't already have one).", $this->plugin_key) ?></li>
-                            <li><?php _e("Go to channel options and select 'Administrator' option.", $this->plugin_key) ?></li>
-                            <li><?php _e("Select 'Add Administrator' option.", $this->plugin_key) ?></li>
-                            <li><?php _e("Search the username of your bot and add it as administrator.", $this->plugin_key) ?></li>
-                            <li><?php _e("Allow 'Post Messages' Permission", $this->plugin_key) ?></li>
-                            <li><?php _e("Enter the username of the channel and hit SAVE button!!!", $this->plugin_key) ?></li>
-                            <li><?php _e("Yes! Now, whenever you publish or update a post you can choose whether send it to Telegram (from post editor page)", $this->plugin_key) ?>
-                            </li>
-                        </ol>
-                    </td>
-                </tr>
-                <?php do_action('wptelegrampro_help_tab_content') ?>
-            </table>
+                    <textarea cols="30" class="ltr" rows="<?php echo $textRows ?>"
+                              onfocus="this.select();" onmouseup="return false;" readonly><?php
+                        $list = array();
+                        foreach ($commands as $command => $desc)
+                            $list[] = $command . ' - ' . $desc;
+                        echo implode("\n", $list);
+                        ?></textarea>
+                </div>
+            </div>
         </div>
         <?php
     }
