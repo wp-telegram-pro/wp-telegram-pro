@@ -39,7 +39,7 @@ class WPTelegramPro
 {
     public static $instance = null;
     public $plugin_key = 'wp-telegram-pro', $per_page = 1, $patterns_tags = array(),
-        $rand_id_length = 10, $now, $db_table, $words = array(), $options, $telegram,
+        $rand_id_length = 10, $now, $db_users_table, $words = array(), $options, $telegram,
         $telegram_input, $user, $default_keyboard, $plugin_name,
         $ignore_post_types = array("attachment", "revision", "nav_menu_item", "custom_css", "customize_changeset", "oembed_cache", "product_variation");
     protected $aboutTabID = 'about-wptp-tab', $page_title_divider;
@@ -53,7 +53,7 @@ class WPTelegramPro
         $this->page_title_divider = is_rtl() ? ' < ' : ' > ';
         $this->options = get_option($this->plugin_key);
         $this->telegram = new TelegramWPTP($this->get_option('api_token'));
-        $this->db_table = $wpdb->prefix . 'wptelegrampro_users';
+        $this->db_users_table = $wpdb->prefix . 'wptelegrampro_users';
         $this->plugin_name = __('WP Telegram Pro', $this->plugin_key);
         $this->now = date("Y-m-d H:i:s");
         $this->init($bypass);
@@ -558,7 +558,7 @@ class WPTelegramPro
             return false;
 
         $result = $wpdb->update(
-            $this->db_table,
+            $this->db_users_table,
             array_merge($update_field, array('updated_at' => $this->now)),
             array('user_id' => $this->user['user_id'])
         );
@@ -571,21 +571,21 @@ class WPTelegramPro
         global $wpdb;
 
         if (isset($args['id']) && $args['id'] != null && is_numeric($args['id']))
-            return $this->user = $wpdb->get_row("SELECT * FROM {$this->db_table} WHERE id = '{$args['id']}'", ARRAY_A);
+            return $this->user = $wpdb->get_row("SELECT * FROM {$this->db_users_table} WHERE id = '{$args['id']}'", ARRAY_A);
         if (isset($args['user_id']) && $args['user_id'] != null && is_numeric($args['user_id']))
-            return $this->user = $wpdb->get_row("SELECT * FROM {$this->db_table} WHERE user_id = '{$args['user_id']}'", ARRAY_A);
+            return $this->user = $wpdb->get_row("SELECT * FROM {$this->db_users_table} WHERE user_id = '{$args['user_id']}'", ARRAY_A);
         if (isset($args['rand_id']) && $args['rand_id'] != null && is_numeric($args['rand_id']))
-            return $this->user = $wpdb->get_row("SELECT * FROM {$this->db_table} WHERE rand_id = '{$args['rand_id']}'", ARRAY_A);
+            return $this->user = $wpdb->get_row("SELECT * FROM {$this->db_users_table} WHERE rand_id = '{$args['rand_id']}'", ARRAY_A);
         if (isset($args['wp_id']) && $args['wp_id'] != null && is_numeric($args['wp_id']))
-            return $this->user = $wpdb->get_row("SELECT * FROM {$this->db_table} WHERE wp_id = {$args['wp_id']}", ARRAY_A);
+            return $this->user = $wpdb->get_row("SELECT * FROM {$this->db_users_table} WHERE wp_id = {$args['wp_id']}", ARRAY_A);
 
         $from = $this->telegram_input['from'];
         if (isset($from['id'])) {
-            $sql = "SELECT * FROM {$this->db_table} WHERE user_id = '{$from['id']}'";
+            $sql = "SELECT * FROM {$this->db_users_table} WHERE user_id = '{$from['id']}'";
             $user = $wpdb->get_row($sql, ARRAY_A);
             if ($user)
                 $wpdb->update(
-                    $this->db_table,
+                    $this->db_users_table,
                     array(
                         'first_name' => $from['first_name'],
                         'last_name' => $from['last_name'],
@@ -597,7 +597,7 @@ class WPTelegramPro
             else {
                 $rand_id = $this->random_id();
                 $wpdb->insert(
-                    $this->db_table,
+                    $this->db_users_table,
                     array(
                         'user_id' => $from['id'],
                         'rand_id' => $rand_id,
@@ -765,7 +765,7 @@ class WPTelegramPro
         $id = '';
         while (!$id_not_exists) {
             $id = $this->random_strings($this->rand_id_length);
-            $user = $wpdb->get_row("SELECT * FROM {$this->db_table} WHERE rand_id = '{$id}'", ARRAY_A);
+            $user = $wpdb->get_row("SELECT * FROM {$this->db_users_table} WHERE rand_id = '{$id}'", ARRAY_A);
             if ($user === null)
                 $id_not_exists = true;
         }
