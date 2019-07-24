@@ -23,6 +23,10 @@ Useful Tools:
 
 Changelog
 -----------
+**1.7.1**
+- Add host info (IP/Location) to debugs page
+- Fixed some bugs
+
 **V 1.7**
 - Add debugs page
 - Add helps page
