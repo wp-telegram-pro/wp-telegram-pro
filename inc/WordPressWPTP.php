@@ -138,7 +138,7 @@ class WordPressWPTP extends WPTelegramPro
                     $user_ids[] = $user->ID;
                 }
                 $user_ids = implode(',', $user_ids);
-                $users = $wpdb->get_results("SELECT user_id,wp_id FROM {$this->db_table} WHERE wp_id IN ({$user_ids})", ARRAY_A);
+                $users = $wpdb->get_results("SELECT user_id,wp_id FROM {$this->db_users_table} WHERE wp_id IN ({$user_ids})", ARRAY_A);
             } else {
                 $users = false;
             }

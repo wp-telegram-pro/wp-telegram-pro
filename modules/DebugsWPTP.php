@@ -20,11 +20,19 @@ class DebugsWPTP extends WPTelegramPro
         add_filter('wptelegrampro_debugs_info', [$this, 'host_info']);
     }
 
+    /**
+     * Add menu to WP Telegram Pro main menu
+     */
     function menu()
     {
         add_submenu_page($this->plugin_key, $this->plugin_name . $this->page_title_divider . $this->page_title, $this->page_title, 'manage_options', $this->page_key, array($this, 'pageContent'));
     }
 
+    /**
+     * Add host info to debugs
+     * @param $debugs string Debugs Info Array
+     * @return string Debugs Info
+     */
     function host_info($debugs)
     {
         // Host Info
@@ -38,15 +46,19 @@ class DebugsWPTP extends WPTelegramPro
                 __('Host Location', $this->plugin_key) => "<span class='ltr-right flex'><img src='https://www.countryflags.io/{$countryCode}/flat/16.png' alt='{$domainCountry['countryCode']} Flag'> &nbsp;" . $domainCountry['countryCode'] . ' - ' . $domainCountry['countryName'] . '</span>'
             );
             if (in_array($domainCountry['countryCode'], $this->telegramFilterCountry))
-                $hostInfo[__('Tip', $this->plugin_key)] = __('Your website host location on the list of countries that have filtered the telegram. For this reason, the plugin may not work well. My suggestion is to use a host of other countries.', $this->plugin_key);
+                $hostInfo[__('Tip', $this->plugin_key)] = __('Your website host location on the list of countries that have filtered the telegram. For this reason, the plugin may not work well. My suggestion is to use a host of another countries.', $this->plugin_key);
             $debugs[__('Host', $this->plugin_key)] = $hostInfo;
         }
         return $debugs;
     }
 
+    /**
+     * Add SSL info to debugs
+     * @param $debugs string Debugs Info Array
+     * @return string Debugs Info
+     */
     function ssl_info($debugs)
     {
-
         $ssl = is_ssl() ? $this->words['active'] : $this->words['inactive'];
 
         $debugs['SSL'] = array(
@@ -73,6 +85,11 @@ class DebugsWPTP extends WPTelegramPro
         return $debugs;
     }
 
+    /**
+     * Add WordPress info to debugs
+     * @param $debugs string Debugs Info Array
+     * @return string Debugs Info
+     */
     function wp_info($debugs)
     {
         global $wp_version;
@@ -92,6 +109,11 @@ class DebugsWPTP extends WPTelegramPro
         return $debugs;
     }
 
+    /**
+     * Add PHP info to debugs
+     * @param $debugs string Debugs Info Array
+     * @return string Debugs Info
+     */
     function php_info($debugs)
     {
         $phpversion = phpversion();
@@ -103,10 +125,15 @@ class DebugsWPTP extends WPTelegramPro
         return $debugs;
     }
 
+    /**
+     * Add WP Telegram Pro info to debugs
+     * @param $debugs string Debugs Info Array
+     * @return string Debugs Info
+     */
     function wptp_info($debugs)
     {
         global $wpdb;
-        $checkDBTable = $wpdb->get_var("show tables like '$this->db_table'") === $this->db_table;
+        $checkDBTable = $wpdb->get_var("show tables like '$this->db_users_table'") === $this->db_users_table;
         $checkDBTable = $checkDBTable ? $this->words['yes'] : $this->words['no'];
         $debugs[$this->plugin_name] = array(
             __('Plugin Version', $this->plugin_key) => WPTELEGRAMPRO_VERSION,
@@ -115,6 +142,9 @@ class DebugsWPTP extends WPTelegramPro
         return $debugs;
     }
 
+    /**
+     * Debugs page content
+     */
     function pageContent()
     {
         $debugs = apply_filters('wptelegrampro_debugs_info', []);
