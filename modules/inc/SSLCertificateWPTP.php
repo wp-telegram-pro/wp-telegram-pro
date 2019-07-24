@@ -12,7 +12,7 @@
  */
 class SSLCertificateWPTP
 {
-    private $port = 443, $host = null, $url, $parsedUrl, $timeOut = 30, $response = null, $rawResponse = null;
+    private $port = 443, $host = null, $timeOut = 30, $response = null, $rawResponse = null;
     
     public function __construct($host = null)
     {
@@ -81,33 +81,8 @@ class SSLCertificateWPTP
         if ($url === null)
             return $this;
         
-        $this->host = $this->parseURL($url);
+        $this->host = HelpersWPTP::getURLHost($url);
         return $this;
-    }
-    
-    function parseURL($url)
-    {
-        if (!HelpersWPTP::startsWith($url, ['http://', 'https://', 'ssl://'])) {
-            $url = "https://{$url}";
-        }
-        
-        if (strlen($url) < 61 && function_exists('idn_to_ascii')) {
-            $url = idn_to_ascii($url, false, INTL_IDNA_VARIANT_UTS46);
-        }
-        
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new Exception("String `{$url}` is not a valid url.");
-        }
-        
-        $this->url = $url;
-        
-        $this->parsedUrl = parse_url($url);
-        
-        if (!isset($this->parsedUrl['host'])) {
-            throw new Exception("Could not determine host from url `{$url}`.");
-        }
-        
-        return $this->parsedUrl['host'];
     }
     
     public function setPort($port)

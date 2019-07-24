@@ -21,6 +21,29 @@ class HelpersWPTP
             return ob_get_clean();
     }
 
+    public static function getURLHost($url)
+    {
+        if (!HelpersWPTP::startsWith($url, ['http://', 'https://', 'ssl://'])) {
+            $url = "https://{$url}";
+        }
+
+        if (strlen($url) < 61 && function_exists('idn_to_ascii')) {
+            $url = idn_to_ascii($url, false, INTL_IDNA_VARIANT_UTS46);
+        }
+
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            throw new Exception("String `{$url}` is not a valid url.");
+        }
+
+        $parsedUrl = parse_url($url);
+
+        if (!isset($parsedUrl['host'])) {
+            throw new Exception("Could not determine host from url `{$url}`.");
+        }
+
+        return $parsedUrl['host'];
+    }
+
     /**
      * Remove Unused Shortcodes
      * https://www.maketecheasier.com/remove-unused-shortcode-from-posts-wordpress/

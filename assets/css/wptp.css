@@ -53,11 +53,7 @@
 }
 
 .wptp-wrap table td, .wptp-wrap table th {
-    padding: 10px;
-}
-
-.wptp-wrap td > *:not(br) {
-    margin-bottom: 10px;
+    padding: 15px 10px;
 }
 
 .wptp-wrap table tr td:first-child, .wptp-wrap table tr th:first-child {
@@ -300,6 +296,11 @@ body.rtl .wptp-wrap th {
     content: "\e900";
 }
 
+.wptp-wrap .flex {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
 
 /* Safari */
 @-webkit-keyframes wptp_spin {
@@ -356,4 +357,8 @@ body.rtl .wptp-wrap label {
 body.rtl .wptp-wrap .ltr-right {
     direction: ltr;
     text-align: right;
+}
+
+body.rtl .wptp-wrap .flex {
+    justify-content: end;
 }

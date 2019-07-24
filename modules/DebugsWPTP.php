@@ -3,7 +3,7 @@
 class DebugsWPTP extends WPTelegramPro
 {
     public static $instance = null;
-    protected $page_key, $page_title;
+    protected $page_key, $page_title, $telegramFilterCountry = ['IR'];
 
     public function __construct()
     {
@@ -21,7 +21,7 @@ class DebugsWPTP extends WPTelegramPro
     function pageContent()
     {
         global $wp_version, $wpdb;
-
+        $url = get_bloginfo('url');
         $phpversion = phpversion();
         $curl = function_exists('curl_version') ? curl_version()['version'] : $this->words['inactive'];
 
@@ -30,11 +30,15 @@ class DebugsWPTP extends WPTelegramPro
         $ssl = is_ssl() ? $this->words['active'] : $this->words['inactive'];
         $language = get_bloginfo('language');
         $charset = get_bloginfo('charset');
-        $text_direction = strtoupper(get_bloginfo('text_direction'));
+        $text_direction = is_rtl() ? 'RTL' : 'LTR';
         $checkDBTable = $wpdb->get_var("show tables like '$this->db_table'") === $this->db_table;
         $checkDBTable = $checkDBTable ? $this->words['yes'] : $this->words['no'];
 
         $debugs = array(
+            $this->plugin_name => array(
+                __('Plugin Version', $this->plugin_key) => WPTELEGRAMPRO_VERSION,
+                __('Plugin DB Table Created', $this->plugin_key) => $checkDBTable
+            ),
             'PHP' => array(
                 __('PHP Version', $this->plugin_key) => $phpversion,
                 __('PHP CURL', $this->plugin_key) => $curl
@@ -44,20 +48,17 @@ class DebugsWPTP extends WPTelegramPro
                 __('Debugging Mode', $this->plugin_key) => $debugMode,
                 __('Address', $this->plugin_key) => get_bloginfo('url'),
                 __('Language', $this->plugin_key) => $language,
-                __('Charset', $this->plugin_key) => $charset,
+                __('Character encoding', $this->plugin_key) => $charset,
                 __('Text Direction', $this->plugin_key) => $text_direction
-            ),
-            $this->plugin_name => array(
-                __('Plugin Version', $this->plugin_key) => WPTELEGRAMPRO_VERSION,
-                __('Plugin DB Table Created', $this->plugin_key) => $checkDBTable
             ),
             'SSL' => array(
                 __('Status', $this->plugin_key) => $ssl,
             )
         );
+
         if (is_ssl()) {
             $ssl_info = array();
-            $info = $this->checkSSLCertificate(get_bloginfo('url'));
+            $info = $this->checkSSLCertificate($url);
             if (is_array($info)) {
                 $ssl_info[__('Issuer', $this->plugin_key)] = $info['issuer'];
                 $ssl_info[__('Valid', $this->plugin_key)] = $info['isValid'] ? __('Yes', $this->plugin_key) : __('No', $this->plugin_key);
@@ -71,6 +72,18 @@ class DebugsWPTP extends WPTelegramPro
 
             $debugs['SSL'] = array_merge($debugs['SSL'], $ssl_info);
         }
+
+        $domainInfo = new DomainInfoWPTP($url);
+        $domainIP = $domainInfo->getIPAddress();
+        $domainCountry = $domainInfo->getLocation($domainIP);
+        $countryCode = strtolower($domainCountry['countryCode']);
+        $hostInfo = array(
+            'IP' => $domainIP,
+            __('Host Location', $this->plugin_key) => "<span class='ltr-right flex'><img src='https://www.countryflags.io/{$countryCode}/flat/16.png' alt='{$domainCountry['countryCode']} Flag'> &nbsp;" . $domainCountry['countryCode'] . ' - ' . $domainCountry['countryName'] . '</span>'
+        );
+        if (in_array($domainCountry['countryCode'], $this->telegramFilterCountry))
+            $hostInfo[__('Tip', $this->plugin_key)] = __('Your website host location on the list of countries that have filtered the telegram. For this reason, the plugin may not work well. My suggestion is to use a host of other countries.', $this->plugin_key);
+        $debugs[__('Host', $this->plugin_key)] = $hostInfo;
         ?>
         <div class="wrap wptp-wrap">
             <h1 class="wp-heading-inline"><?php echo $this->plugin_name . $this->page_title_divider . $this->page_title ?></h1>
@@ -104,6 +117,11 @@ class DebugsWPTP extends WPTelegramPro
         } catch (Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    function checkHostCountry($domain)
+    {
+
     }
 
     /**

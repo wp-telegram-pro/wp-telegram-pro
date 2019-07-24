@@ -92,7 +92,6 @@ class WordPressWPTP extends WPTelegramPro
                 update_option('wptp-rand-url', $webHook['rand'], false);
             } else
                 $update_message .= $this->message(__('Set Webhook with Error!', $this->plugin_key), 'error');
-            $update_message .= $telegram->get_raw_response();
         }
 
         if (isset($new_option['force_update_keyboard']))
