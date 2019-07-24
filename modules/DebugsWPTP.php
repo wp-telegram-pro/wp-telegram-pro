@@ -16,8 +16,8 @@ class DebugsWPTP extends WPTelegramPro
         add_filter('wptelegrampro_debugs_info', [$this, 'wptp_info'], 1);
         add_filter('wptelegrampro_debugs_info', [$this, 'php_info']);
         add_filter('wptelegrampro_debugs_info', [$this, 'wp_info']);
-        add_filter('wptelegrampro_debugs_info', [$this, 'ssl_info']);
         add_filter('wptelegrampro_debugs_info', [$this, 'host_info']);
+        add_filter('wptelegrampro_debugs_info', [$this, 'ssl_info']);
     }
 
     /**
