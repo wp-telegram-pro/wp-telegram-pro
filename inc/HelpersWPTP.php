@@ -1,4 +1,5 @@
 <?php
+
 /**
  * WPTelegramPro Helper functions
  *
@@ -188,10 +189,10 @@ class HelpersWPTP
     public static function localeDate($time, $format = "Y/m/d H:i:s")
     {
         if (function_exists('parsidate'))
-            return parsidate($format, $time, 'en');
+            return parsidate($format, $time, 'per');
 
         if (function_exists('jdate'))
-            return jdate($format, $time, false, false);
+            return jdate($format, $time, false, true);
 
         return $time;
     }

@@ -97,6 +97,7 @@ class WPTelegramPro
             'categories' => __('Categories', $this->plugin_key),
             'detail' => __('Detail', $this->plugin_key),
             'more' => __('More', $this->plugin_key),
+            'ssl_error' => __('The plugin requires SSL in the domain of your website!', $this->plugin_key)
         );
         $words = array_merge($words, $new_words);
 
@@ -817,7 +818,7 @@ class WPTelegramPro
     function check_ssl($message)
     {
         if (!is_ssl())
-            $message .= $this->message(__('The plugin requires SSL in the domain of your website!', $this->plugin_key), 'error');
+            $message .= $this->message($this->words['ssl_error'], 'error');
         return $message;
     }
 

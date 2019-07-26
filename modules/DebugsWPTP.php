@@ -43,7 +43,7 @@ class DebugsWPTP extends WPTelegramPro
             $countryCode = strtolower($domainCountry['countryCode']);
             $hostInfo = array(
                 'IP' => $domainIP,
-                __('Host Location', $this->plugin_key) => "<span class='ltr-right flex'><img src='https://www.countryflags.io/{$countryCode}/flat/16.png' alt='{$domainCountry['countryCode']} Flag'> &nbsp;" . $domainCountry['countryCode'] . ' - ' . $domainCountry['countryName'] . '</span>'
+                __('Host Location', $this->plugin_key) => "<span class='ltr-right flex'><img src='https://www.countryflags.io/{$countryCode}/flat/16.png' alt='{$domainCountry['countryName']} Flag'> &nbsp;" . $domainCountry['countryCode'] . ' - ' . $domainCountry['countryName'] . '</span>'
             );
             if (in_array($domainCountry['countryCode'], $this->telegramFilterCountry))
                 $hostInfo[__('Tip', $this->plugin_key)] = __('Your website host location on the list of countries that have filtered the telegram. For this reason, the plugin may not work well. My suggestion is to use a host of another countries.', $this->plugin_key);
@@ -72,8 +72,13 @@ class DebugsWPTP extends WPTelegramPro
             if (is_array($info)) {
                 $ssl_info[__('Issuer', $this->plugin_key)] = $info['issuer'];
                 $ssl_info[__('Valid', $this->plugin_key)] = $info['isValid'] ? __('Yes', $this->plugin_key) : __('No', $this->plugin_key);
-                $ssl_info[__('Valid from', $this->plugin_key)] = HelpersWPTP::localeDate($info['validFromDate']);
-                $ssl_info[__('Valid until', $this->plugin_key)] = HelpersWPTP::localeDate($info['expirationDate']);
+
+                $validFromDate = HelpersWPTP::localeDate($info['validFromDate']);
+                $ssl_info[__('Valid from', $this->plugin_key)] = "<span class='ltr-right'>" . $info['validFromDate'] . ($info['validFromDate'] != $validFromDate ? " / {$validFromDate}" : '') . "</span>";
+
+                $expirationDate = HelpersWPTP::localeDate($info['expirationDate']);
+                $ssl_info[__('Valid until', $this->plugin_key)] = "<span class='ltr-right'>" . $info['expirationDate'] . ($info['expirationDate'] != $expirationDate ? " / {$expirationDate}" : '') . "</span>";
+
                 $ssl_info[__('Is expired', $this->plugin_key)] = $info['isExpired'] ? __('Yes', $this->plugin_key) : __('No', $this->plugin_key);
                 $ssl_info[__('Remaining days to expiration', $this->plugin_key)] = $info['daysUntilExpirationDate'];
                 $ssl_info[__('Key', $this->plugin_key)] = $info['signatureAlgorithm'];
@@ -81,6 +86,8 @@ class DebugsWPTP extends WPTelegramPro
                 $ssl_info[__('SSL Info', $this->plugin_key)] = $info;
 
             $debugs['SSL'] = array_merge($debugs['SSL'], $ssl_info);
+        } else {
+            $debugs['SSL'][__('Tip', $this->plugin_key)] = $this->words['ssl_error'];
         }
         return $debugs;
     }
