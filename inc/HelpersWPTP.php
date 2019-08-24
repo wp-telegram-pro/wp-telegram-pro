@@ -111,7 +111,7 @@ class HelpersWPTP
     }
 
 
-    public static function startsWith($haystack, $needles): bool
+    public static function startsWith($haystack, $needles)
     {
         foreach ((array)$needles as $needle) {
             if ($needle != '' && mb_strpos($haystack, $needle) === 0) {
@@ -130,7 +130,7 @@ class HelpersWPTP
      *
      * @return bool
      */
-    public static function endsWith(string $haystack, $needles): bool
+    public static function endsWith(string $haystack, $needles)
     {
         foreach ((array)$needles as $needle) {
             if ((string)$needle === self::substr($haystack, -self::length($needle))) {
@@ -150,7 +150,7 @@ class HelpersWPTP
      *
      * @return string
      */
-    public static function substr(string $string, int $start, int $length = null): string
+    public static function substr(string $string, int $start, int $length = null)
     {
         return mb_substr($string, $start, $length, 'UTF-8');
     }
@@ -162,7 +162,7 @@ class HelpersWPTP
      *
      * @return int
      */
-    public static function length(string $value): int
+    public static function length(string $value)
     {
         return mb_strlen($value);
     }
@@ -175,7 +175,7 @@ class HelpersWPTP
      *
      * @return bool
      */
-    public static function strContains(string $haystack, $needles): bool
+    public static function strContains(string $haystack, $needles)
     {
         foreach ((array)$needles as $needle) {
             if ($needle != '' && mb_strpos($haystack, $needle) !== false) {
