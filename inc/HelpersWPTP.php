@@ -28,7 +28,7 @@ class HelpersWPTP
             $url = "https://{$url}";
         }
 
-        if (strlen($url) < 61 && function_exists('idn_to_ascii')) {
+        if (strlen($url) < 61 && function_exists('idn_to_ascii') && defined('INTL_IDNA_VARIANT_UTS46')) {
             $url = idn_to_ascii($url, false, INTL_IDNA_VARIANT_UTS46);
         }
 

@@ -58,8 +58,7 @@ class WPTelegramPro
         $this->now = date("Y-m-d H:i:s");
         $this->init($bypass);
         $this->words = apply_filters('wptelegrampro_words', $this->words);
-        $this->patterns_tags = apply_filters('wptelegrampro_patterns_tags', $this->patterns_tags);
-
+        
         add_filter('wptelegrampro_words', [$this, 'words']);
 
         if (!$bypass) {
@@ -145,7 +144,7 @@ class WPTelegramPro
                             <?php
                             echo sprintf(__('How to set bot commands: Start %s and select your bot > "Edit Bot" > "Edit Commands" > Send text below.', $this->plugin_key), '<a href="https://t.me/BotFather" target="_blank">@BotFather</a>');
                             ?>
-                        </span>
+                        </span><br><br>
                     <textarea cols="30" class="ltr" rows="<?php echo $textRows ?>"
                               onfocus="this.select();" onmouseup="return false;" readonly><?php
                         $list = array();
