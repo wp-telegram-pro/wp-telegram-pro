@@ -1,13 +1,14 @@
 jQuery(function ($) {
     const max_channel_wptp = 20;
+    var wpDoAjax = false;
 
     $.fn.extend({
         change_item_index: function (new_index) {
-            let in_name = $(this).attr('name');
+            var in_name = $(this).attr('name');
             if (new_index === undefined) {
                 new_index = 0;
                 $(".item").each(function (index) {
-                    let in_index = $(this).attr('data-index');
+                    var in_index = $(this).attr('data-index');
                     if (parseInt(in_index) > new_index)
                         new_index = parseInt(in_index);
                 });
@@ -24,13 +25,13 @@ jQuery(function ($) {
             this.each(function () {
                 if (document.selection) {
                     this.focus();
-                    let sel = document.selection.createRange();
+                    var sel = document.selection.createRange();
                     sel.text = myValue;
                     this.focus();
                 } else if (this.selectionStart || this.selectionStart == '0') {
-                    let startPos = this.selectionStart;
-                    let endPos = this.selectionEnd;
-                    let scrollTop = this.scrollTop;
+                    var startPos = this.selectionStart;
+                    var endPos = this.selectionEnd;
+                    var scrollTop = this.scrollTop;
                     this.value = this.value.substring(0, startPos) +
                         myValue + this.value.substring(endPos, this.value.length);
                     this.focus();
@@ -55,7 +56,7 @@ jQuery(function ($) {
                 if ($publish_button && !publish_button_click) {
                     publish_button_click = true;
                     $publish_button.on('click', function () {
-                        let reloader = setInterval(function () {
+                        var reloader = setInterval(function () {
                             postsaving = wp.data.select('core/editor').isSavingPost();
                             autosaving = wp.data.select('core/editor').isAutosavingPost();
                             success = wp.data.select('core/editor').didPostSaveRequestSucceed();
@@ -64,7 +65,7 @@ jQuery(function ($) {
                             clearInterval(reloader);
 
                             $('.wptp-metabox .item').each(function () {
-                                let value = $(this).find(".send-to-channel:checked").val();
+                                var value = $(this).find(".send-to-channel:checked").val();
                                 if (value == '1')
                                     $(this).find(".send-to-channel-no").prop("checked", true);
                             })
@@ -80,7 +81,7 @@ jQuery(function ($) {
 
         function wptp_init() {
             $('.accordion-wptp .toggle').unbind('click').on('click', function () {
-                let $this = $(this);
+                var $this = $(this);
                 $(".accordion-wptp .toggle").each(function (index) {
                     if ($(this).parent().index() != $this.parent().index())
                         $(this).removeClass('active').parent().find('.panel').slideUp();
@@ -104,13 +105,13 @@ jQuery(function ($) {
             });
 
             $('.remove-channel-wptp').unbind('click').on('click', function () {
-                let message = wptp.confirm_remove_channel;
-                let channel_username = $(this).parent().find('.channel-username-wptp').val();
+                var message = wptp.confirm_remove_channel;
+                var channel_username = $(this).parent().find('.channel-username-wptp').val();
                 if ($.trim(channel_username).length > 0)
                     message = message.replace('%', '@' + channel_username);
                 else
                     message = message.replace('%', '');
-                let r = confirm(message);
+                var r = confirm(message);
                 if (r == true) {
                     if ($('.channel-list-wptp .item').length === 1)
                         add_channel_item(false);
@@ -121,9 +122,9 @@ jQuery(function ($) {
             });
 
             $('.patterns-select-wptp').unbind('change').change(function () {
-                let $tcp = $(this).parent().find('div.message-pattern-wptp > .emojionearea-editor');
+                var $tcp = $(this).parent().find('div.message-pattern-wptp > .emojionearea-editor');
                 if ($tcp.length == 0) {
-                    let $tcp = $(this).parent().find('textarea.message-pattern-wptp');
+                    var $tcp = $(this).parent().find('textarea.message-pattern-wptp');
                     $tcp.insertAtCaret($(this).val());
                 } else
                     $tcp.html($tcp.html() + $(this).val()).caret('pos', $tcp.text().length).focus();
@@ -136,20 +137,43 @@ jQuery(function ($) {
             });
 
             $('.channel-info-wptp').unbind('click').on('click', function () {
-                let $this = $(this);
+                var $this = $(this);
                 $this.removeClass('dashicons-info channel-info-wptp').addClass('dashicons-update wptp-loader');
                 $this.parent().find('.description').remove();
-                let channel_username = $(this).parent().find('.channel-username-wptp').val();
-                if ($.trim(channel_username).length > 0) {
-                    let data = {
+                var channel_username = $(this).parent().find('.channel-username-wptp').val();
+                if ($.trim(channel_username).length > 0 && !wpDoAjax) {
+                    wpDoAjax = true;
+                    var data = {
                         'action': 'channel_members_count_wptp',
                         'channel_username': channel_username
                     };
                     $.post(ajaxurl, data, function (response) {
                         $this.parent().append('<div class="description">' + response + '</div>');
                         $this.removeClass('dashicons-update wptp-loader').addClass('dashicons-info channel-info-wptp');
+                        wpDoAjax = false;
                     });
                 }
+            });
+
+            $('.quick-send-channel-wptp').unbind('click').on('click', function () {
+                if (wpDoAjax) return;
+                var $this = $(this);
+                $this.removeClass('dashicons-wptp-telegram green-wptp red-wptp').addClass('dashicons dashicons-update wptp-loader');
+                wpDoAjax = true;
+                var data = {
+                    'action': 'quick_send_channel_wptp',
+                    'channel_username': $this.data('channel'),
+                    'channel_index': $this.data('index'),
+                    'post_id': $this.data('id')
+                };
+                $.post(ajaxurl, data, function (response) {
+                    if (response && response.success)
+                        $this.addClass('green-wptp');
+                    else
+                        $this.addClass('red-wptp');
+                    $this.removeClass('dashicons dashicons-update wptp-loader').addClass('dashicons-wptp-telegram');
+                    wpDoAjax = false;
+                });
             });
         }
 
@@ -157,7 +181,7 @@ jQuery(function ($) {
             if (accordion === undefined)
                 accordion = true;
 
-            let item = $('.channel-list-wptp .item:last').clone();
+            var item = $('.channel-list-wptp .item:last').clone();
             new_index = item.find('.channel-username-wptp').change_item_index();
             item.find('.channel_post_type').change_item_index(new_index);
             item.find('.send_to_channel').change_item_index(new_index);
@@ -195,7 +219,7 @@ jQuery(function ($) {
         // Tab
         $(".wptp-tab").on('click', function (e) {
             e.preventDefault();
-            let ids = $(this).attr('id');
+            var ids = $(this).attr('id');
             $('.wptp-tab-content').hide();
             $(".wptp-tab").removeClass('nav-tab-active');
             $(this).addClass('nav-tab-active');
@@ -203,15 +227,17 @@ jQuery(function ($) {
         });
 
         $('.bot-info-wptp').on('click', function () {
-            let $this = $(this);
-            let api_token = $(this).parent().find('.api-token').val();
-            if ($.trim(api_token).length > 0) {
+            var $this = $(this);
+            var api_token = $(this).parent().find('.api-token').val();
+            if ($.trim(api_token).length > 0 && !wpDoAjax) {
+                wpDoAjax = true;
                 $this.removeClass('dashicons-info bot-info-wptp').addClass('dashicons-update wptp-loader');
                 $this.parent().find('.description').html(' ');
-                let data = {'action': 'bot_info_wptp'};
+                var data = {'action': 'bot_info_wptp'};
                 $.post(ajaxurl, data, function (response) {
                     $this.parent().append('<div class="description">' + response + '</div>');
                     $this.removeClass('dashicons-update wptp-loader').addClass('dashicons-info bot-info-wptp');
+                    wpDoAjax = false;
                 });
             }
         });

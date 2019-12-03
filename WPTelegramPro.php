@@ -58,7 +58,7 @@ class WPTelegramPro
         $this->now = date("Y-m-d H:i:s");
         $this->init($bypass);
         $this->words = apply_filters('wptelegrampro_words', $this->words);
-        
+
         add_filter('wptelegrampro_words', [$this, 'words']);
 
         if (!$bypass) {
@@ -267,12 +267,13 @@ class WPTelegramPro
 
     function enqueue_scripts()
     {
+        $js_version = date("ymd-Gis", filemtime(plugin_dir_path(__FILE__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'wptp.js'));
         $version = rand(100, 200) . rand(200, 300);
         wp_enqueue_script('textrange-js', plugin_dir_url(__FILE__) . 'assets/js/textrange.js', array('jquery'), $version, true);
         wp_enqueue_script('jquery.caret-js', plugin_dir_url(__FILE__) . 'assets/js/jquery.caret.js', array('jquery'), $version, true);
         wp_enqueue_script('emojionearea-js', plugin_dir_url(__FILE__) . 'assets/js/emojionearea.min.js', array('jquery'), $version, true);
         wp_enqueue_style('emojionearea-css', plugin_dir_url(__FILE__) . 'assets/css/emojionearea.min.css', array(), $version, false);
-        wp_enqueue_script('wptp-js', plugin_dir_url(__FILE__) . 'assets/js/wptp.js', array('jquery'), $version, true);
+        wp_enqueue_script('wptp-js', plugin_dir_url(__FILE__) . 'assets/js/wptp.js', array('jquery'), $js_version, true);
         // Localize the script with new data
         $translation_array = array(
             'new_channel' => __('New Channel', $this->plugin_key),

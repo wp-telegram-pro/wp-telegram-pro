@@ -291,6 +291,22 @@ body.rtl .wptp-wrap th {
     animation: wptp_spin 2s linear infinite;
 }
 
+.green-wptp {
+    color: #00c853;
+}
+
+.red-wptp {
+    color: #ff1744;
+}
+
+.quick-send-channel-wptp {
+    font-size: 1.7em;
+    width: 25px;
+    height: 23px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
 #adminmenu #toplevel_page_wp-telegram-pro .menu-top div.wp-menu-image::before {
     font-family: 'wptp' !important;
     content: "\e900";
@@ -361,4 +377,8 @@ body.rtl .wptp-wrap .ltr-right {
 
 body.rtl .wptp-wrap .flex {
     justify-content: end;
+}
+
+body.rtl .quick-send-channel-wptp {
+    margin-left: 5px;
 }
