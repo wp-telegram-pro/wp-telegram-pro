@@ -23,16 +23,25 @@ class WordPressWPTP extends WPTelegramPro
         add_action('show_user_profile', [$this, 'user_profile']);
         add_action('edit_user_profile', [$this, 'user_profile']);
         add_action('wp_before_admin_bar_render', [$this, 'admin_bar_render']);
+        add_action('admin_notices', [$this, 'user_disconnect']);
 
         if (isset($this->options['new_comment_notification']))
             add_action('comment_post', array($this, 'comment_notification'), 10, 2);
     }
 
+    function user_disconnect()
+    {
+        if (isset($_GET['user-disconnect-wptp']) && $this->disconnect_telegram_wp_user(isset($_GET['user_id']) ? $_GET['user_id'] : null))
+            echo '<div class="notice notice-info is-dismissible">
+          <p>' . __('Your profile was successfully disconnected from Telegram account.', $this->plugin_key) . '</p>
+         </div>';
+    }
+
     function admin_bar_render()
     {
         global $wp_admin_bar;
-        if(!$this->get_option('telegram_connectivity', false)) return;
-        
+        if (!$this->get_option('telegram_connectivity', false)) return;
+
         if ($user_id = get_current_user_id()) {
             $bot_user = $this->set_user(array('wp_id' => $user_id));
             if (!$bot_user && $link = $this->get_bot_connect_link($user_id))
@@ -48,7 +57,7 @@ class WordPressWPTP extends WPTelegramPro
 
     function user_profile($user)
     {
-        if(!$this->get_option('telegram_connectivity', false)) return;
+        if (!$this->get_option('telegram_connectivity', false)) return;
 
         $bot_user = $this->set_user(array('wp_id' => $user->ID));
         ?>
@@ -56,7 +65,7 @@ class WordPressWPTP extends WPTelegramPro
         <table class="form-table">
             <tr>
                 <?php if ($bot_user) { ?>
-                    <th colspan="2"><?php echo __('Your profile connected to:', $this->plugin_key) . ' ' . $bot_user['first_name'] . ' ' . $bot_user['last_name'] . ' <a href="https://t.me/' . $bot_user['username'] . '" target="_blank">@' . $bot_user['username'] . '</a>'; ?></th>
+                    <th colspan="2"><?php echo __('Your profile has been linked to this Telegram account:', $this->plugin_key) . ' ' . $bot_user['first_name'] . ' ' . $bot_user['last_name'] . ' <a href="https://t.me/' . $bot_user['username'] . '" target="_blank">@' . $bot_user['username'] . '</a> (<a href="' . $this->get_bot_disconnect_link($user->ID) . '">' . __('Disconnect', $this->plugin_key) . '</a>)'; ?></th>
                 <?php } else {
                     $code = $this->get_user_random_code($user->ID);
                     ?>
@@ -495,7 +504,7 @@ class WordPressWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
-                        <label for="telegram_connectivity"><?php _e('Telegram connectivity', $this->plugin_key) ?></label>
+                        <label for="telegram_connectivity"><?php _e('Telegram Connectivity', $this->plugin_key) ?></label>
                     </td>
                     <td>
                         <label><input type="checkbox" value="1" id="telegram_connectivity"

@@ -195,6 +195,19 @@ class WPTelegramPro
         exit;
     }
 
+    function disconnect_telegram_wp_user($user_id = null)
+    {
+        if (isset($_GET['user-disconnect-wptp'])) {
+            if ($user_id == null)
+                $user_id = get_current_user_id();
+            $nonce = $_GET['user-disconnect-wptp'];
+            $action = date("dH") . $user_id;
+            if (wp_verify_nonce($nonce, $action))
+                return $this->update_user(array('wp_id' => null), array('wp_id' => $user_id));
+        }
+        return false;
+    }
+
     function connect_telegram_wp_user($user_text)
     {
         $code = $user_text;
@@ -204,7 +217,7 @@ class WPTelegramPro
         }
         if (strlen($code) == $this->rand_id_length && is_numeric($code)) {
             $user_id = $this->find_user_by_code($code);
-            if($user_id){
+            if ($user_id) {
                 $this->update_user(array('wp_id' => $user_id));
                 $this->telegram->sendMessage(__('Welcome, your user is successfully connected to the website.', $this->plugin_key));
             }
@@ -584,19 +597,25 @@ class WPTelegramPro
         return $this->user[$key];
     }
 
-    function update_user($update_field)
+    function update_user($update_field, $where = null)
     {
         global $wpdb;
         if (!is_array($update_field))
             return false;
 
+        if ($where == null)
+            $where = array('user_id' => $this->user['user_id']);
+
         $result = $wpdb->update(
             $this->db_users_table,
             array_merge($update_field, array('updated_at' => $this->now)),
-            array('user_id' => $this->user['user_id'])
+            $where
         );
-        if ($result)
+
+        if ($result && isset($this->telegram_input['form']['id']))
             $this->set_user(array('user_id' => $this->telegram_input['form']['id']));
+
+        return $result;
     }
 
     function set_user($args = array())
@@ -789,6 +808,18 @@ class WPTelegramPro
     {
         $output = preg_replace('/<select (.*?) >/', '<select $1 size="5" multiple>', $output);
         return $output;
+    }
+
+    protected function get_bot_disconnect_link($user_id = null)
+    {
+        if ($user_id == null)
+            $user_id = get_current_user_id();
+        $url = HelpersWPTP::getCurrentURL();
+        $url .= strpos($url, '?') === false ? '?' : '&';
+        $action = date("dH") . $user_id;
+        $nonce = wp_create_nonce($action);
+        $url .= 'user-disconnect-wptp=' . $nonce;
+        return $url;
     }
 
     protected function get_bot_connect_link($user_id = null)

@@ -22,6 +22,17 @@ class HelpersWPTP
             return ob_get_clean();
     }
 
+    public static function getCurrentURL()
+    {
+        $pageURL = 'http';
+        if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
+            $pageURL .= "s";
+        }
+        $pageURL .= "://";
+        $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+        return $pageURL;
+    }
+
     public static function getURLHost($url)
     {
         if (!HelpersWPTP::startsWith($url, ['http://', 'https://', 'ssl://'])) {
