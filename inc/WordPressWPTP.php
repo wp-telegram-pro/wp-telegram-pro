@@ -15,39 +15,63 @@ class WordPressWPTP extends WPTelegramPro
         add_action('wptelegrampro_inline_keyboard_response', array($this, 'inline_keyboard'));
         add_action('wptelegrampro_keyboard_response', array($this, 'keyboard'));
         add_action('wptelegrampro_keyboard_response', array($this, 'check_keyboard_need_update'), 9999);
-        add_filter('wptelegrampro_before_settings_update_message', array($this, 'before_settings_updated'), 10, 3);
+        add_filter('wptelegrampro_before_settings_update_message', array($this, 'update_api_token'), 10, 3);
+        add_filter('wptelegrampro_option_settings', array($this, 'update_bot_username'), 100, 2);
         add_filter('wptelegrampro_default_keyboard', [$this, 'default_keyboard'], 10);
         add_filter('wptelegrampro_default_commands', [$this, 'default_commands'], 10);
 
-        add_action('show_user_profile', [$this, 'account_link_profile']);
-        add_action('edit_user_profile', [$this, 'account_link_profile']);
+        add_action('show_user_profile', [$this, 'user_profile']);
+        add_action('edit_user_profile', [$this, 'user_profile']);
+        add_action('wp_before_admin_bar_render', [$this, 'admin_bar_render']);
 
         if (isset($this->options['new_comment_notification']))
             add_action('comment_post', array($this, 'comment_notification'), 10, 2);
     }
 
-    function account_link_profile($user)
+    function admin_bar_render()
     {
-        $user = $this->set_user(array('wp_id' => $user->ID));
+        global $wp_admin_bar;
+        if(!$this->get_option('telegram_connectivity', false)) return;
+        
+        if ($user_id = get_current_user_id()) {
+            $bot_user = $this->set_user(array('wp_id' => $user_id));
+            if (!$bot_user && $link = $this->get_bot_connect_link($user_id))
+                $wp_admin_bar->add_menu(array(
+                    'parent' => 'user-actions',
+                    'id' => 'connect_telegram',
+                    'title' => __('Connect to Telegram', $this->plugin_key),
+                    'href' => $link,
+                    'meta' => array('target' => '_blank')
+                ));
+        }
+    }
+
+    function user_profile($user)
+    {
+        if(!$this->get_option('telegram_connectivity', false)) return;
+
+        $bot_user = $this->set_user(array('wp_id' => $user->ID));
         ?>
-        <h3><?php esc_html_e('Telegram User', $this->plugin_key); ?></h3>
+        <h2><?php _e('Telegram', $this->plugin_key); ?></h2>
         <table class="form-table">
             <tr>
-                <?php if ($user) { ?>
-                    <td colspan="2"><?php echo __('User connect to:', $this->plugin_key) . ' ' . $user['first_name'] . ' ' . $user['last_name'] . ' <a href="https://t.me/' . $user['username'] . '" target="_blank">@' . $user['username'] . '</a>'; ?></td>
-                <?php } elseif (0) { // @TODO: Under Develop ?>
-                    <td>
-                        <label for="identify_telegram_user"><?php //_e('Send via Telegram Bot', $this->plugin_key) ?></label>
-                    </td>
-                    <td>
-                        <input type="text" id="identify_telegram_user" class="regular-text ltr" value=""
-                               onfocus="this.select();" onmouseup="return false;" readonly>
-                        <br>
-                        <span class="description"><?php //_e('Send this code from your telegram bot to identify the your user.', $this->plugin_key) ?></span>
-                    </td>
+                <?php if ($bot_user) { ?>
+                    <th colspan="2"><?php echo __('Your profile connected to:', $this->plugin_key) . ' ' . $bot_user['first_name'] . ' ' . $bot_user['last_name'] . ' <a href="https://t.me/' . $bot_user['username'] . '" target="_blank">@' . $bot_user['username'] . '</a>'; ?></th>
                 <?php } else {
-                    echo '<td colspan="2">Not connected!</td>';
-                } ?>
+                    $code = $this->get_user_random_code($user->ID);
+                    ?>
+                    <th>
+                        <label for="telegram_user_code"><?php _e('Telegram Bot Code', $this->plugin_key) ?></label>
+                    </th>
+                    <td>
+                        <input type="text" id="telegram_user_code" class="regular-text ltr"
+                               value="<?php echo $code ?>"
+                               onfocus="this.select();" onmouseup="return false;"
+                               readonly> <?php echo __('Or', $this->plugin_key) . ' <a href="' . $this->get_bot_connect_link($user->ID) . '" target="_blank">' . __('Request Connect', $this->plugin_key) . '</a>' ?>
+                        <br>
+                        <span class="description"><?php _e('Send this code from telegram bot to identify the your user.', $this->plugin_key) ?></span>
+                    </td>
+                <?php } ?>
             </tr>
         </table>
         <?php
@@ -82,7 +106,7 @@ class WordPressWPTP extends WPTelegramPro
         return $keyboard;
     }
 
-    function before_settings_updated($update_message, $current_option, $new_option)
+    function update_api_token($update_message, $current_option, $new_option)
     {
         if ($this->get_option('api_token') != $new_option['api_token']) {
             $telegram = new TelegramWPTP($new_option['api_token']);
@@ -90,6 +114,7 @@ class WordPressWPTP extends WPTelegramPro
             if ($telegram->setWebhook($webHook['url'])) {
                 $update_message .= $this->message(__('Set Webhook Successfully.', $this->plugin_key));
                 update_option('wptp-rand-url', $webHook['rand'], false);
+                $this->telegram = $telegram;
             } else
                 $update_message .= $this->message(__('Set Webhook with Error!', $this->plugin_key), 'error');
         }
@@ -98,6 +123,17 @@ class WordPressWPTP extends WPTelegramPro
             update_option('update_keyboard_time_wptp', time(), false);
 
         return $update_message;
+    }
+
+    function update_bot_username($new_option, $current_option)
+    {
+        if ($this->get_option('api_token') != $new_option['api_token'] || !$this->get_option('api_bot_username', false)) {
+            $this->telegram->bot_info();
+            $bot_info = $this->telegram->get_last_result();
+            if ($bot_info['ok'] && $bot_info['result']['is_bot'])
+                $new_option['api_bot_username'] = $bot_info['result']['username'];
+        }
+        return $new_option;
     }
 
     function patterns_tags($tags)
@@ -291,7 +327,7 @@ class WordPressWPTP extends WPTelegramPro
         $this->words = $words = apply_filters('wptelegrampro_words', $this->words);
         $current_status = $this->user_field('status');
 
-        if ($user_text == '/start') {
+        if ($user_text == '/start' || strpos($user_text, '/start') !== false) {
             $message = $this->get_option('start_command');
             $message = empty(trim($message)) ? __('Welcome!', $this->plugin_key) : $message;
             $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
@@ -419,10 +455,13 @@ class WordPressWPTP extends WPTelegramPro
                 <tr>
                     <td><label for="api_token"><?php _e('Telegram Bot API Token', $this->plugin_key) ?></label>
                     </td>
-                    <td><input type="password" name="api_token" id="api_token"
+                    <td>
+                        <input type="password" name="api_token" id="api_token"
                                value="<?php echo $this->get_option('api_token') ?>"
-                               class="regular-text ltr api-token"><span
-                                class="dashicons dashicons-info bot-info-wptp"></span>
+                               class="regular-text ltr api-token">
+                        <span class="dashicons dashicons-info bot-info-wptp"></span>
+                        <input type="hidden" name="api_bot_username"
+                               value="<?php echo $this->get_option('api_bot_username') ?>">
                     </td>
                 </tr>
                 <tr>
@@ -449,6 +488,19 @@ class WordPressWPTP extends WPTelegramPro
                     <td>
                             <textarea name="start_command" id="start_command" cols="50" class="emoji"
                                       rows="4"><?php echo $this->get_option('start_command') ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="2"><?php _e('Users', $this->plugin_key) ?></th>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="telegram_connectivity"><?php _e('Telegram connectivity', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="telegram_connectivity"
+                                      name="telegram_connectivity" <?php checked($this->get_option('telegram_connectivity'), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                        </label>
                     </td>
                 </tr>
                 <tr>

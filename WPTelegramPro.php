@@ -42,7 +42,7 @@ class WPTelegramPro
         $rand_id_length = 10, $now, $db_users_table, $words = array(), $options, $telegram,
         $telegram_input, $user, $default_keyboard, $plugin_name,
         $ignore_post_types = array("attachment", "revision", "nav_menu_item", "custom_css", "customize_changeset", "oembed_cache", "product_variation");
-    protected $aboutTabID = 'about-wptp-tab', $page_title_divider;
+    protected $aboutTabID = 'about-wptp-tab', $page_title_divider, $wp_user_rc_key = '_random_code_wptp';
 
     public function __construct($bypass = false)
     {
@@ -63,6 +63,7 @@ class WPTelegramPro
 
         if (!$bypass) {
             add_action('wptelegrampro_keyboard_response', array($this, 'change_user_status'), 1);
+            add_action('wptelegrampro_keyboard_response', array($this, 'connect_telegram_wp_user'), 1);
             add_filter('wptelegrampro_after_settings_update_message', array($this, 'after_settings_updated_message'), 10);
             add_action('wp_login', array($this, 'check_user_id'));
             add_action('user_register', array($this, 'check_user_id'));
@@ -194,6 +195,22 @@ class WPTelegramPro
         exit;
     }
 
+    function connect_telegram_wp_user($user_text)
+    {
+        $code = $user_text;
+        if (strpos($user_text, '/start') !== false) {
+            $user_text = explode(' ', $user_text);
+            $code = end($user_text);
+        }
+        if (strlen($code) == $this->rand_id_length && is_numeric($code)) {
+            $user_id = $this->find_user_by_code($code);
+            if($user_id){
+                $this->update_user(array('wp_id' => $user_id));
+                $this->telegram->sendMessage(__('Welcome, your user is successfully connected to the website.', $this->plugin_key));
+            }
+        }
+    }
+
     function change_user_status($user_text)
     {
         $allow_status = array('search');
@@ -321,9 +338,10 @@ class WPTelegramPro
             do_action('wptelegrampro_before_settings_updated', $this->options, $_POST);
             $update_message = apply_filters('wptelegrampro_before_settings_update_message', $update_message, $this->options, $_POST);
 
-            update_option($this->plugin_key, $_POST, false);
+            $options = apply_filters('wptelegrampro_option_settings', $_POST, $this->options);
+            update_option($this->plugin_key, $options, false);
 
-            do_action('wptelegrampro_after_settings_updated', $this->options, $_POST);
+            do_action('wptelegrampro_after_settings_updated', $this->options, $options);
             $update_message = apply_filters('wptelegrampro_after_settings_update_message', $update_message, $this->options, $_POST);
         }
 
@@ -364,6 +382,20 @@ class WPTelegramPro
     function get_option($key, $default = '')
     {
         return isset($this->options[$key]) ? $this->options[$key] : $default;
+    }
+
+    /**
+     * Update Plugin Option
+     * @param string $key Option Name
+     * @param string $value Option Value
+     * @return  array New Options
+     */
+    function update_option($key, $value)
+    {
+        $options = $this->options;
+        $options[$key] = $value;
+        update_option($this->plugin_key, $options, false);
+        return $this->options = get_option($this->plugin_key);
     }
 
     function query($query = array())
@@ -759,6 +791,60 @@ class WPTelegramPro
         return $output;
     }
 
+    protected function get_bot_connect_link($user_id = null)
+    {
+        if ($user_id == null)
+            $user_id = get_current_user_id();
+
+        $botUsername = $this->get_option('api_bot_username', false);
+        $code = $this->get_user_random_code($user_id);
+
+        if ($botUsername) {
+            return "https://t.me/{$botUsername}?start={$code}";
+        } else
+            return false;
+    }
+
+    protected function find_user_by_code($code)
+    {
+        global $wpdb;
+        $user = $wpdb->get_row("SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key='{$this->wp_user_rc_key}' AND meta_value = '{$code}'");
+        return $user ? $user->user_id : false;
+    }
+
+    protected function get_user_random_code($user_id = null)
+    {
+        if ($user_id == null)
+            $user_id = get_current_user_id();
+
+        if ($user_id != 0) {
+            $code = get_user_meta($user_id, $this->wp_user_rc_key, true);
+            if ($code)
+                return $code;
+            else {
+                $code = $this->wp_user_random_code();
+                update_user_meta($user_id, $this->wp_user_rc_key, $code);
+                return $code;
+            }
+        }
+
+        return false;
+    }
+
+    private function wp_user_random_code()
+    {
+        global $wpdb;
+        $code_not_exists = false;
+        $code = '';
+        while (!$code_not_exists) {
+            $code = $this->random_strings($this->rand_id_length);
+            $user = $wpdb->get_row("SELECT umeta_id FROM {$wpdb->usermeta} WHERE meta_key='{$this->wp_user_rc_key}' AND meta_value = '{$code}'", ARRAY_A);
+            if ($user === null)
+                $code_not_exists = true;
+        }
+        return $code;
+    }
+
     private function random_id()
     {
         global $wpdb;
@@ -766,7 +852,7 @@ class WPTelegramPro
         $id = '';
         while (!$id_not_exists) {
             $id = $this->random_strings($this->rand_id_length);
-            $user = $wpdb->get_row("SELECT * FROM {$this->db_users_table} WHERE rand_id = '{$id}'", ARRAY_A);
+            $user = $wpdb->get_row("SELECT id FROM {$this->db_users_table} WHERE rand_id = '{$id}'", ARRAY_A);
             if ($user === null)
                 $id_not_exists = true;
         }
