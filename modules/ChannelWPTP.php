@@ -643,7 +643,6 @@ class ChannelWPTP extends WPTelegramPro
                         continue;
                     if ($c >= $this->max_channel)
                         break;
-                    //var_dump($options['channel_post_type']);
                     $item = array(
                         'index' => $c,
                         'channel_username' => $options['channel_username'][$k],

@@ -205,6 +205,9 @@ class HelpersWPTP
         if (function_exists('jdate'))
             return jdate($format, $time, false, true);
 
-        return $time;
+        if (function_exists('wp_date'))
+            return wp_date($format, strtotime($time));
+        else
+            return date($format, strtotime($time));
     }
 }

@@ -172,22 +172,21 @@ class WordPressWPTP extends WPTelegramPro
 
     function comment_notification($comment_ID, $comment_approved, $message_id = null)
     {
-        global $wpdb;
         $comment = get_comment($comment_ID);
         if ($comment) {
             $comment_status = wp_get_comment_status($comment_ID);
-            if ($message_id === null) {
-                $users = get_users(array('role' => 'Administrator'));
-                $user_ids = array();
-                foreach ($users as $user) {
-                    $user_ids[] = $user->ID;
-                }
-                $user_ids = implode(',', $user_ids);
-                $users = $wpdb->get_results("SELECT user_id,wp_id FROM {$this->db_users_table} WHERE wp_id IN ({$user_ids})", ARRAY_A);
-            } else {
-                $users = false;
-            }
-            if ($users) {
+            $keyboard_ = array(array(
+                array(
+                    'text' => '🔗',
+                    'url' => get_permalink($comment->comment_post_ID)
+                ),
+                array(
+                    'text' => '💬',
+                    'url' => admin_url('edit-comments.php')
+                )
+            ));
+
+            if ($message_id === null && $users = $this->get_users()) {
                 $text = "*" . __('New Comment', $this->plugin_key) . "*\n\n";
                 $text .= __('Post') . ': ' . get_the_title($comment->comment_post_ID) . "\n";
                 $text .= __('Author') . ': ' . $comment->comment_author . "\n";
@@ -198,76 +197,66 @@ class WordPressWPTP extends WPTelegramPro
                 if (!empty($comment->comment_content))
                     $text .= __('Comment') . ":\n" . stripslashes(strip_tags($comment->comment_content)) . "\n";
 
-                $keyboard_ = array(array(
-                    array(
-                        'text' => '🔗',
-                        'url' => get_permalink($comment->comment_post_ID)
-                    ),
-                    array(
-                        'text' => '💬',
-                        'url' => admin_url('edit-comments.php')
-                    )
-                ));
-                if ($message_id === null) {
-                    foreach ($users as $user) {
-                        if ($user['wp_id'] == $comment->user_id)
-                            continue;
-                        $keyboard = $keyboard_;
-                        $this->telegram->sendMessage($text, null, $user['user_id'], 'Markdown');
-                        $message_id = $this->telegram->get_last_result()['result']['message_id'];
-                        $keyboard[0][] = array(
-                            'text' => '🚮',
-                            'callback_data' => 'comment_trash_' . $comment_ID . '_' . $message_id
-                        );
-                        if ($comment_approved)
-                            $keyboard[0][] = array(
-                                'text' => '💊',
-                                'callback_data' => 'comment_hold_' . $comment_ID . '_' . $message_id
-                            );
-                        else
-                            $keyboard[0][] = array(
-                                'text' => '✔️',
-                                'callback_data' => 'comment_approve_' . $comment_ID . '_' . $message_id
-                            );
+                $text = apply_filters('wptelegrampro_wp_new_comment_notification_text', $text, $comment, $comment_ID);
 
+                foreach ($users as $user) {
+                    if ($user['wp_id'] == $comment->user_id)
+                        continue;
+                    $keyboard = $keyboard_;
+                    $this->telegram->sendMessage($text, null, $user['user_id'], 'Markdown');
+                    $message_id = $this->telegram->get_last_result()['result']['message_id'];
+                    $keyboard[0][] = array(
+                        'text' => '🚮',
+                        'callback_data' => 'comment_trash_' . $comment_ID . '_' . $message_id
+                    );
+                    if ($comment_approved)
                         $keyboard[0][] = array(
-                            'text' => '🛡️',
-                            'callback_data' => 'comment_spam_' . $comment_ID . '_' . $message_id
-                        );
-                        $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
-                        $this->telegram->editMessageReplyMarkup($keyboards, $message_id, $user['user_id']);
-                    }
-                } else {
-                    if ($comment_status === 'trash')
-                        $keyboard_[0][] = array(
-                            'text' => '🔄',
-                            'callback_data' => 'comment_untrash_' . $comment_ID . '_' . $message_id
-                        );
-                    else
-                        $keyboard_[0][] = array(
-                            'text' => '🚮',
-                            'callback_data' => 'comment_trash_' . $comment_ID . '_' . $message_id
-                        );
-
-                    if ($comment_status === 'approved')
-                        $keyboard_[0][] = array(
                             'text' => '💊',
                             'callback_data' => 'comment_hold_' . $comment_ID . '_' . $message_id
                         );
                     else
-                        $keyboard_[0][] = array(
+                        $keyboard[0][] = array(
                             'text' => '✔️',
                             'callback_data' => 'comment_approve_' . $comment_ID . '_' . $message_id
                         );
 
-                    if ($comment_status !== 'spam')
-                        $keyboard_[0][] = array(
-                            'text' => '🛡️',
-                            'callback_data' => 'comment_spam_' . $comment_ID . '_' . $message_id
-                        );
-                    $keyboards = $this->telegram->keyboard($keyboard_, 'inline_keyboard');
-                    $this->telegram->editMessageReplyMarkup($keyboards, $message_id);
+                    $keyboard[0][] = array(
+                        'text' => '🛡️',
+                        'callback_data' => 'comment_spam_' . $comment_ID . '_' . $message_id
+                    );
+                    $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+                    $this->telegram->editMessageReplyMarkup($keyboards, $message_id, $user['user_id']);
                 }
+            } elseif ($message_id !== null) {
+                if ($comment_status === 'trash')
+                    $keyboard_[0][] = array(
+                        'text' => '🔄',
+                        'callback_data' => 'comment_untrash_' . $comment_ID . '_' . $message_id
+                    );
+                else
+                    $keyboard_[0][] = array(
+                        'text' => '🚮',
+                        'callback_data' => 'comment_trash_' . $comment_ID . '_' . $message_id
+                    );
+
+                if ($comment_status === 'approved')
+                    $keyboard_[0][] = array(
+                        'text' => '💊',
+                        'callback_data' => 'comment_hold_' . $comment_ID . '_' . $message_id
+                    );
+                else
+                    $keyboard_[0][] = array(
+                        'text' => '✔️',
+                        'callback_data' => 'comment_approve_' . $comment_ID . '_' . $message_id
+                    );
+
+                if ($comment_status !== 'spam')
+                    $keyboard_[0][] = array(
+                        'text' => '🛡️',
+                        'callback_data' => 'comment_spam_' . $comment_ID . '_' . $message_id
+                    );
+                $keyboards = $this->telegram->keyboard($keyboard_, 'inline_keyboard');
+                $this->telegram->editMessageReplyMarkup($keyboards, $message_id);
             }
         }
     }
@@ -441,7 +430,7 @@ class WordPressWPTP extends WPTelegramPro
                 }
                 $this->telegram->answerCallbackQuery($status_message);
                 $comment_status = wp_get_comment_status($comment_ID);
-                $this->comment_notification($comment_ID, $comment_status == 'approved' ? 1 : 0, $button_data[3]);
+                $this->comment_notification($comment_ID, $comment_status == 'approved', $button_data[3]);
             } else {
                 $this->telegram->answerCallbackQuery(__('Not Found Comment!', $this->plugin_key));
             }
@@ -495,8 +484,8 @@ class WordPressWPTP extends WPTelegramPro
                         <label for="start_command"><?php _e('Start Command<br>(Welcome Message)', $this->plugin_key) ?></label>
                     </td>
                     <td>
-                            <textarea name="start_command" id="start_command" cols="50" class="emoji"
-                                      rows="4"><?php echo $this->get_option('start_command') ?></textarea>
+                        <textarea name="start_command" id="start_command" cols="50" class="emoji"
+                                  rows="4"><?php echo $this->get_option('start_command') ?></textarea>
                     </td>
                 </tr>
                 <tr>
@@ -509,7 +498,10 @@ class WordPressWPTP extends WPTelegramPro
                     <td>
                         <label><input type="checkbox" value="1" id="telegram_connectivity"
                                       name="telegram_connectivity" <?php checked($this->get_option('telegram_connectivity'), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
-                        </label>
+                        </label><br>
+                        <span class="description">
+                            <?php _e('Enable the ability to connect the WordPress profile to the Telegram account. This feature is displayed in the user profile, Admin bar, and WooCommerce account details.', $this->plugin_key) ?>
+                        </span>
                     </td>
                 </tr>
                 <tr>

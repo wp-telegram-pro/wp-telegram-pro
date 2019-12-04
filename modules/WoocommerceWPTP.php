@@ -32,8 +32,53 @@ class WoocommerceWPTP extends WPTelegramPro
         add_action('woocommerce_payment_complete', [$this, 'woocommerce_payment_complete']);
         add_action('woocommerce_account_edit-account_endpoint', [$this, 'woocommerce_edit_account'], 1);
         add_action('template_redirect', [$this, 'user_disconnect']);
+        if ($this->get_option('wc_new_order_notification', false))
+            add_action('woocommerce_thankyou', [$this, 'new_order_notification']);
 
         $this->words = apply_filters('wptelegrampro_words', $this->words);
+    }
+
+    function new_order_notification($order_id)
+    {
+        if (!$order_id) return;
+        $users = $this->get_users(['Administrator', 'shop_manager']);
+        if ($users) {
+            $order = wc_get_order($order_id);
+            $keyboard = array(array(
+                array(
+                    'text' => '📝',
+                    'url' => admin_url('post.php?post=' . $order_id . '&action=edit')
+                ),
+                array(
+                    'text' => '📂',
+                    'url' => admin_url('edit.php?post_type=shop_order')
+                )
+            ));
+            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+
+            $text = "*" . __('New Order', $this->plugin_key) . "*\n\n";
+            $text .= __('Order number', $this->plugin_key) . ': ' . $order_id . "\n";
+            $text .= __('Status', $this->plugin_key) . ': ' . wc_get_order_status_name($order->get_status()) . "\n";
+            $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate($order->get_date_modified()) . "\n";
+            $text .= __('Email', $this->plugin_key) . ': ' . $order->get_billing_email() . "\n";
+            $text .= __('Total Price', $this->plugin_key) . ': ' . $this->wc_price($order->get_total()) . "\n";
+            $text .= __('Payment method', $this->plugin_key) . ': ' . $order->get_payment_method_title() . "\n";
+            $text .= "\n" . __('Items', $this->plugin_key) . ':' . "\n";
+
+            foreach ($order->get_items() as $item_id => $item_data) {
+                $product = $item_data->get_product();
+                $product_name = $product->get_name();
+                $item_quantity = $item_data->get_quantity();
+                $item_total = $this->wc_price($item_data->get_total());
+                $text .= $product_name . ' × ' . $item_quantity . ' = ' . $item_total . "\n";
+            }
+
+            $text = apply_filters('wptelegrampro_wc_new_order_notification_text', $text, $order, $order_id);
+
+            foreach ($users as $user) {
+                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
+            }
+        }
     }
 
     function user_disconnect()
@@ -501,6 +546,19 @@ class WoocommerceWPTP extends WPTelegramPro
                     <td><?php echo $this->dropdown_categories('exclude_display_categories[]', 'product_cat', $this->get_option('exclude_display_categories')); ?></td>
                 </tr>
                 <tr>
+                    <th colspan="2"><?php _e('Notification', $this->plugin_key) ?></th>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="wc_new_order_notification"><?php _e('New Order', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="wc_new_order_notification"
+                                      name="wc_new_order_notification" <?php checked($this->get_option('wc_new_order_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
                     <th colspan="2"><?php _e('Empty the cart', $this->plugin_key) ?></th>
                 </tr>
                 <tr>
@@ -930,8 +988,13 @@ class WoocommerceWPTP extends WPTelegramPro
         $price = (!empty($product['saleprice']) ? $product['saleprice'] : $product['price']);
         if ($product['product_type'] == 'variable')
             $price = $product['price'];
-        $price = !empty($price) ? strip_tags(html_entity_decode(wc_price($price))) : $price;
+        $price = !empty($price) ? $this->wc_price($price) : $price;
         return $price;
+    }
+
+    function wc_price($price)
+    {
+        return strip_tags(html_entity_decode(wc_price($price)));
     }
 
     function cart($message_id = null, $refresh = false)

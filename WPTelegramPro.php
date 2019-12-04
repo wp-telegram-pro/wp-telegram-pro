@@ -764,7 +764,6 @@ class WPTelegramPro
     {
         global $_wp_additional_image_sizes;
         $sizes = array();
-        //var_dump($_wp_additional_image_sizes);
         foreach (get_intermediate_image_sizes() as $_size) {
             if (in_array($_size, array('thumbnail', 'medium', 'medium_large', 'large'))) {
                 $sizes[$_size]['width'] = get_option("{
@@ -956,6 +955,16 @@ class WPTelegramPro
         foreach ($editable_roles as $role => $details)
             $roles[$role] = translate_user_role($details['name']);
         return $roles;
+    }  
+
+    function get_users($role = ['Administrator'])
+    {
+        global $wpdb;
+        $user_ids = get_users(array('fields' => 'ids', 'role__in' => $role));
+        if (count($user_ids) == 0) return false;
+        $user_ids = implode(',', $user_ids);
+        $users = $wpdb->get_results("SELECT user_id,wp_id FROM {$this->db_users_table} WHERE wp_id IN ({$user_ids})", ARRAY_A);
+        return $users;
     }
 
     static function install()
