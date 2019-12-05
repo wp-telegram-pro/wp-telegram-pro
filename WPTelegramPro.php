@@ -8,7 +8,7 @@
  * Author URI: http://parsa.ws
  * Text Domain: wp-telegram-pro
  * WC requires at least: 3.0.0
- * WC tested up to: 3.6.2
+ * WC tested up to: 3.8.1
  */
 
 if (!defined('ABSPATH')) exit;
