@@ -33,9 +33,92 @@ class WoocommerceWPTP extends WPTelegramPro
         add_action('woocommerce_account_edit-account_endpoint', [$this, 'woocommerce_edit_account'], 1);
         add_action('template_redirect', [$this, 'user_disconnect']);
         if ($this->get_option('wc_new_order_notification', false))
+            add_action('woocommerce_order_status_changed', [$this, 'order_status_notification'], 10, 4);
+        if ($this->get_option('wc_admin_order_status_notification', false))
+            add_action('woocommerce_order_status_changed', [$this, 'admin_order_status_notification'], 10, 4);
+        if ($this->get_option('wc_order_status_notification', false))
             add_action('woocommerce_thankyou', [$this, 'new_order_notification']);
 
         $this->words = apply_filters('wptelegrampro_words', $this->words);
+    }
+
+    /**
+     * Send notification to admin users when changed order status
+     *
+     * @param int $order_id
+     * @param string $old_status
+     * @param string $new_status
+     * @param WC_Order  Actual order
+     */
+    public function admin_order_status_notification($order_id, $old_status, $new_status, $order)
+    {
+        $users = $this->get_users(['Administrator', 'shop_manager']);
+        if ($users) {
+            $keyboard = array(array(
+                array(
+                    'text' => '📝',
+                    'url' => admin_url('post.php?post=' . $order_id . '&action=edit')
+                ),
+                array(
+                    'text' => '📂',
+                    'url' => admin_url('edit.php?post_type=shop_order')
+                )
+            ));
+            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+
+            $text = "*" . __('Order status changed', $this->plugin_key) . "*\n\n";
+            $text .= __('Order number', $this->plugin_key) . ': ' . $order_id . "\n";
+            $text .= __('Old status', $this->plugin_key) . ': ' . wc_get_order_status_name($old_status) . "\n";
+            $text .= __('New status', $this->plugin_key) . ': ' . wc_get_order_status_name($new_status) . "\n";
+            $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate($order->get_date_modified()) . "\n";
+
+            $text = apply_filters('wptelegrampro_wc_admin_order_status_notification_text', $text, $order, $order_id);
+
+            foreach ($users as $user)
+                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
+        }
+    }
+
+    /**
+     * Send notification to customer when changed order status
+     *
+     * @param int $order_id
+     * @param string $old_status
+     * @param string $new_status
+     * @param WC_Order  Actual order
+     */
+    public function order_status_notification($order_id, $old_status, $new_status, $order)
+    {
+        $user_id = $order->get_customer_id();
+        if ($user_id) {
+            $user = $this->set_user(array('wp_id' => $user_id));
+            if ($user) {
+                $orders_endpoint = get_option('woocommerce_myaccount_orders_endpoint', 'orders');
+                if (!empty($orders_endpoint)) {
+                    $keyboard = array(array(
+                        array(
+                            'text' => '👁️',
+                            'url' => $order->get_view_order_url()
+                        ),
+                        array(
+                            'text' => '📂',
+                            'url' => esc_url_raw(wc_get_account_endpoint_url($orders_endpoint))
+                        )
+                    ));
+                    $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+                } else {
+                    $keyboards = null;
+                }
+
+                $text = "*" . __('Order status changed', $this->plugin_key) . "*\n\n";
+                $text .= __('Order number', $this->plugin_key) . ': ' . $order_id . "\n";
+                $text .= __('New status', $this->plugin_key) . ': ' . wc_get_order_status_name($new_status) . "\n";
+                $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate($order->get_date_modified()) . "\n";
+                $text = apply_filters('wptelegrampro_wc_order_status_notification_text', $text, $order, $order_id);
+
+                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
+            }
+        }
     }
 
     function new_order_notification($order_id)
@@ -75,9 +158,8 @@ class WoocommerceWPTP extends WPTelegramPro
 
             $text = apply_filters('wptelegrampro_wc_new_order_notification_text', $text, $order, $order_id);
 
-            foreach ($users as $user) {
+            foreach ($users as $user)
                 $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
-            }
         }
     }
 
@@ -550,11 +632,37 @@ class WoocommerceWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
-                        <label for="wc_new_order_notification"><?php _e('New Order', $this->plugin_key) ?></label>
+                        <label for="wc_new_order_notification"><?php _e('Administrators', $this->plugin_key);
+                            echo ': ';
+                            _e('New Order', $this->plugin_key) ?></label>
                     </td>
                     <td>
                         <label><input type="checkbox" value="1" id="wc_new_order_notification"
                                       name="wc_new_order_notification" <?php checked($this->get_option('wc_new_order_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="wc_admin_order_status_notification"><?php _e('Administrators', $this->plugin_key);
+                            echo ': ';
+                            _e('Order status change', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="wc_admin_order_status_notification"
+                                      name="wc_admin_order_status_notification" <?php checked($this->get_option('wc_admin_order_status_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="wc_order_status_notification"><?php _e('Customers', $this->plugin_key);
+                            echo ': ';
+                            _e('Order status change', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="wc_order_status_notification"
+                                      name="wc_order_status_notification" <?php checked($this->get_option('wc_order_status_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
                         </label>
                     </td>
                 </tr>
