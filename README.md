@@ -23,6 +23,14 @@ Useful Tools:
 
 Changelog
 -----------
+**1.8**
+- Add quick send to channel
+- Connect WordPress profile to Telegram account
+- WooCommerce new order and order status change notification
+- Fixed comment notification
+- Fixed problem displaying list of pattern tags.
+- Fixed warning with PHP V7.2.*
+
 **1.7.2**
 - Fixed some bugs in PHP5.*
 

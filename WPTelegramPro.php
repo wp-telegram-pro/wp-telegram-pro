@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/parsakafi/wp-telegram-pro
  * Description: Integrate WordPress with Telegram
  * Author: Parsa Kafi
- * Version: 1.7.2
+ * Version: 1.8
  * Author URI: http://parsa.ws
  * Text Domain: wp-telegram-pro
  * WC requires at least: 3.0.0
@@ -955,7 +955,7 @@ class WPTelegramPro
         foreach ($editable_roles as $role => $details)
             $roles[$role] = translate_user_role($details['name']);
         return $roles;
-    }  
+    }
 
     function get_users($role = ['Administrator'])
     {
