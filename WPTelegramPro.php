@@ -219,7 +219,7 @@ class WPTelegramPro
             $user_id = $this->find_user_by_code($code);
             if ($user_id) {
                 $this->update_user(array('wp_id' => $user_id));
-                $this->telegram->sendMessage(__('Welcome, your user is successfully connected to the website.', $this->plugin_key));
+                $this->telegram->sendMessage(__('Welcome, Your Telegram account is successfully connected to the website.', $this->plugin_key));
             }
         }
     }
@@ -270,7 +270,7 @@ class WPTelegramPro
         if ($user === null || !empty($user['wp_id']))
             return $user_id;
         $this->update_user(array('wp_id' => $user_id));
-        $this->telegram->sendMessage(__('Welcome, your user is successfully connected to the store.', $this->plugin_key), null, $user['user_id']);
+        $this->telegram->sendMessage(__('Welcome, Your Telegram account is successfully connected to the store.', $this->plugin_key), null, $user['user_id']);
         setcookie('wptpwc_user_id', null, -1);
         unset($_COOKIE['wptpwc_user_id']);
     }

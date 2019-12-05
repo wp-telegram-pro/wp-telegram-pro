@@ -144,7 +144,7 @@ class WoocommerceWPTP extends WPTelegramPro
             $text .= __('Status', $this->plugin_key) . ': ' . wc_get_order_status_name($order->get_status()) . "\n";
             $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate($order->get_date_modified()) . "\n";
             $text .= __('Email', $this->plugin_key) . ': ' . $order->get_billing_email() . "\n";
-            $text .= __('Total Price', $this->plugin_key) . ': ' . $this->wc_price($order->get_total()) . "\n";
+            $text .= __('Total price', $this->plugin_key) . ': ' . $this->wc_price($order->get_total()) . "\n";
             $text .= __('Payment method', $this->plugin_key) . ': ' . $order->get_payment_method_title() . "\n";
             $text .= "\n" . __('Items', $this->plugin_key) . ':' . "\n";
 
@@ -1186,7 +1186,7 @@ class WoocommerceWPTP extends WPTelegramPro
             elseif (empty($user['wp_id'])) {
                 $wp_id = get_current_user_id();
                 $this->update_user(array('wp_id' => $wp_id));
-                $this->telegram->sendMessage(__('Welcome, your user is successfully connected to the store.', $this->plugin_key), null, $user['user_id']);
+                $this->telegram->sendMessage(__('Welcome, Your Telegram account is successfully connected to the store.', $this->plugin_key), null, $user['user_id']);
             }
             $cart_item_id = false;
             $cart = $this->get_cart();
