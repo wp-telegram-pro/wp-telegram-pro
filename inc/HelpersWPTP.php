@@ -197,8 +197,10 @@ class HelpersWPTP
         return false;
     }
 
-    public static function localeDate($time, $format = "Y/m/d H:i:s")
+    public static function localeDate($time = null, $format = "Y/m/d H:i:s")
     {
+        if ($time == null) $time = date("Y-m-d H:i:s");
+
         if (function_exists('parsidate'))
             return parsidate($format, $time, 'per');
 

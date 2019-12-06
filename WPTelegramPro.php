@@ -48,8 +48,6 @@ class WPTelegramPro
     {
         global $wpdb;
 
-        date_default_timezone_set(get_option('timezone_string'));
-
         $this->page_title_divider = is_rtl() ? ' < ' : ' > ';
         $this->options = get_option($this->plugin_key);
         $this->telegram = new TelegramWPTP($this->get_option('api_token'));

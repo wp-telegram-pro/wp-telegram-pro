@@ -33,7 +33,7 @@ class WordPressWPTP extends WPTelegramPro
     {
         if (isset($_GET['user-disconnect-wptp']) && $this->disconnect_telegram_wp_user(isset($_GET['user_id']) ? $_GET['user_id'] : null))
             echo '<div class="notice notice-info is-dismissible">
-          <p>' . __('Your profile was successfully disconnected from Telegram account.', $this->plugin_key) . '</p>
+          <p>' . __('This profile was successfully disconnected from Telegram account.', $this->plugin_key) . '</p>
          </div>';
     }
 
@@ -65,7 +65,7 @@ class WordPressWPTP extends WPTelegramPro
         <table class="form-table">
             <tr>
                 <?php if ($bot_user) { ?>
-                    <th colspan="2"><?php echo __('Your profile has been linked to this Telegram account:', $this->plugin_key) . ' ' . $bot_user['first_name'] . ' ' . $bot_user['last_name'] . ' <a href="https://t.me/' . $bot_user['username'] . '" target="_blank">@' . $bot_user['username'] . '</a> (<a href="' . $this->get_bot_disconnect_link($user->ID) . '">' . __('Disconnect', $this->plugin_key) . '</a>)'; ?></th>
+                    <th colspan="2"><?php echo __('This profile has been linked to this Telegram account:', $this->plugin_key) . ' ' . $bot_user['first_name'] . ' ' . $bot_user['last_name'] . ' <a href="https://t.me/' . $bot_user['username'] . '" target="_blank">@' . $bot_user['username'] . '</a> (<a href="' . $this->get_bot_disconnect_link($user->ID) . '">' . __('Disconnect', $this->plugin_key) . '</a>)'; ?></th>
                 <?php } else {
                     $code = $this->get_user_random_code($user->ID);
                     ?>
@@ -199,34 +199,35 @@ class WordPressWPTP extends WPTelegramPro
 
                 $text = apply_filters('wptelegrampro_wp_new_comment_notification_text', $text, $comment, $comment_ID);
 
-                foreach ($users as $user) {
-                    if ($user['wp_id'] == $comment->user_id)
-                        continue;
-                    $keyboard = $keyboard_;
-                    $this->telegram->sendMessage($text, null, $user['user_id'], 'Markdown');
-                    $message_id = $this->telegram->get_last_result()['result']['message_id'];
-                    $keyboard[0][] = array(
-                        'text' => '🚮',
-                        'callback_data' => 'comment_trash_' . $comment_ID . '_' . $message_id
-                    );
-                    if ($comment_approved)
+                if ($text)
+                    foreach ($users as $user) {
+                        if ($user['wp_id'] == $comment->user_id)
+                            continue;
+                        $keyboard = $keyboard_;
+                        $this->telegram->sendMessage($text, null, $user['user_id'], 'Markdown');
+                        $message_id = $this->telegram->get_last_result()['result']['message_id'];
                         $keyboard[0][] = array(
-                            'text' => '💊',
-                            'callback_data' => 'comment_hold_' . $comment_ID . '_' . $message_id
+                            'text' => '🚮',
+                            'callback_data' => 'comment_trash_' . $comment_ID . '_' . $message_id
                         );
-                    else
-                        $keyboard[0][] = array(
-                            'text' => '✔️',
-                            'callback_data' => 'comment_approve_' . $comment_ID . '_' . $message_id
-                        );
+                        if ($comment_approved)
+                            $keyboard[0][] = array(
+                                'text' => '💊',
+                                'callback_data' => 'comment_hold_' . $comment_ID . '_' . $message_id
+                            );
+                        else
+                            $keyboard[0][] = array(
+                                'text' => '✔️',
+                                'callback_data' => 'comment_approve_' . $comment_ID . '_' . $message_id
+                            );
 
-                    $keyboard[0][] = array(
-                        'text' => '🛡️',
-                        'callback_data' => 'comment_spam_' . $comment_ID . '_' . $message_id
-                    );
-                    $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
-                    $this->telegram->editMessageReplyMarkup($keyboards, $message_id, $user['user_id']);
-                }
+                        $keyboard[0][] = array(
+                            'text' => '🛡️',
+                            'callback_data' => 'comment_spam_' . $comment_ID . '_' . $message_id
+                        );
+                        $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+                        $this->telegram->editMessageReplyMarkup($keyboards, $message_id, $user['user_id']);
+                    }
             } elseif ($message_id !== null) {
                 if ($comment_status === 'trash')
                     $keyboard_[0][] = array(

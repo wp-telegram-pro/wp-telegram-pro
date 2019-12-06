@@ -3,7 +3,7 @@
 if (!defined('ABSPATH')) exit;
 if (!class_exists('WooCommerce')) return;
 
-class WoocommerceWPTP extends WPTelegramPro
+class WooCommerceWPTP extends WPTelegramPro
 {
     protected $tabID = 'woocommerce-wptp-tab', $default_products_keyboard;
     public static $instance = null;
@@ -12,16 +12,15 @@ class WoocommerceWPTP extends WPTelegramPro
     {
         parent::__construct(true);
 
+        $this->default_products_keyboard = array(array(
+            array('text' => __('Detail', $this->plugin_key), 'callback_data' => 'product_detail')
+        ));
+
         add_filter('wptelegrampro_words', [$this, 'words']);
         add_filter('wptelegrampro_patterns_tags', [$this, 'patterns_tags']);
         add_filter('wptelegrampro_query_args', [$this, 'query_args'], 10, 2);
         add_filter('wptelegrampro_post_info', [$this, 'product_info'], 10, 3);
         add_filter('wptelegrampro_default_keyboard', [$this, 'default_keyboard'], 20);
-
-        $this->default_products_keyboard = array(array(
-            array('text' => __('Detail', $this->plugin_key), 'callback_data' => 'product_detail')
-        ));
-
         add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 30);
         add_action('wptelegrampro_settings_content', [$this, 'settings_content']);
         add_action('wptelegrampro_inline_keyboard_response', [$this, 'inline_keyboard_response']);
@@ -1253,14 +1252,14 @@ class WoocommerceWPTP extends WPTelegramPro
 
     /**
      * Returns an instance of class
-     * @return WoocommerceWPTP
+     * @return WooCommerceWPTP
      */
     static function getInstance()
     {
         if (self::$instance == null)
-            self::$instance = new WoocommerceWPTP();
+            self::$instance = new WooCommerceWPTP();
         return self::$instance;
     }
 }
 
-$WoocommerceWPTP = WoocommerceWPTP::getInstance();
+$WooCommerceWPTP = WooCommerceWPTP::getInstance();
