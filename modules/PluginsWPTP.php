@@ -8,7 +8,7 @@ class PluginsWPTP extends WPTelegramPro
         $plugins = array('contact-form-7' => 'contact-form-7/wp-contact-form-7.php'),
         $currentActivePlugins = array(),
         $cf7_fields = array('email', 'name', 'subject', 'message'),
-        $cf7_prefix_field = 'wptelegrampro_cf7_',
+        $cf7_prefix_field = 'wptelegrampro_',
         $cf7_message_ids = array();
     public static $instance = null;
 
