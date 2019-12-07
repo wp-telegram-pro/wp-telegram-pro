@@ -57,12 +57,24 @@ class PluginsWPTP extends WPTelegramPro
                             echo sprintf(__('Open the <a href="%s" target="_blank">Additional Settings</a> tab in the contact form editor page, and add lines like these:', $this->plugin_key), 'https://contactform7.com/admin-screen/#additional-settings');
                             ?>
                         </span>
-                            <br>
+                            <br><br>
                             <textarea cols="30" rows="4" onfocus="this.select();" onmouseup="return false;"
-                                      style="resize:none; overflow:hidden" readonly><?php
+                                      class="ltr" style="resize:none; overflow:hidden" readonly><?php
+                                $fields = '';
                                 foreach ($this->cf7_fields as $field)
-                                    echo $this->cf7_prefix_field . $field . ': "[your-' . $field . ']"' . "\n";
+                                    $fields .= $this->cf7_prefix_field . $field . ': "[your-' . $field . ']"' . "\n";
+                                echo trim($fields, "\n");
                                 ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="cf7_forms_select"><?php _e('Notification from this forms', $this->plugin_key) ?></label>
+                        </td>
+                        <td>
+                            <?php
+                            $this->post_type_select('cf7_forms_select[]', 'wpcf7_contact_form', array('multiple' => true, 'selected' => $this->get_option('cf7_forms_select', []), 'class' => 'multi_select_none_wptp', 'none_select' => __('All', $this->plugin_key)));
+                            ?>
                         </td>
                     </tr>
                 <?php } ?>
@@ -71,6 +83,12 @@ class PluginsWPTP extends WPTelegramPro
         <?php
     }
 
+    /**
+     * Send notification to admin users when new message from Contact Form 7
+     *
+     * @param WPCF7_ContactForm $contact_form
+     * @param array $result
+     */
     function wpcf7_submit($contact_form, $result)
     {
         if ($contact_form->in_demo_mode())
@@ -84,6 +102,10 @@ class PluginsWPTP extends WPTelegramPro
         }
 
         if ($submission->get_meta('do_not_store'))
+            return;
+
+        $forms_select = $this->get_option('cf7_forms_select', []);
+        if (count($forms_select) && $forms_select[0] != '' && !in_array($contact_form->id(), $forms_select))
             return;
 
         $fields_senseless =
@@ -143,6 +165,7 @@ class PluginsWPTP extends WPTelegramPro
             if ($users) {
                 $keyboards = null;
                 $text = "*" . __('New message', $this->plugin_key) . "*\n\n";
+
                 if ($email)
                     $text .= __('Email', $this->plugin_key) . ': ' . $email . "\n";
                 if ($name)
@@ -167,6 +190,11 @@ class PluginsWPTP extends WPTelegramPro
         }
     }
 
+    /**
+     * Add keyboard to new message notification from Contact Form 7
+     *
+     * @param array $result
+     */
     function wpcf7_after_flamingo($result)
     {
         if (count($this->cf7_message_ids) && isset($result['flamingo_inbound_id']) && $result['flamingo_inbound_id']) {
@@ -186,6 +214,13 @@ class PluginsWPTP extends WPTelegramPro
         }
     }
 
+    /**
+     * Get field value from Contact Form 7 message
+     *
+     * @param string $field Field name
+     * @param WPCF7_ContactForm $contact_form
+     * @return string Field value
+     */
     function wpcf7_get_value($field, $contact_form)
     {
         if (empty($field)
@@ -213,6 +248,11 @@ class PluginsWPTP extends WPTelegramPro
         return $value;
     }
 
+    /**
+     * Check active support plugins
+     *
+     * @return bool
+     */
     function check_plugins()
     {
         foreach ($this->plugins as $plugin => $path)

@@ -807,6 +807,69 @@ class WPTelegramPro
         return $output;
     }
 
+    /**
+     * WordPress post type select
+     * @param string $name Select Name
+     * @param string $post_type post type name
+     * @param array $args Options
+     * @return  string HTML post type select
+     */
+    function post_type_select($name, $post_type, $args = array())
+    {
+        global $post;
+        $temp = $post;
+        $defaults = array(
+            'none_select' => false,
+            'none_select_value' => false,
+            'multiple' => false,
+            'id' => str_replace('[]', '', $name),
+            'class' => false,
+            'echo' => true,
+            'selected' => 0,
+            'orderby' => 'ID',
+            'post_status' => 'publish',
+            'posts_per_page' => -1
+        );
+
+        $args = wp_parse_args($args, $defaults);
+
+        $query_args = array(
+            'post_type' => $post_type,
+            'post_status' => $args['post_status'],
+            'orderby' => $args['orderby'],
+            'posts_per_page' => $args['posts_per_page']
+        );
+        $query = new WP_Query($query_args);
+
+        $select = '<select name="' . $name . '" id="' . $args['id'] . '" ' . ($args['class'] ? 'class="' . $args['class'] . '" ' : '') . ($args['multiple'] ? 'multiple' : '') . '>';
+
+        if ($args['none_select'])
+            $select .= '<option value="" ' . ($args['selected'] == '' || is_array($args['selected']) && $args['selected'][0] == '' ? 'selected' : '') . '>' . $args['none_select'] . '</option>';
+
+        if ($query->have_posts())
+            while ($query->have_posts()) {
+                $query->the_post();
+                $selected = false;
+                $post_id = get_the_ID();
+                if ($args['selected']) {
+                    if (is_array($args['selected']))
+                        $selected = in_array($post_id, $args['selected']);
+                    else
+                        $selected = $post_id == $args['selected'];
+                }
+                $select .= '<option value="' . $post_id . '" ' . selected($selected, true, false) . '>' . get_the_title() . '</option>';
+            }
+        $select .= '</select>';
+
+        $post = $temp;
+        wp_reset_query();
+
+        if ($args['echo'])
+            echo $select;
+        else
+            return $select;
+    }
+
     protected function get_bot_disconnect_link($user_id = null)
     {
         if ($user_id == null)

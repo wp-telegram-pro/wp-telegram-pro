@@ -175,6 +175,12 @@ jQuery(function ($) {
                     wpDoAjax = false;
                 });
             });
+
+            $('.multi_select_none_wptp').change(function() {
+                if ($('option:first', this).is(':selected')) {
+                    $('option:not(:first)', this).prop('selected', false);
+                }
+            });
         }
 
         function add_channel_item(accordion) {
