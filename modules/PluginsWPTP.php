@@ -24,6 +24,8 @@ class PluginsWPTP extends WPTelegramPro
             add_action('wpcf7_submit', [$this, 'wpcf7_submit'], 5, 2);
             add_action('wpcf7_after_flamingo', [$this, 'wpcf7_after_flamingo']);
         }
+
+        add_action('wpforms_process_complete', [$this, 'wpforms_submit'], 10, 4);
     }
 
     function settings_tab($tabs)
@@ -81,6 +83,71 @@ class PluginsWPTP extends WPTelegramPro
             </table>
         </div>
         <?php
+    }
+
+    /**
+     * Send notification to admin users when new message from WPForms
+     *
+     * @param array $fields
+     * @param array $entry
+     * @param array $form_data
+     * @param int $entry_id
+     */
+    function wpforms_submit($fields, $entry, $form_data, $entry_id)
+    {
+        // Limit to Form ID = 123
+        //if( 123 != $form_data['id'] )
+        //    return;
+
+        /*$api_url = 'http://example.com';
+        $body = array(
+            'name' => $fields['1']['value'],
+            'email' => $fields['2']['value'],
+        );
+        $request = wp_remote_post($api_url, array('body' => $body));*/
+
+        $valid_type = array('name', 'radio', 'select', 'checkbox', 'number', 'email', 'text', 'textarea');
+
+        $text = '';
+
+        foreach ($fields as $field) {
+            if (!in_array($field['type'], $valid_type))
+                continue;
+            $text .= $field['name'] . ': ';
+            $value = $field['value'];
+
+            if (!empty($value) && $field['type'] == 'checkbox') {
+                $value_ = explode("\n", $value);
+                if (count($value_) > 1)
+                    $text .= "\n";
+                $value_ = array_map(function ($v) {
+                    return is_string($v) ? trim($v, "\n") : $v;
+                }, $value_);
+                $value = "▫️ " . implode("\n▫️ ", $value_);
+
+            } elseif ($field['type'] == 'textarea') {
+                $text .= "\n";
+            }
+
+            $text .= $value . "\n";
+        }
+
+        if ($text == '') return;
+
+        $text = "*" . __('New message', $this->plugin_key) . "*\n\n" . $text;
+        $text = apply_filters('wptelegrampro_wpforms_message_notification_text', $text, $fields, $entry, $form_data, $entry_id);
+
+        if (!$text) return;
+
+        $users = $this->get_users();
+        if ($users) {
+            $keyboards = null;
+            //$text = HelpersWPTP::dd($fields, true);
+
+            foreach ($users as $user) {
+                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
+            }
+        }
     }
 
     /**
