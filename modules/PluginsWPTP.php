@@ -149,12 +149,14 @@ class PluginsWPTP extends WPTelegramPro
                     $text .= __('Name', $this->plugin_key) . ': ' . $name . "\n";
                 if ($subject)
                     $text .= __('Subject', $this->plugin_key) . ': ' . $subject . "\n";
-                if ($message)
+                if ($message) {
+                    $message = apply_filters('wptelegrampro_wpcf7_notification_message', $message, $args, $contact_form, $result);
                     $text .= __('Message', $this->plugin_key) . ':' . "\n" . $message . "\n";
+                }
 
                 $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
 
-                $text = apply_filters('wptelegrampro_wpcf7_new_message_notification_text', $text, $args, $contact_form, $result);
+                $text = apply_filters('wptelegrampro_wpcf7_message_notification_text', $text, $args, $contact_form, $result);
 
                 if ($text)
                     foreach ($users as $user) {

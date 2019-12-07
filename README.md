@@ -9,8 +9,11 @@ Integrate WordPress with Telegram
 
 - New comments notification
 - Search in post types
-- Send post automatically to Telegram channel
-- Integrate with Woocommerce
+- Send post manually or automatically to Telegram channel
+- Display Telegram channel members count with shortcode
+- Connect WordPress profile to Telegram account
+- Integrate with [WooCommerce](https://wordpress.org/plugins/woocommerce), New order and order status change notification
+- Integrate with [Contact Form 7](https://wordpress.org/plugins/contact-form-7) and [Flamingo](https://wordpress.org/plugins/flamingo) for new message notification
 
 
 Development Source:
@@ -23,6 +26,9 @@ Useful Tools:
 
 Changelog
 -----------
+**1.9**
+- Integrate with Contact Form 7 and Flamingo for new message notification
+
 **1.8**
 - Add quick send to channel
 - Connect WordPress profile to Telegram account
