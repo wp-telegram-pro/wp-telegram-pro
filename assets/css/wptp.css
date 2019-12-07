@@ -164,6 +164,15 @@ body.rtl .wptp-wrap th {
     color: #a72c29;
 }
 
+.wptp-wrap .title-with-icon {
+    display: flex;
+    align-items: center;
+}
+
+.wptp-wrap .title-with-icon svg, .wptp-wrap .title-with-icon [class^="dashicons-"] {
+    margin-right: 7px;
+}
+
 .accordion-wptp .toggle {
     background-color: #e4e4e4;
     color: #444;
@@ -381,4 +390,10 @@ body.rtl .wptp-wrap .flex {
 
 body.rtl .quick-send-channel-wptp {
     margin-left: 5px;
+}
+
+body.rtl .wptp-wrap .title-with-icon svg,
+body.rtl .wptp-wrap .title-with-icon [class^="dashicons-"] {
+    margin-right: 0;
+    margin-left: 7px;
 }

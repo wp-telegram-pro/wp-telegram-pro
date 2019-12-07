@@ -21,7 +21,14 @@ class FormidableFormsWPTP extends WPTelegramPro
         $this->options = get_option($this->plugin_key);
         ?>
         <tr>
-            <th colspan="2"><?php _e('Formidable Forms', $this->plugin_key) ?></th>
+            <th colspan="2" class="title-with-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 599.68 601.37" width="20" height="20">
+                    <path fill="#333" d="M289.6 384h140v76h-140z"/>
+                    <path fill="#333"
+                          d="M400.2 147h-200c-17 0-30.6 12.2-30.6 29.3V218h260v-71zM397.9 264H169.6v196h75V340H398a32.2 32.2 0 0 0 30.1-21.4 24.3 24.3 0 0 0 1.7-8.7V264zM299.8 601.4A300.3 300.3 0 0 1 0 300.7a299.8 299.8 0 1 1 511.9 212.6 297.4 297.4 0 0 1-212 88zm0-563A262 262 0 0 0 38.3 300.7a261.6 261.6 0 1 0 446.5-185.5 259.5 259.5 0 0 0-185-76.8z"/>
+                </svg>
+                <?php _e('Formidable Forms', $this->plugin_key) ?>
+            </th>
         </tr>
         <tr>
             <td>
@@ -35,11 +42,20 @@ class FormidableFormsWPTP extends WPTelegramPro
         </tr>
         <tr>
             <td>
-                <label for="cf7_forms_select"><?php _e('Notification from this forms', $this->plugin_key) ?></label>
+                <label for="formidable_forms_select"><?php _e('Notification from this forms', $this->plugin_key) ?></label>
             </td>
             <td>
                 <?php
-                $this->post_type_select('wpforms_forms_select[]', 'wpforms', array('multiple' => true, 'selected' => $this->get_option('wpforms_forms_select', []), 'class' => 'multi_select_none_wptp', 'none_select' => __('All', $this->plugin_key)));
+                self::forms_dropdown(
+                    'formidable_forms_select[]',
+                    array(
+                        'blank' => __('All', $this->plugin_key),
+                        'field_id' => 'formidable_forms_select',
+                        'multiple' => 'multiple',
+                        'selected' => $this->get_option('formidable_forms_select', []),
+                        'class' => 'multi_select_none_wptp',
+                    )
+                );
                 ?>
             </td>
         </tr>
@@ -54,6 +70,10 @@ class FormidableFormsWPTP extends WPTelegramPro
      */
     function formidable_submit($entry_id, $form_id)
     {
+        $forms_select = $this->get_option('formidable_forms_select', []);
+        if (count($forms_select) && $forms_select[0] != '' && !in_array($form_id, $forms_select))
+            return;
+
         $defaults = array(
             'id' => $entry_id,
             'entry' => false,
@@ -91,12 +111,77 @@ class FormidableFormsWPTP extends WPTelegramPro
 
         $users = $this->get_users();
         if ($users) {
-            $keyboards = null;
+            $keyboard = array(array(
+                array(
+                    'text' => '👁️',
+                    'url' => admin_url('admin.php?page=formidable-entries&frm_action=show&id=' . $entry_id)
+                ),
+                array(
+                    'text' => '📂',
+                    'url' => admin_url('admin.php?page=formidable-entries')
+                )
+            ));
+            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
 
             foreach ($users as $user) {
                 $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
             }
         }
+    }
+
+    public static function forms_dropdown($field_name, $args = array())
+    {
+        $defaults = array(
+            'blank' => true,
+            'field_id' => false,
+            'onchange' => false,
+            'exclude' => false,
+            'multiple' => false,
+            'selected' => 0,
+            'class' => '',
+            'inc_children' => 'exclude',
+        );
+        $args = wp_parse_args($args, $defaults);
+
+        if (!$args['field_id']) {
+            $args['field_id'] = $field_name;
+        }
+
+        $query = array();
+        if ($args['exclude']) {
+            $query['id !'] = $args['exclude'];
+        }
+
+        $where = apply_filters('frm_forms_dropdown', $query, $field_name);
+        $forms = FrmForm::get_published_forms($where, 999, $args['inc_children']);
+        $add_html = array();
+        FrmFormsHelper::add_html_attr($args['onchange'], 'onchange', $add_html);
+        FrmFormsHelper::add_html_attr($args['class'], 'class', $add_html);
+        FrmFormsHelper::add_html_attr($args['multiple'], 'multiple', $add_html);
+
+        ?>
+        <select name="<?php echo esc_attr($field_name); ?>"
+                id="<?php echo esc_attr($args['field_id']); ?>"
+            <?php echo wp_strip_all_tags(implode(' ', $add_html)); // WPCS: XSS ok.
+            ?>>
+            <?php if ($args['blank']) { ?>
+                <option value="" <?php echo($args['selected'] == '' || is_array($args['selected']) && $args['selected'][0] == '' ? 'selected' : '') ?>><?php echo ($args['blank'] == 1) ? ' ' : '- ' . esc_attr($args['blank']) . ' -'; ?></option>
+            <?php } ?>
+            <?php foreach ($forms as $form) {
+                $selected = false;
+                if ($args['selected']) {
+                    if (is_array($args['selected']))
+                        $selected = in_array($form->id, $args['selected']);
+                    else
+                        $selected = $form->id == $args['selected'];
+                }
+                ?>
+                <option value="<?php echo esc_attr($form->id); ?>" <?php selected($selected, true); ?>>
+                    <?php echo esc_html('' === $form->name ? __('(no title)', 'formidable') : FrmAppHelper::truncate($form->name, 50) . ($form->parent_form_id ? ' ' . __('(child)', 'wp-telegram-pro') : '')); ?>
+                </option>
+            <?php } ?>
+        </select>
+        <?php
     }
 
     /**

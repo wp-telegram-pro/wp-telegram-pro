@@ -845,7 +845,7 @@ class WPTelegramPro
         $select = '<select name="' . $name . '" id="' . $args['id'] . '" ' . ($args['class'] ? 'class="' . $args['class'] . '" ' : '') . ($args['multiple'] ? 'multiple' : '') . '>';
 
         if ($args['none_select'])
-            $select .= '<option value="" ' . ($args['selected'] == '' || is_array($args['selected']) && $args['selected'][0] == '' ? 'selected' : '') . '>' . $args['none_select'] . '</option>';
+            $select .= '<option value="" ' . ($args['selected'] == '' || is_array($args['selected']) && $args['selected'][0] == '' ? 'selected' : '') . '>- ' . $args['none_select'] . ' -</option>';
 
         if ($query->have_posts())
             while ($query->have_posts()) {

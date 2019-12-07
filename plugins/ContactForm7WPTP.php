@@ -25,7 +25,7 @@ class ContactForm7WPTP extends WPTelegramPro
         $this->options = get_option($this->plugin_key);
         ?>
         <tr>
-            <th colspan="2"><?php _e('Contact Form 7', $this->plugin_key) ?></th>
+            <th colspan="2" class="title-with-icon"><span class="dashicons-before dashicons-email"></span><?php _e('Contact Form 7', $this->plugin_key) ?></th>
         </tr>
         <tr>
             <td>
