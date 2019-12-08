@@ -1069,7 +1069,7 @@ class WooCommerceWPTP extends WPTelegramPro
         if ($this->get_option('rating_display') == 1 && !empty($product['average_rating']) && intval($product['average_rating']) > 0) {
             $star = '';
             for ($i = 1; $i <= intval($product['average_rating']); $i++)
-                $star .= "☆"; // star ✰
+                $star .= "⭐️"; // star ✰
             $metas[] = $star;
         }
 

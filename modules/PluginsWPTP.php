@@ -30,6 +30,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'NinjaFormsWPTP',
             'path' => 'ninja-forms/ninja-forms.php'
         ),
+        'caldera-forms' => array(
+            'class' => 'CalderaFormsWPTP',
+            'path' => 'caldera-forms/caldera-core.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;

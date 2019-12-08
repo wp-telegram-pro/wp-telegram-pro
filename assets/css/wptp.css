@@ -173,6 +173,10 @@ body.rtl .wptp-wrap th {
     margin-right: 7px;
 }
 
+.wptp-wrap div.wp-menu-image::before {
+    color: inherit;
+}
+
 .accordion-wptp .toggle {
     background-color: #e4e4e4;
     color: #444;
