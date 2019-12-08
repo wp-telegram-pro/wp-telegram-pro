@@ -38,6 +38,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'EverestFormsWPTP',
             'path' => 'everest-forms/everest-forms.php'
         ),
+        'happyforms' => array(
+            'class' => 'HappyFormsWPTP',
+            'path' => 'happyforms/happyforms.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;

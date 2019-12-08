@@ -93,7 +93,7 @@ class EverestFormsWPTP extends WPTelegramPro
 
             if (is_array($value))
                 $value = (count($value) > 1 ? "\n" : '') . "▫️ " . implode("\n▫️ ", $value);
-            
+
             $text .= $value . "\n";
         }
 

@@ -57,7 +57,14 @@ class ContactForm7WPTP extends WPTelegramPro
             </td>
             <td>
                 <?php
-                $this->post_type_select('cf7_forms_select[]', 'wpcf7_contact_form', array('multiple' => 'multiple', 'selected' => $this->get_option('cf7_forms_select', []), 'class' => 'multi_select_none_wptp', 'blank' => __('All', $this->plugin_key)));
+                $this->post_type_select('cf7_forms_select[]', 'wpcf7_contact_form',
+                    array(
+                        'multiple' => 'multiple',
+                        'selected' => $this->get_option('cf7_forms_select', []),
+                        'class' => 'multi_select_none_wptp',
+                        'blank' => __('All', $this->plugin_key)
+                    )
+                );
                 ?>
             </td>
         </tr>
