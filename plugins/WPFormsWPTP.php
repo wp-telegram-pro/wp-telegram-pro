@@ -45,7 +45,7 @@ class WPFormsWPTP extends WPTelegramPro
             </td>
             <td>
                 <?php
-                $this->post_type_select('wpforms_forms_select[]', 'wpforms', array('multiple' => true, 'selected' => $this->get_option('wpforms_forms_select', []), 'class' => 'multi_select_none_wptp', 'none_select' => __('All', $this->plugin_key)));
+                $this->post_type_select('wpforms_forms_select[]', 'wpforms', array('multiple' => 'multiple', 'selected' => $this->get_option('wpforms_forms_select', []), 'class' => 'multi_select_none_wptp', 'blank' => __('All', $this->plugin_key)));
                 ?>
             </td>
         </tr>
@@ -63,7 +63,7 @@ class WPFormsWPTP extends WPTelegramPro
     function wpforms_submit($fields, $entry, $form_data, $entry_id)
     {
         $forms_select = $this->get_option('wpforms_forms_select', []);
-        if (count($forms_select) && $forms_select[0] != '' && !in_array($form_data['id'], $forms_select))
+        if (count($forms_select) && isset($forms_select[0]) && $forms_select[0] != '' && !in_array($form_data['id'], $forms_select))
             return;
 
         $valid_type = array('name', 'radio', 'select', 'checkbox', 'number', 'email', 'text', 'textarea');
@@ -95,6 +95,7 @@ class WPFormsWPTP extends WPTelegramPro
         if ($text == '') return;
 
         $text = "*" . __('New message', $this->plugin_key) . "*\n\n" . $text;
+        $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
         $text = apply_filters('wptelegrampro_wpforms_message_notification_text', $text, $fields, $entry, $form_data, $entry_id);
 
         if (!$text) return;

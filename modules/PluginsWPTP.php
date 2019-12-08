@@ -22,6 +22,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'FormidableFormsWPTP',
             'path' => 'formidable/formidable.php'
         ),
+        'gravityforms' => array(
+            'class' => 'GravityFormsWPTP',
+            'path' => 'gravityforms/gravityforms.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;

@@ -46,7 +46,7 @@ class FormidableFormsWPTP extends WPTelegramPro
             </td>
             <td>
                 <?php
-                self::forms_dropdown(
+                self::forms_select(
                     'formidable_forms_select[]',
                     array(
                         'blank' => __('All', $this->plugin_key),
@@ -71,7 +71,7 @@ class FormidableFormsWPTP extends WPTelegramPro
     function formidable_submit($entry_id, $form_id)
     {
         $forms_select = $this->get_option('formidable_forms_select', []);
-        if (count($forms_select) && $forms_select[0] != '' && !in_array($form_id, $forms_select))
+        if (count($forms_select) && isset($forms_select[0]) && $forms_select[0] != '' && !in_array($form_id, $forms_select))
             return;
 
         $defaults = array(
@@ -104,6 +104,7 @@ class FormidableFormsWPTP extends WPTelegramPro
         $entry_formatter = FrmEntryFactory::entry_formatter_instance($defaults);
         $text = $entry_formatter->get_formatted_entry_values();
         $text = "*" . __('New message', $this->plugin_key) . "*\n\n" . $text;
+        $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
 
         $text = apply_filters('wptelegrampro_formidable_message_notification_text', $text, $entry_id, $form_id);
 
@@ -129,59 +130,28 @@ class FormidableFormsWPTP extends WPTelegramPro
         }
     }
 
-    public static function forms_dropdown($field_name, $args = array())
+    private static function forms_select($field_name, $args = array())
     {
         $defaults = array(
-            'blank' => true,
-            'field_id' => false,
-            'onchange' => false,
             'exclude' => false,
-            'multiple' => false,
-            'selected' => 0,
-            'class' => '',
-            'inc_children' => 'exclude',
+            'inc_children' => 'exclude'
         );
-        $args = wp_parse_args($args, $defaults);
-
-        if (!$args['field_id']) {
-            $args['field_id'] = $field_name;
-        }
+        $defaults = wp_parse_args($args, $defaults);
 
         $query = array();
-        if ($args['exclude']) {
-            $query['id !'] = $args['exclude'];
+        if ($defaults['exclude']) {
+            $query['id !'] = $defaults['exclude'];
         }
 
         $where = apply_filters('frm_forms_dropdown', $query, $field_name);
-        $forms = FrmForm::get_published_forms($where, 999, $args['inc_children']);
-        $add_html = array();
-        FrmFormsHelper::add_html_attr($args['onchange'], 'onchange', $add_html);
-        FrmFormsHelper::add_html_attr($args['class'], 'class', $add_html);
-        FrmFormsHelper::add_html_attr($args['multiple'], 'multiple', $add_html);
+        $forms = FrmForm::get_published_forms($where, 999, $defaults['inc_children']);
 
-        ?>
-        <select name="<?php echo esc_attr($field_name); ?>"
-                id="<?php echo esc_attr($args['field_id']); ?>"
-            <?php echo wp_strip_all_tags(implode(' ', $add_html)); // WPCS: XSS ok.
-            ?>>
-            <?php if ($args['blank']) { ?>
-                <option value="" <?php echo($args['selected'] == '' || is_array($args['selected']) && $args['selected'][0] == '' ? 'selected' : '') ?>><?php echo ($args['blank'] == 1) ? ' ' : '- ' . esc_attr($args['blank']) . ' -'; ?></option>
-            <?php } ?>
-            <?php foreach ($forms as $form) {
-                $selected = false;
-                if ($args['selected']) {
-                    if (is_array($args['selected']))
-                        $selected = in_array($form->id, $args['selected']);
-                    else
-                        $selected = $form->id == $args['selected'];
-                }
-                ?>
-                <option value="<?php echo esc_attr($form->id); ?>" <?php selected($selected, true); ?>>
-                    <?php echo esc_html('' === $form->name ? __('(no title)', 'formidable') : FrmAppHelper::truncate($form->name, 50) . ($form->parent_form_id ? ' ' . __('(child)', 'wp-telegram-pro') : '')); ?>
-                </option>
-            <?php } ?>
-        </select>
-        <?php
+        $items = [];
+        foreach ($forms as $form) {
+            $items[$form->id] = esc_html('' === $form->name ? __('(no title)', 'formidable') : FrmAppHelper::truncate($form->name, 50) . ($form->parent_form_id ? __(' (child)', 'formidable') : ''));
+        }
+
+        HelpersWPTP::forms_select($field_name, $items, $args);
     }
 
     /**

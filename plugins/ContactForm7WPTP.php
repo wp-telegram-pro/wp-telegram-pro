@@ -57,7 +57,7 @@ class ContactForm7WPTP extends WPTelegramPro
             </td>
             <td>
                 <?php
-                $this->post_type_select('cf7_forms_select[]', 'wpcf7_contact_form', array('multiple' => true, 'selected' => $this->get_option('cf7_forms_select', []), 'class' => 'multi_select_none_wptp', 'none_select' => __('All', $this->plugin_key)));
+                $this->post_type_select('cf7_forms_select[]', 'wpcf7_contact_form', array('multiple' => 'multiple', 'selected' => $this->get_option('cf7_forms_select', []), 'class' => 'multi_select_none_wptp', 'blank' => __('All', $this->plugin_key)));
                 ?>
             </td>
         </tr>
@@ -86,7 +86,7 @@ class ContactForm7WPTP extends WPTelegramPro
             return;
 
         $forms_select = $this->get_option('cf7_forms_select', []);
-        if (count($forms_select) && $forms_select[0] != '' && !in_array($contact_form->id(), $forms_select))
+        if (count($forms_select) && isset($forms_select[0]) && $forms_select[0] != '' && !in_array($contact_form->id(), $forms_select))
             return;
 
         $fields_senseless =

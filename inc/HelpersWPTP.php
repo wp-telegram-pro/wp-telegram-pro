@@ -22,6 +22,104 @@ class HelpersWPTP
             return ob_get_clean();
     }
 
+    public static function forms_select($field_name, $items = array(), $args = array())
+    {
+        $defaults = array(
+            'blank' => false,
+            'field_id' => false,
+            'onchange' => false,
+            'exclude' => false,
+            'multiple' => false,
+            'selected' => 0,
+            'echo' => true,
+            'class' => ''
+        );
+        $args = wp_parse_args($args, $defaults);
+
+        if (!$args['field_id'])
+            $args['field_id'] = str_replace('[]', '', $field_name);
+
+        $add_html = array();
+        self::add_html_attr($args['onchange'], 'onchange', $add_html);
+        self::add_html_attr($args['class'], 'class', $add_html);
+        self::add_html_attr($args['multiple'], 'multiple', $add_html);
+
+        ob_start();
+        ?>
+        <select name="<?php echo esc_attr($field_name); ?>"
+                id="<?php echo esc_attr($args['field_id']); ?>"
+            <?php echo wp_strip_all_tags(implode(' ', $add_html)); // WPCS: XSS ok.
+            ?>>
+            <?php if ($args['blank']) { ?>
+                <option value="" <?php echo($args['selected'] == '' || is_array($args['selected']) && count($args['selected']) === 0 || is_array($args['selected']) && isset($args['selected'][0]) && $args['selected'][0] == '' ? 'selected' : '') ?>><?php echo ($args['blank'] == 1) ? ' ' : '- ' . esc_attr($args['blank']) . ' -'; ?></option>
+            <?php } ?>
+            <?php foreach ($items as $item_id => $item_title) {
+                if ($args['exclude'] && (is_array($args['exclude']) && in_array($item_id, $args['exclude']) || $args['exclude'] == $item_id))
+                    continue;
+
+                $selected = false;
+                if ($args['selected']) {
+                    if (is_array($args['selected']))
+                        $selected = in_array($item_id, $args['selected']);
+                    else
+                        $selected = $item_id == $args['selected'];
+                }
+                ?>
+                <option value="<?php echo esc_attr($item_id); ?>" <?php selected($selected, true); ?>>
+                    <?php echo esc_html($item_title) ?>
+                </option>
+            <?php } ?>
+        </select>
+        <?php
+
+        $select = ob_get_clean();
+
+        if ($args['echo'])
+            echo $select;
+        else
+            return $select;
+    }
+
+    /**
+     * FrmFormsHelper::add_html_attr
+     * @param string $class
+     * @param string $param
+     * @param array $add_html
+     *
+     * @since 2.0.6
+     */
+    public static function add_html_attr($class, $param, &$add_html)
+    {
+        if (!empty($class)) {
+            $add_html[$param] = sanitize_title($param) . '="' . esc_attr(trim(sanitize_text_field($class))) . '"';
+        }
+    }
+
+    /**
+     * Convert html > ul > li to a PHP array
+     * https://gist.github.com/molotovbliss/18acc1522d3c23382757df2dbe6f0134
+     * @param string $ul ul>li HTML tags
+     * @return array|bool
+     */
+    public static function ul_to_array($ul)
+    {
+        if (is_string($ul)) {
+            // encode ampersand appropiately to avoid parsing warnings
+            $ul = preg_replace('/&(?!#?[a-z0-9]+;)/', '&amp;', $ul);
+            if (!$ul = simplexml_load_string($ul)) {
+                trigger_error("Syntax error in UL/LI structure");
+                return false;
+            }
+            return self::ul_to_array($ul);
+        } else if (is_object($ul)) {
+            $output = array();
+            foreach ($ul->li as $li) {
+                $output[] = (isset($li->ul)) ? self::ul_to_array($li->ul) : (string)$li;
+            }
+            return $output;
+        } else return false;
+    }
+
     public static function getCurrentURL()
     {
         $pageURL = 'http';
@@ -199,6 +297,8 @@ class HelpersWPTP
 
     public static function localeDate($time = null, $format = "Y/m/d H:i:s")
     {
+        $format = apply_filters('wptelegrampro_date_format', $format);
+
         if ($time == null) $time = date("Y-m-d H:i:s");
 
         if (function_exists('parsidate'))
