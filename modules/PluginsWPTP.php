@@ -42,6 +42,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'HappyFormsWPTP',
             'path' => 'happyforms/happyforms.php'
         ),
+        'weforms' => array(
+            'class' => 'WeFormsWPTP',
+            'path' => 'weforms/weforms.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;

@@ -123,7 +123,7 @@ class GravityFormsWPTP extends WPTelegramPro
                             $content .= "\n";
                         } elseif (($field->type == 'list' || $field->type == 'checkbox') && !empty(trim($display_value))) {
                             $content .= "\n";
-                            if (is_string($value)) $value = unserialize($value);
+                            if (is_string($value) && is_serialized($value)) $value = unserialize($value);
                             $display_value = "▫️ " . implode("\n▫️ ", $value);
                         } elseif ($field->type == 'address') {
                             $content .= "\n";
