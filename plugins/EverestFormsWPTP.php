@@ -83,12 +83,17 @@ class EverestFormsWPTP extends WPTelegramPro
         $text = "*" . __('New message', $this->plugin_key) . "*\n\n";
 
         foreach ($form_fields as $slug => $field) {
+            $value = $field['value'];
+            if (!is_array($value) && !is_string($value))
+                continue;
+
             $text .= $field['name'] . ': ';
             if ($field['type'] == 'textarea')
                 $text .= "\n";
-            $value = $field['value'];
+
             if (is_array($value))
                 $value = (count($value) > 1 ? "\n" : '') . "▫️ " . implode("\n▫️ ", $value);
+            
             $text .= $value . "\n";
         }
 
