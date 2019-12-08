@@ -34,6 +34,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'CalderaFormsWPTP',
             'path' => 'caldera-forms/caldera-core.php'
         ),
+        'everest-forms' => array(
+            'class' => 'EverestFormsWPTP',
+            'path' => 'everest-forms/everest-forms.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;
