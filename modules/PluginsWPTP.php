@@ -26,6 +26,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'GravityFormsWPTP',
             'path' => 'gravityforms/gravityforms.php'
         ),
+        'ninja-forms' => array(
+            'class' => 'NinjaFormsWPTP',
+            'path' => 'ninja-forms/ninja-forms.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;

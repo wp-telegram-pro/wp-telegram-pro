@@ -64,17 +64,6 @@ class GravityFormsWPTP extends WPTelegramPro
         <?php
     }
 
-    private static function forms_select($field_name, $args = array())
-    {
-        $forms = GFAPI::get_forms();
-        $items = [];
-        if (count($forms))
-            foreach ($forms as $form) {
-                $items[$form['id']] = $form['title'];
-            }
-        HelpersWPTP::forms_select($field_name, $items, $args);
-    }
-
     /**
      * Send notification to admin users when new message from Gravity Forms
      * Source from GFEntryDetail::lead_detail_grid()
@@ -183,6 +172,17 @@ class GravityFormsWPTP extends WPTelegramPro
                 $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
             }
         }
+    }
+
+    private static function forms_select($field_name, $args = array())
+    {
+        $forms = GFAPI::get_forms();
+        $items = [];
+        if (count($forms))
+            foreach ($forms as $form) {
+                $items[$form['id']] = $form['title'];
+            }
+        HelpersWPTP::forms_select($field_name, $items, $args);
     }
 
     /**

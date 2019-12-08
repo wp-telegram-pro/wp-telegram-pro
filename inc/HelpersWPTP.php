@@ -11,14 +11,14 @@
  */
 class HelpersWPTP
 {
-    public static function dd($data, $return = false)
+    public static function dd($data, $echo = true)
     {
-        if ($return)
+        if (!$echo)
             ob_start();
         echo '<pre>';
         var_dump($data);
         echo '</pre>';
-        if ($return)
+        if (!$echo)
             return ob_get_clean();
     }
 
