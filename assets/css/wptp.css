@@ -1,5 +1,9 @@
 @import "icon.css";
 
+.wptp-wrap {
+    line-height: 2em;
+}
+
 .wptp-wrap .wp-heading-inline {
     margin-bottom: 30px;
 }

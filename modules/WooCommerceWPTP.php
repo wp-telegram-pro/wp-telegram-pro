@@ -31,18 +31,74 @@ class WooCommerceWPTP extends WPTelegramPro
         add_action('woocommerce_payment_complete', [$this, 'woocommerce_payment_complete']);
         add_action('woocommerce_account_edit-account_endpoint', [$this, 'woocommerce_edit_account'], 1);
         add_action('template_redirect', [$this, 'user_disconnect']);
-        if ($this->get_option('wc_new_order_notification', false))
-            add_action('woocommerce_order_status_changed', [$this, 'order_status_notification'], 10, 4);
+
+        if ($this->get_option('wc_admin_new_order_notification', false))
+            add_action('woocommerce_thankyou', [$this, 'admin_new_order_notification']);
         if ($this->get_option('wc_admin_order_status_notification', false))
             add_action('woocommerce_order_status_changed', [$this, 'admin_order_status_notification'], 10, 4);
+        if ($this->get_option('wc_admin_product_low_stock_notification', false))
+            add_action('woocommerce_low_stock', [$this, 'admin_product_stock_change_notification']);
+        if ($this->get_option('wc_admin_product_no_stock_notification', false))
+            add_action('woocommerce_no_stock', [$this, 'admin_product_stock_change_notification']);
+
         if ($this->get_option('wc_order_status_notification', false))
-            add_action('woocommerce_thankyou', [$this, 'new_order_notification']);
+            add_action('woocommerce_order_status_changed', [$this, 'order_status_notification'], 10, 4);
 
         $this->words = apply_filters('wptelegrampro_words', $this->words);
     }
 
     /**
-     * Send notification to admin users when changed order status
+     * Send notification to admin and shop manager users when product stock changed
+     *
+     * @param WC_Product|null|false $product
+     */
+    public function admin_product_stock_change_notification($product)
+    {
+        if (!$product) return;
+
+        $users = $this->get_users(['Administrator', 'shop_manager']);
+        if ($users) {
+            if ($product->is_type('variation'))
+                $product = wc_get_product($product->get_parent_id());
+
+            $keyboard = array(array(
+                array(
+                    'text' => '📝',
+                    'url' => admin_url('post.php?action=edit&post=' . $product->get_id())
+                ),
+                array(
+                    'text' => '📂',
+                    'url' => admin_url('edit.php?post_type=product')
+                )
+            ));
+            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+
+            $no_stock_amount = absint(get_option('woocommerce_notify_no_stock_amount', 0));
+            $low_stock_amount = absint(wc_get_low_stock_amount($product));
+            $product_stock_amount = absint($product->get_stock_quantity());
+
+            $text = "*" . __('Product stock status', $this->plugin_key) . "*\n\n";
+            $text .= __('Product', $this->plugin_key) . ': ' . $product->get_title() . "\n";
+            $text .= __('Stock status', $this->plugin_key) . ': ';
+
+            if ($product_stock_amount <= $no_stock_amount) {
+                $text .= __('No stock', $this->plugin_key) . "\n";
+
+            } elseif ($product_stock_amount <= $low_stock_amount) {
+                $text .= __('Low stock', $this->plugin_key) . "\n";
+                $text .= __('Current quantity', $this->plugin_key) . ': ' . $product_stock_amount . "\n";
+            }
+            $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
+
+            $text = apply_filters('wptelegrampro_wc_admin_product_stock_change_notification_text', $text, $product);
+
+            foreach ($users as $user)
+                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
+        }
+    }
+
+    /**
+     * Send notification to admin users when order status changed
      *
      * @param int $order_id
      * @param string $old_status
@@ -79,7 +135,7 @@ class WooCommerceWPTP extends WPTelegramPro
     }
 
     /**
-     * Send notification to customer when changed order status
+     * Send notification to customer when order status changed
      *
      * @param int $order_id
      * @param string $old_status
@@ -120,7 +176,12 @@ class WooCommerceWPTP extends WPTelegramPro
         }
     }
 
-    function new_order_notification($order_id)
+    /**
+     * Send notification to admin users when new order received
+     *
+     * @param int $order_id
+     */
+    function admin_new_order_notification($order_id)
     {
         if (!$order_id) return;
         $users = $this->get_users(['Administrator', 'shop_manager']);
@@ -631,37 +692,30 @@ class WooCommerceWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
-                        <label for="wc_new_order_notification"><?php _e('Administrators', $this->plugin_key);
-                            echo ': ';
-                            _e('New Order', $this->plugin_key) ?></label>
+                        <?php _e('Administrators', $this->plugin_key); ?>
                     </td>
                     <td>
-                        <label><input type="checkbox" value="1" id="wc_new_order_notification"
-                                      name="wc_new_order_notification" <?php checked($this->get_option('wc_new_order_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="wc_admin_order_status_notification"><?php _e('Administrators', $this->plugin_key);
-                            echo ': ';
-                            _e('Order status change', $this->plugin_key) ?></label>
-                    </td>
-                    <td>
+                        <label><input type="checkbox" value="1" id="wc_admin_new_order_notification"
+                                      name="wc_admin_new_order_notification" <?php checked($this->get_option('wc_admin_new_order_notification', 0), 1) ?>> <?php _e('New order', $this->plugin_key) ?>
+                        </label><br>
                         <label><input type="checkbox" value="1" id="wc_admin_order_status_notification"
-                                      name="wc_admin_order_status_notification" <?php checked($this->get_option('wc_admin_order_status_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                                      name="wc_admin_order_status_notification" <?php checked($this->get_option('wc_admin_order_status_notification', 0), 1) ?>> <?php _e('Order status change', $this->plugin_key) ?>
+                        </label><br>
+                        <label><input type="checkbox" value="1" id="wc_admin_product_low_stock_notification"
+                                      name="wc_admin_product_low_stock_notification" <?php checked($this->get_option('wc_admin_product_low_stock_notification', 0), 1) ?>> <?php _e('Product low stock', $this->plugin_key) ?>
+                        </label><br>
+                        <label><input type="checkbox" value="1" id="wc_admin_product_no_stock_notification"
+                                      name="wc_admin_product_no_stock_notification" <?php checked($this->get_option('wc_admin_product_no_stock_notification', 0), 1) ?>> <?php _e('Product no stock', $this->plugin_key) ?>
                         </label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="wc_order_status_notification"><?php _e('Customers', $this->plugin_key);
-                            echo ': ';
-                            _e('Order status change', $this->plugin_key) ?></label>
+                        <?php _e('Customers', $this->plugin_key); ?>
                     </td>
                     <td>
                         <label><input type="checkbox" value="1" id="wc_order_status_notification"
-                                      name="wc_order_status_notification" <?php checked($this->get_option('wc_order_status_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                                      name="wc_order_status_notification" <?php checked($this->get_option('wc_order_status_notification', 0), 1) ?>> <?php _e('Order status change', $this->plugin_key) ?>
                         </label>
                     </td>
                 </tr>
