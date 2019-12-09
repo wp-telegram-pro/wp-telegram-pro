@@ -102,12 +102,13 @@ class VisualFormBuilderWPTP extends WPTelegramPro
                         $value = str_replace(['<br>', '<br/>'], ', ', $value);
 
                     } elseif ($field['type'] == 'file-upload' && !empty($value)) {
-                        $file = explode('.', $value);
-                        $ext = strtolower(end($file));
-                        if (in_array($ext, ['png', 'gif', 'jpeg', 'jpg']))
-                            $mediaURL = $value;
-
-                        continue;
+                        if (filter_var($value, FILTER_VALIDATE_URL)) {
+                            $file = explode('.', $value);
+                            $ext = strtolower(end($file));
+                            if (in_array($ext, ['png', 'gif', 'jpeg', 'jpg']))
+                                $mediaURL = $value;
+                        } else
+                            continue;
 
                     } elseif ($field['type'] == 'checkbox' && !empty($value)) {
                         $value = explode(',', $value);
@@ -117,7 +118,7 @@ class VisualFormBuilderWPTP extends WPTelegramPro
 
                     $text .= $field['name'] . ': ';
 
-                    if ($field['type'] == 'textarea')
+                    if ($field['type'] == 'textarea' && !empty($value))
                         $text .= "\n";
 
                     $text .= $value . "\n";

@@ -50,6 +50,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'VisualFormBuilderWPTP',
             'path' => 'visual-form-builder/visual-form-builder.php'
         ),
+        'wp-sms' => array(
+            'class' => 'WPSMSWPTP',
+            'path' => 'wp-sms/wp-sms.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;
