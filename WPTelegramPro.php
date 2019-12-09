@@ -145,7 +145,7 @@ class WPTelegramPro
                             echo sprintf(__('How to set bot commands: Start %s and select your bot > "Edit Bot" > "Edit Commands" > Send text below.', $this->plugin_key), '<a href="https://t.me/BotFather" target="_blank">@BotFather</a>');
                             ?>
                         </span><br><br>
-                    <textarea cols="30" class="ltr" rows="<?php echo $textRows ?>"
+                    <textarea cols="30" class="ltr" rows="<?php echo $textRows ?>" style="resize:none"
                               onfocus="this.select();" onmouseup="return false;" readonly><?php
                         $list = array();
                         foreach ($commands as $command => $desc)

@@ -121,6 +121,10 @@ body.rtl .wptp-wrap th {
     width: 100%;
 }
 
+.wptp-wrap .dashicons, .wptp-wrap .dashicons-before::before {
+    line-height: unset;
+}
+
 .wptp-wrap .dashicons {
     font-size: 2.4em;
     color: #aaa;
