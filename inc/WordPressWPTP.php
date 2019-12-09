@@ -25,8 +25,14 @@ class WordPressWPTP extends WPTelegramPro
         add_action('wp_before_admin_bar_render', [$this, 'admin_bar_render']);
         add_action('admin_notices', [$this, 'user_disconnect']);
 
-        if (isset($this->options['new_comment_notification']))
+        if ($this->get_option('new_comment_notification', false))
             add_action('comment_post', array($this, 'comment_notification'), 10, 2);
+        if ($this->get_option('admin_user_login_notification', false))
+            add_action('wp_login', [$this, 'admin_user_login_notification'], 10, 2);
+        if ($this->get_option('user_login_notification', false))
+            add_action('wp_login', [$this, 'user_login_notification'], 10, 2);
+        if ($this->get_option('admin_register_new_user_notification', false))
+            add_action('user_register', array($this, 'admin_register_new_user_notification'));
     }
 
     function user_disconnect()
@@ -168,6 +174,129 @@ class WordPressWPTP extends WPTelegramPro
             )
         );
         return $tags;
+    }
+
+    /**
+     * Send notification to user when logged in
+     *
+     * @param string $user_login Username.
+     * @param WP_User $user WP_User object of the logged-in user.
+     */
+    function user_login_notification($user_login, $user)
+    {
+        $bot_user = $this->set_user(array('wp_id' => $user->ID));
+        if ($bot_user) {
+            $userIP = HelpersWPTP::getUserIP();
+            $text = "*" . sprintf(__('Dear %s', $this->plugin_key), $user->display_name) . "*\n";
+            $text .= sprintf(__('Your successful login to %1$s account on date %2$s at %3$s done with %4$s IP address.', $this->plugin_key), $user_login, HelpersWPTP::localeDate(null, "l j F Y"), HelpersWPTP::localeDate(null, "H:i"), "[{$userIP}](http://{$userIP}.ipaddress.com)");
+
+            $text = apply_filters('wptelegrampro_user_login_notification_text', $text, $user_login, $user);
+
+            if ($text) {
+                $keyboard = array(array(
+                    array(
+                        'text' => __('Display website', $this->plugin_key),
+                        'url' => get_bloginfo('url')
+                    )
+                ));
+                $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+                $this->telegram->disable_web_page_preview(true);
+                $this->telegram->sendMessage($text, $keyboards, $bot_user['user_id'], 'Markdown');
+            }
+        }
+    }
+
+    /**
+     * Send notification to admin users when user login
+     *
+     * @param string $user_login Username.
+     * @param WP_User $user WP_User object of the logged-in user.
+     */
+    function admin_user_login_notification($user_login, $user)
+    {
+        $user_role = $this->get_user_role($user);
+        if (!$user_role || $user_role == 'administrator') return;
+
+        $users = $this->get_users(['Administrator']);
+        if ($users) {
+            $keyboard = array(array(
+                array(
+                    'text' => '📝',
+                    'url' => admin_url('user-edit.php?user_id=' . $user->ID)
+                ),
+                array(
+                    'text' => '📂',
+                    'url' => admin_url('users.php')
+                )
+            ));
+            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+            $userIP = HelpersWPTP::getUserIP();
+
+            $text = "*" . __('User login', $this->plugin_key) . "*\n\n";
+
+            $text .= __('User name', $this->plugin_key) . ': ' . $user_login . "\n";
+            $text .= __('Name', $this->plugin_key) . ': ' . $user->display_name . "\n";
+            $text .= __('User IP', $this->plugin_key) . ': ' . "[{$userIP}](http://{$userIP}.ipaddress.com)" . "\n";
+
+            $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
+
+            $text = apply_filters('wptelegrampro_admin_user_login_notification_text', $text, $user_login, $user);
+
+            if ($text) {
+                $this->telegram->disable_web_page_preview(true);
+                foreach ($users as $user)
+                    $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
+            }
+        }
+    }
+
+    /**
+     * Send notification to admin users when new user registered
+     *
+     * @param int $user_id User ID.
+     */
+    function admin_register_new_user_notification($user_id)
+    {
+        $user = get_userdata($user_id);
+        $user_role = $this->get_user_role($user);
+        if (!$user_role || $user_role == 'administrator') return;
+
+        $users = $this->get_users(['Administrator']);
+        if ($users) {
+            $keyboard = array(array(
+                array(
+                    'text' => '📝',
+                    'url' => admin_url('user-edit.php?user_id=' . $user->ID)
+                ),
+                array(
+                    'text' => '📂',
+                    'url' => admin_url('users.php')
+                )
+            ));
+            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+            $userIP = HelpersWPTP::getUserIP();
+            $user_roles = $this->wp_user_roles();
+            $user_role = $user_roles[$user_role];
+            $text = "*" . __('Register a new user', $this->plugin_key) . "*\n\n";
+
+            $text .= __('User name', $this->plugin_key) . ': ' . $user->user_login . "\n";
+            $text .= __('Name', $this->plugin_key) . ': ' . $user->display_name . "\n";
+            $text .= __('User role', $this->plugin_key) . ': ' . $user_role . "\n";
+
+            $current_user_role = $this->get_user_role();
+            if (!$current_user_role || $current_user_role != 'administrator')
+                $text .= __('User IP', $this->plugin_key) . ': ' . "[{$userIP}](http://{$userIP}.ipaddress.com)" . "\n";
+
+            $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
+
+            $text = apply_filters('wptelegrampro_admin_register_new_user_notification_text', $text, $user_id, $user);
+
+            if ($text) {
+                $this->telegram->disable_web_page_preview(true);
+                foreach ($users as $user)
+                    $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
+            }
+        }
     }
 
     function comment_notification($comment_ID, $comment_approved, $message_id = null)
@@ -510,11 +639,27 @@ class WordPressWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
-                        <label for="new_comment_notification"><?php _e('New Comment', $this->plugin_key) ?></label>
+                        <?php _e('Administrators', $this->plugin_key); ?>
                     </td>
                     <td>
                         <label><input type="checkbox" value="1" id="new_comment_notification"
-                                      name="new_comment_notification" <?php checked($this->get_option('new_comment_notification'), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                                      name="new_comment_notification" <?php checked($this->get_option('new_comment_notification'), 1) ?>> <?php _e('New comment', $this->plugin_key) ?>
+                        </label><br>
+                        <label><input type="checkbox" value="1" id="admin_user_login_notification"
+                                      name="admin_user_login_notification" <?php checked($this->get_option('admin_user_login_notification'), 1) ?>> <?php _e('User login', $this->plugin_key) ?>
+                        </label><br>
+                        <label><input type="checkbox" value="1" id="admin_register_new_user_notification"
+                                      name="admin_register_new_user_notification" <?php checked($this->get_option('admin_register_new_user_notification'), 1) ?>> <?php _e('Register a new user', $this->plugin_key) ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <?php _e('Users', $this->plugin_key) ?>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="user_login_notification"
+                                      name="user_login_notification" <?php checked($this->get_option('user_login_notification'), 1) ?>> <?php _e('User login', $this->plugin_key) ?>
                         </label>
                     </td>
                 </tr>
@@ -523,7 +668,7 @@ class WordPressWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
-                        <label><?php _e('Post Type', $this->plugin_key) ?></label>
+                        <?php _e('Post Type', $this->plugin_key) ?>
                     </td>
                     <td>
                         <?php

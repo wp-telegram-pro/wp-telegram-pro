@@ -982,10 +982,17 @@ class WPTelegramPro
         return $message;
     }
 
-    function get_current_user_role()
+    /**
+     * Get user role
+     *
+     * @param WP_User $user WP_User object of the logged-in user.
+     * @return string|bool Return user role name or false
+     */
+    function get_user_role($user = null)
     {
-        if (is_user_logged_in()) {
-            $user = wp_get_current_user();
+        if ($user != null || is_user_logged_in()) {
+            if ($user == null)
+                $user = wp_get_current_user();
             $roles = ( array )$user->roles;
             return $roles[0];
         } else
@@ -994,6 +1001,8 @@ class WPTelegramPro
 
     function wp_user_roles()
     {
+        if (!function_exists('get_editable_roles'))
+            require_once($this->get_admin_path() . 'includes' . DIRECTORY_SEPARATOR . 'user.php');
         $editable_roles = get_editable_roles();
         $roles = [];
         foreach ($editable_roles as $role => $details)

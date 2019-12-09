@@ -271,7 +271,7 @@ class ChannelWPTP extends WPTelegramPro
                 return '...';
             });
 
-            $disable_web_page_preview = isset($options['channel_disable_web_page_preview'][$index]) ? true : false;
+            $disable_web_page_preview = isset($options['channel_disable_web_page_preview'][$index]);
             //$image_position = $options['channel_image_position'][$index];
             $formatting_messages = $options['channel_formatting_messages'][$index];
             $formatting_messages = $formatting_messages == 'simple' ? null : $formatting_messages;
@@ -850,7 +850,7 @@ class ChannelWPTP extends WPTelegramPro
         )
             return false;
 
-        $user_role = $this->get_current_user_role();
+        $user_role = $this->get_user_role();
         $channels_user_roles = array_keys($this->options['channels_metabox_user_roles']);
         return in_array($user_role, $channels_user_roles);
     }

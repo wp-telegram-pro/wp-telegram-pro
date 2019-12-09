@@ -307,9 +307,31 @@ class HelpersWPTP
         if (function_exists('jdate'))
             return jdate($format, $time, false, true);
 
+        if (!self::isValidTimeStamp($time))
+            $time = strtotime($time);
+
         if (function_exists('wp_date'))
-            return wp_date($format, strtotime($time));
+            return wp_date($format, $time);
         else
-            return date($format, strtotime($time));
+            return date($format, $time);
+    }
+
+    public static function isValidTimeStamp($strTimestamp)
+    {
+        return ((string)(int)$strTimestamp === $strTimestamp)
+            && ($strTimestamp <= PHP_INT_MAX)
+            && ($strTimestamp >= ~PHP_INT_MAX);
+    }
+
+    public static function getUserIP()
+    {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return apply_filters('wpb_get_ip', $ip);
     }
 }
