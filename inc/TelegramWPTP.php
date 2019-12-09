@@ -14,14 +14,14 @@ class TelegramWPTP
     protected $fileMethod = array('sendPhoto', 'sendAudio', 'sendDocument', 'sendVideo', 'sendVoice', 'sendVideoNote');
     protected $textMethod = array('sendMessage', 'editMessageText', 'InputTextMessageContent');
     public $disable_web_page_preview = false;
-    
+
     function __construct($token)
     {
         $this->token = $token;
         add_filter('wptelegrampro_api_request_parameters', [$this, 'request_file_parameter']);
         add_action('http_api_curl', [$this, 'modify_http_api_curl'], 10, 3);
     }
-    
+
     function input()
     {
         $input = file_get_contents('php://input');
@@ -50,31 +50,36 @@ class TelegramWPTP
             throw new Exception('Not Receive Telegram Input!');
         }
     }
-    
+
     function request($method, $parameter = array())
     {
         $parameter['disable_web_page_preview'] = $this->disable_web_page_preview;
         $proxy_status = apply_filters('wptelegrampro_proxy_status', '');
         $url = 'https://api.telegram.org/bot' . $this->token . '/' . $method;
-        
+
         if (!empty($proxy_status)) {
             $headers = array('wptelegrampro' => true);
-            
+
             if (in_array($method, $this->fileMethod) && isset($parameter['file'])) {
                 $key = $this->file_key = strtolower(str_replace(array('send', 'VideoNote'), array('', 'video_note'), $method));
-                $parameter[$key] = $this->file = $parameter['file'];
-                $headers['attache_file'] = true;
+                if (filter_var($parameter['file'], FILTER_VALIDATE_URL)) {
+                    $parameter[$key] = $parameter['file'];
+                    remove_action('http_api_curl', [$this, 'modify_http_api_curl']);
+                } else {
+                    $parameter[$key] = $this->file = $parameter['file'];
+                    $headers['attache_file'] = true;
+                    add_action('http_api_curl', [$this, 'modify_http_api_curl'], 99999, 3);
+                }
                 unset($parameter['file']);
-                add_action('http_api_curl', [$this, 'modify_http_api_curl'], 99999, 3);
             } else {
                 remove_action('http_api_curl', [$this, 'modify_http_api_curl']);
             }
-            
+
             $url = apply_filters('wptelegrampro_api_request_url', $url);
-            
+
             // $parameter = apply_filters('wptelegrampro_api_request_parameters', $parameter);
             $parameter = $this->request_file_parameter($parameter);
-            
+
             $args = array(
                 'timeout' => 20, //seconds
                 'blocking' => true,
@@ -82,29 +87,33 @@ class TelegramWPTP
                 'body' => $parameter,
                 'sslverify' => true,
             );
-            
+
             foreach ($args as $argument => $value)
                 $args[$argument] = apply_filters("wptelegrampro_api_request_arg_{$argument}", $value);
-            
+
             $args = apply_filters('wptelegrampro_api_remote_post_args', $args, $method, $this->token);
             $raw_response = $this->raw_response = $this->last_result = wp_remote_post($url, $args);
             $this->set_properties($raw_response);
             $this->valid_json = $this->decode_body();
             $result = $this->get_decoded_body();
-            
+
         } else {
             if (empty($this->token) || !function_exists('curl_init'))
                 return false;
-            
+
             $ch = curl_init();
             if (in_array($method, $this->fileMethod) && isset($parameter['file'])) {
                 $key = strtolower(str_replace(array('send', 'VideoNote'), array('', 'video_note'), $method));
-                $parameter[$key] = new CURLFile(realpath($parameter['file']));
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    "Content-Type:multipart/form-data"
-                ));
+                if (filter_var($parameter['file'], FILTER_VALIDATE_URL)) {
+                    $parameter[$key] = $parameter['file'];
+                } else {
+                    $parameter[$key] = new CURLFile(realpath($parameter['file']));
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        "Content-Type:multipart/form-data"
+                    ));
+                }
             }
-            
+
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             if (count($parameter))
@@ -113,15 +122,15 @@ class TelegramWPTP
             $this->valid_json = $this->decode_body();
             $result = $this->get_decoded_body();
         }
-        
+
         return $result;
     }
-    
+
     public function set_token($token)
     {
         $this->token = $token;
     }
-    
+
     function request_file_parameter($parameter)
     {
         $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
@@ -130,7 +139,7 @@ class TelegramWPTP
         }
         return $parameter;
     }
-    
+
     function modify_http_api_curl(&$handle, $r, $url)
     {
         $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
@@ -139,7 +148,7 @@ class TelegramWPTP
             curl_setopt($handle, CURLOPT_HTTPHEADER, array("Content-Type:multipart/form-data"));
         }
     }
-    
+
     function setWebhook($url)
     {
         $result = $this->last_result = $this->request('setWebhook', array('url' => $url));
@@ -153,7 +162,7 @@ class TelegramWPTP
         if (!$result) return false;
         return isset($result['result']) ? $result['result'] : false;
     }
-    
+
     function sendMessage($message, $keyboard = null, $chat_id = null, $parse_mode = null)
     {
         $chat_id = $chat_id == null ? $this->input['chat_id'] : $chat_id;
@@ -164,7 +173,7 @@ class TelegramWPTP
             $parameter['parse_mode'] = $parse_mode;
         return $this->last_result = $this->request('sendMessage', $parameter);
     }
-    
+
     function editMessageText($message, $message_id, $keyboard = null, $chat_id = null, $parse_mode = null)
     {
         $chat_id = $chat_id == null ? $this->input['chat_id'] : $chat_id;
@@ -175,8 +184,8 @@ class TelegramWPTP
             $parameter['parse_mode'] = $parse_mode;
         return $this->last_result = $this->request('editMessageText', $parameter);
     }
-    
-    function sendFile($method, $file, $caption = null, $keyboard = null, $chat_id = null)
+
+    function sendFile($method, $file, $caption = null, $keyboard = null, $chat_id = null, $parse_mode = null)
     {
         $chat_id = $chat_id == null ? $this->input['chat_id'] : $chat_id;
         $parameter = array('chat_id' => $chat_id, 'file' => $file);
@@ -184,16 +193,18 @@ class TelegramWPTP
             $parameter['caption'] = $caption;
         if ($keyboard != null)
             $parameter['reply_markup'] = $keyboard;
+        if ($parse_mode != null)
+            $parameter['parse_mode'] = $parse_mode;
         return $this->last_result = $this->request($method, $parameter);
     }
-    
+
     function answerCallbackQuery($text, $callback_query_id = null, $show_alert = false)
     {
         $callback_query_id = $callback_query_id == null ? $this->input['callback_query_id'] : $callback_query_id;
         $parameter = array('callback_query_id' => $callback_query_id, 'text' => $text, 'show_alert' => $show_alert);
         return $this->last_result = $this->request('answerCallbackQuery', $parameter);
     }
-    
+
     function editMessageReplyMarkup($reply_markup, $message_id = null, $chat_id = null)
     {
         $chat_id = $chat_id == null ? $this->input['chat_id'] : $chat_id;
@@ -201,12 +212,12 @@ class TelegramWPTP
         $parameter = array('reply_markup' => $reply_markup, 'chat_id' => $chat_id, 'message_id' => $message_id);
         return $this->last_result = $this->request('editMessageReplyMarkup', $parameter);
     }
-    
+
     function bot_info()
     {
         return $this->last_result = $this->request('getMe');
     }
-    
+
     function get_members_count($chat_id)
     {
         if ($chat_id == null || $chat_id == '')
@@ -214,7 +225,7 @@ class TelegramWPTP
         $parameter = array('chat_id' => $chat_id);
         return $this->last_result = $this->request('getChatMembersCount', $parameter);
     }
-    
+
     function keyboard($keys, $type = 'keyboard')
     {
         if (!is_array($keys)) return '';
@@ -227,21 +238,21 @@ class TelegramWPTP
             $reply['resize_keyboard'] = true;
         return json_encode($reply, true);
     }
-    
+
     function get_last_result($raw = false)
     {
         if ($raw)
             return $this->last_result;
-        
+
         if (!$this->last_result)
             return array();
-        
+
         if ($this->valid_json)
             return $this->decoded_body;
         else
             return false;
     }
-    
+
     /**
      * Converts raw API response to proper decoded response.
      * @since   1.0.0
@@ -254,7 +265,7 @@ class TelegramWPTP
             return (json_last_error() == JSON_ERROR_NONE);
         return true;
     }
-    
+
     /**
      * Sets the class properties
      * Copy from "WP Telegram" plugin
@@ -272,7 +283,7 @@ class TelegramWPTP
             $this->$property = call_user_func('wp_remote_retrieve_' . $property, $raw_response);
         }
     }
-    
+
     /**
      * Gets the original HTTP response.
      * @return array
@@ -283,7 +294,7 @@ class TelegramWPTP
     {
         return $this->raw_response;
     }
-    
+
     /**
      * Gets the HTTP response code.
      * @return null|int
@@ -294,7 +305,7 @@ class TelegramWPTP
     {
         return $this->response_code;
     }
-    
+
     /**
      * Returns the value of valid_json
      * @return bool
@@ -305,7 +316,7 @@ class TelegramWPTP
     {
         return $this->valid_json;
     }
-    
+
     /**
      * Gets the HTTP response message.
      * @return null|string
@@ -316,7 +327,7 @@ class TelegramWPTP
     {
         return $this->response_message;
     }
-    
+
     /**
      * Return the HTTP headers for this response.
      * @return array
@@ -327,7 +338,7 @@ class TelegramWPTP
     {
         return $this->headers;
     }
-    
+
     /**
      * Return the raw body response.
      * @return string
@@ -338,7 +349,7 @@ class TelegramWPTP
     {
         return $this->body;
     }
-    
+
     /**
      * Return the decoded body response.
      * @return array
@@ -349,7 +360,7 @@ class TelegramWPTP
     {
         return $this->decoded_body;
     }
-    
+
     /**
      * Helper function to return the payload of a successful response.
      * @return mixed
@@ -360,7 +371,7 @@ class TelegramWPTP
     {
         return $this->decoded_body['result'];
     }
-    
+
     function disable_web_page_preview($status)
     {
         $this->disable_web_page_preview = $status;

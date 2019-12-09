@@ -127,18 +127,6 @@ class WeFormsWPTP extends WPTelegramPro
         }
     }
 
-    private static function forms_select($field_name, $args = array())
-    {
-        $items = [];
-        $forms = evf_get_all_forms(true);
-        if ($forms && count($forms))
-            foreach ($forms as $form_id => $form_title) {
-                $items[$form_id] = $form_title;
-            }
-        HelpersWPTP::forms_select($field_name, $items, $args);
-    }
-
-
     /**
      * Returns an instance of class
      * @return WeFormsWPTP

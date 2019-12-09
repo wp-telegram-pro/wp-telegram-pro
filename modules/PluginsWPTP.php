@@ -46,6 +46,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'WeFormsWPTP',
             'path' => 'weforms/weforms.php'
         ),
+        'visual-form-builder' => array(
+            'class' => 'VisualFormBuilderWPTP',
+            'path' => 'visual-form-builder/visual-form-builder.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;
