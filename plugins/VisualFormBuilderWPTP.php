@@ -59,7 +59,7 @@ class VisualFormBuilderWPTP extends WPTelegramPro
     }
 
     /**
-     * Send notification to admin users when new message from Everest Forms
+     * Send notification to admin users when new message from Visual Form Builder
      *
      * @param int $form_id Form ID
      */
