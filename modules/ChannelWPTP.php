@@ -399,7 +399,7 @@ class ChannelWPTP extends WPTelegramPro
                     $post_types = array_merge($post_types, array_keys($options['channel_post_type'][$k]));
             }
             if (in_array($post_type, $post_types))
-                add_meta_box('WPTBMetaBox', $this->plugin_name, array($this, 'post_display'), $post_type);
+                add_meta_box('WPTPMetaBox', $this->plugin_name, array($this, 'post_display'), $post_type);
         }
     }
 

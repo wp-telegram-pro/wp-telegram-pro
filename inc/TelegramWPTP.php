@@ -163,6 +163,12 @@ class TelegramWPTP
         return isset($result['result']) ? $result['result'] : false;
     }
 
+    function deleteMessage($message_id, $chat_id = null)
+    {
+        $parameter = array('chat_id' => $chat_id, 'message_id' => $message_id);
+        return $this->last_result = $this->request('deleteMessage', $parameter);
+    }
+
     function sendMessage($message, $keyboard = null, $chat_id = null, $parse_mode = null)
     {
         $chat_id = $chat_id == null ? $this->input['chat_id'] : $chat_id;

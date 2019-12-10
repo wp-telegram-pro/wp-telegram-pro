@@ -40,9 +40,13 @@ class WooCommerceWPTP extends WPTelegramPro
             add_action('woocommerce_low_stock', [$this, 'admin_product_stock_change_notification']);
         if ($this->get_option('wc_admin_product_no_stock_notification', false))
             add_action('woocommerce_no_stock', [$this, 'admin_product_stock_change_notification']);
-
         if ($this->get_option('wc_order_status_notification', false))
-            add_action('woocommerce_order_status_changed', [$this, 'order_status_notification'], 10, 4);
+            add_action('woocommerce_order_status_changed', [$this, 'user_order_status_notification'], 10, 4);
+        if ($this->get_option('wc_order_note_customer_notification', false))
+            add_action('woocommerce_new_customer_note', [$this, 'user_order_note_customer_notification'], 10, 1);
+        if ($this->get_option('wc_admin_order_note_notification', false))
+            add_action('wp_insert_comment', [$this, 'admin_order_note_notification'], 10, 2);
+        add_action('delete_comment', [$this, 'order_note_delete_notification'], 10, 2);
 
         $this->words = apply_filters('wptelegrampro_words', $this->words);
     }
@@ -142,7 +146,7 @@ class WooCommerceWPTP extends WPTelegramPro
      * @param string $new_status
      * @param WC_Order  Actual order
      */
-    public function order_status_notification($order_id, $old_status, $new_status, $order)
+    public function user_order_status_notification($order_id, $old_status, $new_status, $order)
     {
         $user_id = $order->get_customer_id();
         if ($user_id) {
@@ -169,11 +173,139 @@ class WooCommerceWPTP extends WPTelegramPro
                 $text .= __('Order number', $this->plugin_key) . ': ' . $order_id . "\n";
                 $text .= __('New status', $this->plugin_key) . ': ' . wc_get_order_status_name($new_status) . "\n";
                 $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate($order->get_date_modified()) . "\n";
-                $text = apply_filters('wptelegrampro_wc_order_status_notification_text', $text, $order, $order_id);
+                $text = apply_filters('wptelegrampro_wc_user_order_status_notification_text', $text, $order, $order_id);
 
                 $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
             }
         }
+    }
+
+    /**
+     * Send notification to admin and shop manager when add order note
+     *
+     * @param int $commentID The comment ID.
+     * @param WP_Comment $comment Comment object.
+     */
+    function admin_order_note_notification($commentID, $comment)
+    {
+        if ($comment->comment_type != 'order_note')
+            return;
+
+        $content = $comment->comment_content;
+        $order_id = intval($comment->comment_post_ID);
+
+        $users = $this->get_users(['Administrator', 'shop_manager']);
+        if ($users) {
+            $keyboard = array(array(
+                array(
+                    'text' => '📝',
+                    'url' => admin_url('post.php?post=' . $order_id . '&action=edit')
+                ),
+                array(
+                    'text' => '📂',
+                    'url' => admin_url('edit.php?post_type=shop_order')
+                )
+            ));
+            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+
+            $text = "*" . __('New order note', $this->plugin_key) . "*\n\n";
+            $text .= __('Order number', $this->plugin_key) . ': ' . $order_id . "\n";
+            $text .= __('Note', $this->plugin_key) . ': ' . "\n" . $content . "\n";
+            $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
+
+            $text = apply_filters('wptelegrampro_wc_admin_order_note_notification_text', $text, $content, $order_id);
+
+            foreach ($users as $user) {
+                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
+                $message_id = $this->telegram->get_last_result()['result']['message_id'];
+                $this->save_message_id_order_note($commentID, $user['user_id'], $message_id);
+            }
+        }
+    }
+
+    /**
+     * Send notification to customer when add order note
+     *
+     * @param array $data
+     */
+    function user_order_note_customer_notification($data)
+    {
+        $order_id = $data['order_id'];
+        $customer_note = $data['customer_note'];
+        $order = wc_get_order($order_id);
+        $user_id = $order->get_customer_id();
+
+        if ($user_id) {
+            $user = $this->set_user(array('wp_id' => $user_id));
+            if ($user) {
+                $customer_order_notes = $order->get_customer_order_notes();
+                $customer_order_note = current($customer_order_notes);
+                $commentID = intval($customer_order_note->comment_ID);
+
+                $orders_endpoint = get_option('woocommerce_myaccount_orders_endpoint', 'orders');
+                if (!empty($orders_endpoint)) {
+                    $keyboard = array(array(
+                        array(
+                            'text' => '👁️',
+                            'url' => $order->get_view_order_url()
+                        ),
+                        array(
+                            'text' => '📂',
+                            'url' => esc_url_raw(wc_get_account_endpoint_url($orders_endpoint))
+                        )
+                    ));
+                    $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+                } else {
+                    $keyboards = null;
+                }
+
+                $text = "*" . __('New order note', $this->plugin_key) . "*\n\n";
+                $text .= __('Order number', $this->plugin_key) . ': ' . $order_id . "\n";
+                $text .= __('Note', $this->plugin_key) . ': ' . "\n" . $customer_note . "\n";
+                $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
+                $text = apply_filters('wptelegrampro_wc_user_order_note_customer_notification_text', $text, $customer_note, $order_id);
+
+                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
+                $message_id = $this->telegram->get_last_result()['result']['message_id'];
+                $this->save_message_id_order_note($commentID, $user['user_id'], $message_id);
+            }
+        }
+    }
+
+    /**
+     * Delete Telegram notification when delete order note
+     *
+     * @param int $commentID The comment ID.
+     * @param WP_Comment $comment The comment to be deleted.
+     */
+    function order_note_delete_notification($commentID, $comment)
+    {
+        if ($comment->comment_type != 'order_note')
+            return;
+
+        $meta = get_comment_meta($commentID, 'order_note_message_wptp', true);
+        if (!$meta || empty($meta)) return;
+
+        $messages = explode('|', $meta);
+        if (count($messages) == 0) return;
+
+        foreach ($messages as $message) {
+            $message = explode('-', $message);
+            $userID = $message[0];
+            $messageID = $message[1];
+            $this->telegram->deleteMessage($messageID, $userID);
+        }
+    }
+
+    private function save_message_id_order_note($commentID, $userID, $messageID)
+    {
+        $meta = get_comment_meta($commentID, 'order_note_message_wptp', true);
+        $messages = array();
+        if ($meta && !empty($meta))
+            $messages = explode('|', $meta);
+        $messages[] = $userID . '-' . $messageID;
+        $meta = implode('|', $messages);
+        update_comment_meta($commentID, 'order_note_message_wptp', $meta);
     }
 
     /**
@@ -706,6 +838,9 @@ class WooCommerceWPTP extends WPTelegramPro
                         </label><br>
                         <label><input type="checkbox" value="1" id="wc_admin_product_no_stock_notification"
                                       name="wc_admin_product_no_stock_notification" <?php checked($this->get_option('wc_admin_product_no_stock_notification', 0), 1) ?>> <?php _e('Product no stock', $this->plugin_key) ?>
+                        </label><br>
+                        <label><input type="checkbox" value="1" id="wc_admin_order_note_notification"
+                                      name="wc_admin_order_note_notification" <?php checked($this->get_option('wc_admin_order_note_notification', 0), 1) ?>> <?php _e('New order note', $this->plugin_key) ?>
                         </label>
                     </td>
                 </tr>
@@ -716,6 +851,9 @@ class WooCommerceWPTP extends WPTelegramPro
                     <td>
                         <label><input type="checkbox" value="1" id="wc_order_status_notification"
                                       name="wc_order_status_notification" <?php checked($this->get_option('wc_order_status_notification', 0), 1) ?>> <?php _e('Order status change', $this->plugin_key) ?>
+                        </label><br>
+                        <label><input type="checkbox" value="1" id="wc_order_note_customer_notification"
+                                      name="wc_order_note_customer_notification" <?php checked($this->get_option('wc_order_note_customer_notification', 0), 1) ?>> <?php _e('New order note', $this->plugin_key) ?>
                         </label>
                     </td>
                 </tr>
@@ -724,7 +862,7 @@ class WooCommerceWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
-                        <label for="empty_cart_after_wc_redirect"><?php _e('After Redirect to Cart Page', $this->plugin_key) ?>                                </label>
+                        <label for="empty_cart_after_wc_redirect"><?php _e('After Redirect to Cart Page', $this->plugin_key) ?></label>
                     </td>
                     <td>
                         <label><input type="checkbox" value="1" id="empty_cart_after_wc_redirect"
@@ -734,7 +872,7 @@ class WooCommerceWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
-                        <label for="empty_cart_after_wc_payment_complete"><?php _e('After Payment Complete', $this->plugin_key) ?>                                </label>
+                        <label for="empty_cart_after_wc_payment_complete"><?php _e('After Payment Complete', $this->plugin_key) ?></label>
                     </td>
                     <td>
                         <label><input type="checkbox" value="1" id="empty_cart_after_wc_payment_complete"
