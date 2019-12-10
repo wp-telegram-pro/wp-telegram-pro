@@ -58,6 +58,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'WPSMSWPTP',
             'path' => 'wp-sms/wp-sms.php'
         ),
+        'mailchimp-for-wp' => array(
+            'class' => 'MailchimpForWPWPTP',
+            'path' => 'mailchimp-for-wp/mailchimp-for-wp.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;

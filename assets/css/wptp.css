@@ -10,6 +10,7 @@
 
 .wptp-wrap table {
     border-collapse: collapse;
+    width: 100%;
 }
 
 .wptp-wrap a, .wptp-wrap span {
@@ -61,8 +62,11 @@
 }
 
 .wptp-wrap table tr td:first-child, .wptp-wrap table tr th:first-child {
-    width: 200px;
     vertical-align: top;
+}
+
+.wptp-wrap table tr td:first-child {
+    width: 200px;
 }
 
 .wptp-wrap input.small-text {
