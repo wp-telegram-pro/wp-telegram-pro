@@ -181,7 +181,10 @@ body.rtl .wptp-wrap th {
     align-items: center;
 }
 
-.wptp-wrap .title-with-icon svg, .wptp-wrap .title-with-icon [class^="dashicons-"] {
+.wptp-wrap .title-with-icon svg,
+.wptp-wrap .title-with-icon [class^="dashicons-"],
+.wptp-wrap .title-with-icon .pg-icon {
+    font-size: 1.2em;
     margin-right: 7px;
 }
 

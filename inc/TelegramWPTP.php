@@ -10,10 +10,9 @@ if (class_exists('TelegramWPTP')) return;
 
 class TelegramWPTP
 {
-    protected $token, $input, $last_result = '', $raw_response, $valid_json, $decoded_body, $response_code, $response_message, $body, $headers, $file, $file_key;
+    protected $token, $input, $last_result = '', $raw_response, $valid_json, $decoded_body, $response_code, $response_message, $body, $headers, $file, $file_key, $disable_web_page_preview = false;
     protected $fileMethod = array('sendPhoto', 'sendAudio', 'sendDocument', 'sendVideo', 'sendVoice', 'sendVideoNote');
     protected $textMethod = array('sendMessage', 'editMessageText', 'InputTextMessageContent');
-    public $disable_web_page_preview = false;
 
     function __construct($token)
     {

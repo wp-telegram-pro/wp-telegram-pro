@@ -70,6 +70,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'WordfenceWPTP',
             'path' => 'wordfence/wordfence.php'
         ),
+        'better-wp-security' => array(
+            'class' => 'IThemesSecurityWPTP',
+            'path' => 'better-wp-security/better-wp-security.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;

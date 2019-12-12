@@ -102,7 +102,7 @@ class WordfenceWPTP extends WPTelegramPro
         foreach ($data as $key => $value) {
             $label = $key;
             if ($label == 'ip') $label = 'IP';
-            elseif ($label == 'username') $label = 'User Name';
+            elseif ($label == 'username') $label = 'userName';
             $label = HelpersWPTP::wordsCamelCaseToSentence($label);
 
             if ($key == 'duration') {
