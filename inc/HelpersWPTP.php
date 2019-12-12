@@ -334,4 +334,28 @@ class HelpersWPTP
         }
         return apply_filters('wpb_get_ip', $ip);
     }
+
+    public static function wordsCamelCaseToSentence($words)
+    {
+        $words = preg_split('~[^A-Z]+K|(?=[A-Z][^A-Z]+)~', $words, 0, PREG_SPLIT_NO_EMPTY);
+        return ucwords(implode(' ', $words));
+    }
+
+    public static function secondsToHumanTime($seconds, $labels = [])
+    {
+        $seconds = intval($seconds);
+        $times = [];
+        $output = '';
+        $times['days'] = floor($seconds / (3600 * 24));
+        $times['hours'] = floor($seconds / 3600) % 24;
+        $times['minutes'] = floor(($seconds / 60) % 60);
+        $times['seconds'] = $seconds % 60;
+
+        foreach ($times as $key => $value) {
+            if ($value > 0)
+                $output .= $value . ' ' . (isset($labels[$key]) ? $labels[$key] : ucwords($key)) . ', ';
+        }
+        $output = trim($output);
+        return $output;
+    }
 }

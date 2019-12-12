@@ -66,6 +66,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'MailchimpForWPWPTP',
             'path' => 'mailchimp-for-wp/mailchimp-for-wp.php'
         ),
+        'wordfence' => array(
+            'class' => 'WordfenceWPTP',
+            'path' => 'wordfence/wordfence.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;

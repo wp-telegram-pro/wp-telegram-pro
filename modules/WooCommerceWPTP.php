@@ -46,6 +46,7 @@ class WooCommerceWPTP extends WPTelegramPro
             add_action('woocommerce_new_customer_note', [$this, 'user_order_note_customer_notification'], 10, 1);
         if ($this->get_option('wc_admin_order_note_notification', false))
             add_action('wp_insert_comment', [$this, 'admin_order_note_notification'], 10, 2);
+
         add_action('delete_comment', [$this, 'order_note_delete_notification'], 10, 2);
 
         $this->words = apply_filters('wptelegrampro_words', $this->words);
