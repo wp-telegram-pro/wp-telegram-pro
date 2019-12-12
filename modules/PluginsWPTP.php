@@ -50,9 +50,13 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'VisualFormBuilderWPTP',
             'path' => 'visual-form-builder/visual-form-builder.php'
         ),
-        'Quform' => array(
+        'quform' => array(
             'class' => 'QuFormWPTP',
             'path' => 'quform/quform.php'
+        ),
+        'html-forms' => array(
+            'class' => 'HTMLFormsWPTP',
+            'path' => 'html-forms/html-forms.php'
         ),
         'wp-sms' => array(
             'class' => 'WPSMSWPTP',

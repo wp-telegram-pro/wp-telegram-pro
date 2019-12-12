@@ -106,10 +106,9 @@ class MailchimpForWPWPTP extends WPTelegramPro
         }
 
         $text = "*" . $title . "*\n\n";
-
         $text .= __('Email', $this->plugin_key) . ': ' . $email . "\n";
-
         $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
+
         $text = apply_filters('wptelegrampro_mailchimpforwp_new_subscriber_notification_text', $text, $email, $form, $event);
 
         if (!$text) return;
