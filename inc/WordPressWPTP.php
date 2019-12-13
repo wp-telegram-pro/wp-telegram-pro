@@ -35,6 +35,8 @@ class WordPressWPTP extends WPTelegramPro
             add_action('user_register', array($this, 'admin_register_new_user_notification'));
         if ($this->get_option('admin_php_error_notification', false))
             add_filter('recovery_mode_email', [$this, 'admin_recovery_mode_notification'], 1000, 2);
+        if ($this->get_option('admin_auto_core_update_notification', false))
+            add_filter('auto_core_update_email', [$this, 'admin_auto_core_update_notification'], 1000, 4);
     }
 
     function user_disconnect()
@@ -265,6 +267,35 @@ class WordPressWPTP extends WPTelegramPro
         $text = $email['message'];
         $text = str_replace([__('emailed'), __('email')], __('notification', $this->plugin_key), $text);
         $text = apply_filters('wptelegrampro_admin_recovery_mode_notification_text', $text, $email, $url);
+
+        if (!$text) return $email;
+
+        $users = $this->get_users();
+        if ($users) {
+            $this->telegram->disable_web_page_preview(true);
+            foreach ($users as $user)
+                $this->telegram->sendMessage($text, null, $user['user_id']);
+        }
+
+        return $email;
+    }
+
+    /**
+     * Send notification to admin users when auto core update
+     *
+     * @param array $email (to, subject, body, headers)
+     * @param string $type The type of email being sent. Can be one of
+     *                            'success', 'fail', 'manual', 'critical'.
+     * @param object $core_update The update offer that was attempted.
+     * @param mixed $result The result for the core update. Can be WP_Error.
+     * @return array
+     */
+    function admin_auto_core_update_notification($email, $type, $core_update, $result)
+    {
+        $text = $email['body'];
+        $text = apply_filters('wptelegrampro_admin_auto_core_update_notification_text', $text, $email, $type, $core_update, $result);
+
+        if (!$text) return $email;
 
         $users = $this->get_users();
         if ($users) {
@@ -670,6 +701,9 @@ class WordPressWPTP extends WPTelegramPro
                     <td>
                         <label><input type="checkbox" value="1" id="admin_php_error_notification"
                                       name="admin_php_error_notification" <?php checked($this->get_option('admin_php_error_notification'), 1) ?>> <?php _e('<strong>Try</strong> to send recovery mode notification', $this->plugin_key) ?>
+                        </label><br>
+                        <label><input type="checkbox" value="1" id="admin_auto_core_update_notification"
+                                      name="admin_auto_core_update_notification" <?php checked($this->get_option('admin_auto_core_update_notification'), 1) ?>> <?php _e('Auto core update', $this->plugin_key) ?>
                         </label><br>
                         <label><input type="checkbox" value="1" id="new_comment_notification"
                                       name="new_comment_notification" <?php checked($this->get_option('new_comment_notification'), 1) ?>> <?php _e('New comment', $this->plugin_key) ?>

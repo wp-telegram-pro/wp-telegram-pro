@@ -74,6 +74,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'IThemesSecurityWPTP',
             'path' => 'better-wp-security/better-wp-security.php'
         ),
+        'all-in-one-wp-security-and-firewall' => array(
+            'class' => 'AllInOneWPSecurityFirewallWPTP',
+            'path' => 'all-in-one-wp-security-and-firewall/wp-security.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;
