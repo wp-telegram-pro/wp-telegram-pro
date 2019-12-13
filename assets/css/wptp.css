@@ -21,6 +21,10 @@
     margin-right: 15px;
 }
 
+.wptp-wrap strong {
+    font-weight: 700;
+}
+
 .wptp-wrap select {
     min-width: 300px;
 }

@@ -358,4 +358,12 @@ class HelpersWPTP
         $output = trim($output);
         return $output;
     }
+
+    public static function removeInnerTextTag($string, $tags = [])
+    {
+        foreach ($tags as $tag)
+            $string = preg_replace('#(<' . $tag . '.*?>).*?(</' . $tag . '>)#', '$1$2', $string);
+
+        return $string;
+    }
 }

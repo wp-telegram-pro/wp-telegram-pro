@@ -33,6 +33,8 @@ class WordPressWPTP extends WPTelegramPro
             add_action('wp_login', [$this, 'user_login_notification'], 10, 2);
         if ($this->get_option('admin_register_new_user_notification', false))
             add_action('user_register', array($this, 'admin_register_new_user_notification'));
+        if ($this->get_option('admin_php_error_notification', false))
+            add_filter('recovery_mode_email', [$this, 'admin_recovery_mode_notification'], 1000, 2);
     }
 
     function user_disconnect()
@@ -249,6 +251,29 @@ class WordPressWPTP extends WPTelegramPro
                     $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
             }
         }
+    }
+
+    /**
+     * Send notification to admin users when has been a PHP error
+     *
+     * @param array $email Used to build wp_mail().
+     * @param string $url URL to enter recovery mode.
+     * @return array
+     */
+    function admin_recovery_mode_notification($email, $url)
+    {
+        $text = $email['message'];
+        $text = str_replace([__('emailed'), __('email')], __('notification', $this->plugin_key), $text);
+        $text = apply_filters('wptelegrampro_admin_recovery_mode_notification_text', $text, $email, $url);
+
+        $users = $this->get_users();
+        if ($users) {
+            $this->telegram->disable_web_page_preview(true);
+            foreach ($users as $user)
+                $this->telegram->sendMessage($text, null, $user['user_id']);
+        }
+
+        return $email;
     }
 
     /**
@@ -643,6 +668,9 @@ class WordPressWPTP extends WPTelegramPro
                         <?php _e('Administrators', $this->plugin_key); ?>
                     </td>
                     <td>
+                        <label><input type="checkbox" value="1" id="admin_php_error_notification"
+                                      name="admin_php_error_notification" <?php checked($this->get_option('admin_php_error_notification'), 1) ?>> <?php _e('<strong>Try</strong> to send recovery mode notification', $this->plugin_key) ?>
+                        </label><br>
                         <label><input type="checkbox" value="1" id="new_comment_notification"
                                       name="new_comment_notification" <?php checked($this->get_option('new_comment_notification'), 1) ?>> <?php _e('New comment', $this->plugin_key) ?>
                         </label><br>
