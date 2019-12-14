@@ -27,8 +27,8 @@ class WordPressWPTP extends WPTelegramPro
 
         if ($this->get_option('new_comment_notification', false))
             add_action('comment_post', array($this, 'comment_notification'), 10, 2);
-        if ($this->get_option('admin_user_login_notification', false))
-            add_action('wp_login', [$this, 'admin_user_login_notification'], 10, 2);
+        if ($this->get_option('admin_users_login_notification', false))
+            add_action('wp_login', [$this, 'admin_users_login_notification'], 10, 2);
         if ($this->get_option('user_login_notification', false))
             add_action('wp_login', [$this, 'user_login_notification'], 10, 2);
         if ($this->get_option('admin_register_new_user_notification', false))
@@ -217,7 +217,7 @@ class WordPressWPTP extends WPTelegramPro
      * @param string $user_login Username.
      * @param WP_User $user WP_User object of the logged-in user.
      */
-    function admin_user_login_notification($user_login, $user)
+    function admin_users_login_notification($user_login, $user)
     {
         $user_role = $this->get_user_role($user);
         if (!$user_role || $user_role == 'administrator') return;
@@ -245,7 +245,7 @@ class WordPressWPTP extends WPTelegramPro
 
             $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
 
-            $text = apply_filters('wptelegrampro_admin_user_login_notification_text', $text, $user_login, $user);
+            $text = apply_filters('wptelegrampro_admin_users_login_notification_text', $text, $user_login, $user);
 
             if ($text) {
                 $this->telegram->disable_web_page_preview(true);
@@ -700,7 +700,7 @@ class WordPressWPTP extends WPTelegramPro
                     </td>
                     <td>
                         <label><input type="checkbox" value="1" id="admin_php_error_notification"
-                                      name="admin_php_error_notification" <?php checked($this->get_option('admin_php_error_notification'), 1) ?>> <?php _e('<strong>Try</strong> to send recovery mode notification', $this->plugin_key) ?>
+                                      name="admin_php_error_notification" <?php checked($this->get_option('admin_php_error_notification'), 1) ?>> <?php _e('Trying to send recovery mode (PHP errors) notification', $this->plugin_key) ?>
                         </label><br>
                         <label><input type="checkbox" value="1" id="admin_auto_core_update_notification"
                                       name="admin_auto_core_update_notification" <?php checked($this->get_option('admin_auto_core_update_notification'), 1) ?>> <?php _e('Auto core update', $this->plugin_key) ?>
@@ -708,8 +708,8 @@ class WordPressWPTP extends WPTelegramPro
                         <label><input type="checkbox" value="1" id="new_comment_notification"
                                       name="new_comment_notification" <?php checked($this->get_option('new_comment_notification'), 1) ?>> <?php _e('New comment', $this->plugin_key) ?>
                         </label><br>
-                        <label><input type="checkbox" value="1" id="admin_user_login_notification"
-                                      name="admin_user_login_notification" <?php checked($this->get_option('admin_user_login_notification'), 1) ?>> <?php _e('User login', $this->plugin_key) ?>
+                        <label><input type="checkbox" value="1" id="admin_users_login_notification"
+                                      name="admin_users_login_notification" <?php checked($this->get_option('admin_users_login_notification'), 1) ?>> <?php _e('Users login', $this->plugin_key) ?>
                         </label><br>
                         <label><input type="checkbox" value="1" id="admin_register_new_user_notification"
                                       name="admin_register_new_user_notification" <?php checked($this->get_option('admin_register_new_user_notification'), 1) ?>> <?php _e('Register a new user', $this->plugin_key) ?>

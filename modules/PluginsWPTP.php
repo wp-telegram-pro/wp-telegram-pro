@@ -78,6 +78,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'AllInOneWPSecurityFirewallWPTP',
             'path' => 'all-in-one-wp-security-and-firewall/wp-security.php'
         ),
+        'wp-cerber' => array(
+            'class' => 'WPCerberSecurityWPTP',
+            'path' => 'wp-cerber/wp-cerber.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;

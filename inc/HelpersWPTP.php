@@ -341,10 +341,10 @@ class HelpersWPTP
         return ucwords(implode(' ', $words));
     }
 
-    public static function secondsToHumanTime($seconds, $labels = [])
+    public static function secondsToHumanTime($seconds, $labels = [], $separator = ', ')
     {
         $seconds = intval($seconds);
-        $times = [];
+        $times = $times_ = [];
         $output = '';
         $times['days'] = floor($seconds / (3600 * 24));
         $times['hours'] = floor($seconds / 3600) % 24;
@@ -353,9 +353,9 @@ class HelpersWPTP
 
         foreach ($times as $key => $value) {
             if ($value > 0)
-                $output .= $value . ' ' . (isset($labels[$key]) ? $labels[$key] : ucwords($key)) . ', ';
+                $times_[] = $value . ' ' . (isset($labels[$key]) ? $labels[$key] : ucwords($key));
         }
-        $output = trim($output);
+        $output = implode($separator, $times_);
         return $output;
     }
 
@@ -365,5 +365,10 @@ class HelpersWPTP
             $string = preg_replace('#(<' . $tag . '.*?>).*?(</' . $tag . '>)#', '$1$2', $string);
 
         return $string;
+    }
+
+    public static function br2nl($string)
+    {
+        return preg_replace('#<br\s*/?>#i', "\n", $string);
     }
 }

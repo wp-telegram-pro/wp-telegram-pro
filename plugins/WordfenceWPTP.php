@@ -84,7 +84,7 @@ class WordfenceWPTP extends WPTelegramPro
     }
 
     /**
-     * Send notification to admin users when add subscriber to WP SMS
+     * Send notification to admin users when new security events happened
      *
      * @param string $event Event name
      * @param array $data Data
@@ -134,13 +134,18 @@ class WordfenceWPTP extends WPTelegramPro
 
         $users = $this->get_users();
         if ($users) {
-            $keyboard = array(array(
-                array(
-                    'text' => __('Wordfence Dashboard', $this->plugin_key),
-                    'url' => admin_url('admin.php?page=Wordfence')
-                )
-            ));
-            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+            if ($event == 'wordfenceDeactivated') {
+                $keyboards = null;
+
+            } else {
+                $keyboard = array(array(
+                    array(
+                        'text' => __('Wordfence Dashboard', $this->plugin_key),
+                        'url' => admin_url('admin.php?page=Wordfence')
+                    )
+                ));
+                $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+            }
 
             foreach ($users as $user) {
                 $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
