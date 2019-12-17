@@ -345,7 +345,6 @@ class HelpersWPTP
     {
         $seconds = intval($seconds);
         $times = $times_ = [];
-        $output = '';
         $times['days'] = floor($seconds / (3600 * 24));
         $times['hours'] = floor($seconds / 3600) % 24;
         $times['minutes'] = floor(($seconds / 60) % 60);

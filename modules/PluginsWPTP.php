@@ -58,6 +58,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'HTMLFormsWPTP',
             'path' => 'html-forms/html-forms.php'
         ),
+        'forminator' => array(
+            'class' => 'ForminatorWPTP',
+            'path' => 'forminator/forminator.php'
+        ),
         'wp-sms' => array(
             'class' => 'WPSMSWPTP',
             'path' => 'wp-sms/wp-sms.php'
@@ -78,7 +82,7 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'AllInOneWPSecurityFirewallWPTP',
             'path' => 'all-in-one-wp-security-and-firewall/wp-security.php'
         ),
-        'wp-cerber' => array(
+        'wp-cerber-security' => array(
             'class' => 'WPCerberSecurityWPTP',
             'path' => 'wp-cerber/wp-cerber.php'
         ),

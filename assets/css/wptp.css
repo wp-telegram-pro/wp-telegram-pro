@@ -140,6 +140,7 @@ body.rtl .wptp-wrap th {
     cursor: pointer;
     width: 31px;
     height: 31px;
+    line-height: 1em;
 }
 
 .wptp-metabox .dashicons {
