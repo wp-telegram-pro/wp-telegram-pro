@@ -629,7 +629,7 @@ class ChannelWPTP extends WPTelegramPro
                                    value="1" <?php checked($this->get_option('quick_send_to_channel'), 1) ?>
                                    name="quick_send_to_channel"> <?php _e('Active', $this->plugin_key) ?>
                         </label><br>
-                        <span class="description"><?php _e('Display Telegram column in admin post type archive (Required metabox display access).', $this->plugin_key) ?></span>
+                        <span class="description"><?php _e('Display Telegram column in admin post type archive (Requires the metabox display access).', $this->plugin_key) ?></span>
                     </td>
                 </tr>
             </table>
