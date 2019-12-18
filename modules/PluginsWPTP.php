@@ -86,6 +86,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'WPCerberSecurityWPTP',
             'path' => 'wp-cerber/wp-cerber.php'
         ),
+        'backwpup' => array(
+            'class' => 'BackWPupWPTP',
+            'path' => 'backwpup/backwpup.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;

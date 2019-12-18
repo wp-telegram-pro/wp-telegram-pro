@@ -191,6 +191,7 @@ body.rtl .wptp-wrap th {
 .wptp-wrap .title-with-icon .pg-icon {
     font-size: 1.2em;
     margin-right: 7px;
+    line-height: 1em;
 }
 
 .wptp-wrap div.wp-menu-image::before {

@@ -785,8 +785,8 @@ class WPTelegramPro
     function dropdown_categories($name, $taxonomy, $selected = array())
     {
         $select = wp_dropdown_categories(array(
-            'name' => $name,
-            'id' => $name,
+            'name' => 'pa_city',
+            'id' => 'pa_city',
             'show_option_none' => __('- Category Select -', $this->plugin_key),
             'option_none_value' => '-1',
             'taxonomy' => $taxonomy,

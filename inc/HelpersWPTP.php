@@ -366,8 +366,17 @@ class HelpersWPTP
         return $string;
     }
 
-    public static function br2nl($string)
+    public static function br2nl($string, $removeMultiple = false)
     {
-        return preg_replace('#<br\s*/?>#i', "\n", $string);
+        $string = preg_replace('#<br\s*/?>#i', "\n", $string);
+        if ($removeMultiple) {
+            //$string = preg_replace('/\n\r+/', "\n", $string);
+            //$string = preg_replace("/[" . chr(10) . "]+/", "\n", $string);
+            //$string = preg_replace("/[\r\n]+/", "\n", $string);
+            $string = preg_replace('/[ \t]+/', ' ', preg_replace('/\s*$^\s*/m', "\n", $string));
+            //$string = preg_replace('/\s+/', ' ', $string);
+            //$string = preg_replace('/([\s])\1+/', ' ', $string);
+        }
+        return $string;
     }
 }
