@@ -267,9 +267,6 @@ class ChannelWPTP extends WPTelegramPro
             add_filter('excerpt_length', function () use ($excerpt_length) {
                 return $excerpt_length;
             });
-            add_filter('excerpt_more', function () {
-                return '...';
-            });
 
             $disable_web_page_preview = isset($options['channel_disable_web_page_preview'][$index]);
             //$image_position = $options['channel_image_position'][$index];

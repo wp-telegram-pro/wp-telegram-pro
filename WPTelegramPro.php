@@ -75,7 +75,7 @@ class WPTelegramPro
             add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 100);
             add_action('wptelegrampro_helps_content', [$this, 'helps_command_list'], 1);
             add_action('wptelegrampro_settings_content', [$this, 'about_settings_content']);
-            add_filter('wptelegrampro_post_info', [$this, 'fix_post_info'], 1000, 3);
+            add_filter('wptelegrampro_post_info', [$this, 'fix_post_info'], 1000, 9999);
         }
     }
 
@@ -474,6 +474,8 @@ class WPTelegramPro
 
         $c = 0;
         if ($query_->have_posts()) {
+            add_filter('excerpt_more', 'WPTelegramPro::excerpt_more');
+
             while ($query_->have_posts()) {
                 $query_->the_post();
                 $post_id = get_the_ID();
@@ -532,7 +534,7 @@ class WPTelegramPro
         return $items;
     }
 
-    function fix_post_info($item, $product_id, $query)
+    function fix_post_info($item, $post_id, $query)
     {
         $item['excerpt'] = do_shortcode($item['excerpt']);
         $item['excerpt'] = HelpersWPTP::stripShortCodes($item['excerpt']);
@@ -540,6 +542,10 @@ class WPTelegramPro
 
         $item['content'] = do_shortcode($item['content']);
         $item['content'] = HelpersWPTP::stripShortCodes($item['content']);
+
+        foreach ($item as $key => $value)
+            if (is_string($value))
+                $item[$key] = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
 
         return $item;
     }
@@ -1018,6 +1024,11 @@ class WPTelegramPro
         $user_ids = implode(',', $user_ids);
         $users = $wpdb->get_results("SELECT user_id,wp_id FROM {$this->db_users_table} WHERE wp_id IN ({$user_ids})", ARRAY_A);
         return $users;
+    }
+
+    public static function excerpt_more($more)
+    {
+        return ' ...';
     }
 
     static function install()
