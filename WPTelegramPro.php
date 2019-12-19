@@ -98,7 +98,10 @@ class WPTelegramPro
             'categories' => __('Categories', $this->plugin_key),
             'detail' => __('Detail', $this->plugin_key),
             'more' => __('More', $this->plugin_key),
-            'ssl_error' => __('The plugin requires SSL in the domain of your website!', $this->plugin_key)
+            'ssl_error' => __('The plugin requires SSL in the domain of your website!', $this->plugin_key),
+            'profile_success_connect' => __('Welcome, Your Telegram account is successfully connected to the website.', $this->plugin_key),
+            'profile_disconnect' => __('Your profile was successfully disconnected from Telegram account.', $this->plugin_key),
+            'user_disconnect' => __('This profile was successfully disconnected from Telegram account.', $this->plugin_key),
         );
         $words = array_merge($words, $new_words);
 
@@ -203,8 +206,16 @@ class WPTelegramPro
                 $user_id = get_current_user_id();
             $nonce = $_GET['user-disconnect-wptp'];
             $action = date("dH") . $user_id;
-            if (wp_verify_nonce($nonce, $action))
-                return $this->update_user(array('wp_id' => null), array('wp_id' => $user_id));
+            if (wp_verify_nonce($nonce, $action)) {
+                $bot_user = $this->set_user(array('wp_id' => $user_id));
+                $update = $this->update_user(array('wp_id' => null), array('wp_id' => $user_id));
+                if ($update && $bot_user) {
+                    $disconnect_message = $this->get_option('telegram_connectivity_disconnect_message', $this->words['profile_disconnect']);
+                    if (!empty($disconnect_message))
+                        $this->telegram->sendMessage($disconnect_message, null, $bot_user['user_id']);
+                }
+                return $update;
+            }
         }
         return false;
     }
@@ -220,7 +231,9 @@ class WPTelegramPro
             $user_id = $this->find_user_by_code($code);
             if ($user_id) {
                 $this->update_user(array('wp_id' => $user_id));
-                $this->telegram->sendMessage(__('Welcome, Your Telegram account is successfully connected to the website.', $this->plugin_key));
+                $success_connect_message = $this->get_option('telegram_connectivity_success_connect_message', $this->words['profile_success_connect']);
+                if (!empty($success_connect_message))
+                    $this->telegram->sendMessage($success_connect_message);
             }
         }
     }
@@ -229,7 +242,7 @@ class WPTelegramPro
     {
         $allow_status = array('search');
         $user_text = trim($user_text, '/');
-        $this->words = $words = $words = apply_filters('wptelegrampro_words', $this->words);
+        $this->words = $words = apply_filters('wptelegrampro_words', $this->words);
         $words = array_flip($words);
         if (isset($words[$user_text])) {
             if (in_array($words[$user_text], $allow_status))

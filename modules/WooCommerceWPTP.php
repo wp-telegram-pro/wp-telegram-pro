@@ -358,8 +358,11 @@ class WooCommerceWPTP extends WPTelegramPro
 
     function user_disconnect()
     {
-        if (isset($_GET['user-disconnect-wptp']) && $this->disconnect_telegram_wp_user())
-            wc_add_notice(__('Your profile was successfully disconnected from Telegram account.', $this->plugin_key));
+        if (isset($_GET['user-disconnect-wptp']) && $this->disconnect_telegram_wp_user()) {
+            $disconnect_message = $this->get_option('telegram_connectivity_disconnect_message', $this->words['profile_disconnect']);
+            if (!empty($disconnect_message))
+                wc_add_notice($disconnect_message);
+        }
     }
 
     function woocommerce_edit_account()
@@ -1378,7 +1381,9 @@ class WooCommerceWPTP extends WPTelegramPro
             elseif (empty($user['wp_id'])) {
                 $wp_id = get_current_user_id();
                 $this->update_user(array('wp_id' => $wp_id));
-                $this->telegram->sendMessage(__('Welcome, Your Telegram account is successfully connected to the store.', $this->plugin_key), null, $user['user_id']);
+                $success_connect_message = $this->get_option('telegram_connectivity_success_connect_message', $this->words['profile_success_connect']);
+                if (!empty($success_connect_message))
+                    $this->telegram->sendMessage($success_connect_message, null, $user['user_id']);
             }
             $cart_item_id = false;
             $cart = $this->get_cart();

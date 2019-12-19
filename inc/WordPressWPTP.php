@@ -8,6 +8,7 @@ class WordPressWPTP extends WPTelegramPro
     public function __construct()
     {
         parent::__construct(true);
+        $this->words = apply_filters('wptelegrampro_words', $this->words);
 
         add_filter('wptelegrampro_patterns_tags', [$this, 'patterns_tags']);
         add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 10);
@@ -41,10 +42,16 @@ class WordPressWPTP extends WPTelegramPro
 
     function user_disconnect()
     {
-        if (isset($_GET['user-disconnect-wptp']) && $this->disconnect_telegram_wp_user(isset($_GET['user_id']) ? $_GET['user_id'] : null))
-            echo '<div class="notice notice-info is-dismissible">
-          <p>' . __('This profile was successfully disconnected from Telegram account.', $this->plugin_key) . '</p>
-         </div>';
+        if (isset($_GET['user-disconnect-wptp']) && $this->disconnect_telegram_wp_user(isset($_GET['user_id']) ? $_GET['user_id'] : null)) {
+            if (isset($_GET['user_id']) && get_current_user_id() != $_GET['user_id'])
+                $disconnect_message = $this->words['user_disconnect'];
+            else
+                $disconnect_message = $this->get_option('telegram_connectivity_disconnect_message', $this->words['profile_disconnect']);
+            if (!empty($disconnect_message))
+                echo '<div class="notice notice-info is-dismissible">
+                      <p>' . $disconnect_message . '</p>
+                     </div>';
+        }
     }
 
     function admin_bar_render()
@@ -668,11 +675,11 @@ class WordPressWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
-                        <label for="start_command"><?php _e('Start Command<br>(Welcome Message)', $this->plugin_key) ?></label>
+                        <label for="start_command"><?php _e('Start Command<br>(Welcome Message)', $this->plugin_key); ?></label>
                     </td>
                     <td>
                         <textarea name="start_command" id="start_command" cols="50" class="emoji"
-                                  rows="4"><?php echo $this->get_option('start_command') ?></textarea>
+                                  rows="4"><?php echo $this->get_option('start_command', sprintf(__('Welcome to %s', $this->plugin_key), get_bloginfo('name'))) ?></textarea>
                     </td>
                 </tr>
                 <tr>
@@ -689,6 +696,26 @@ class WordPressWPTP extends WPTelegramPro
                         <span class="description">
                             <?php _e('Enable the ability to connect the WordPress profile to the Telegram account. This feature is displayed in the user profile, Admin bar, and WooCommerce account details.', $this->plugin_key) ?>
                         </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="telegram_connectivity_success_connect_message"><?php _e('Successful connect message', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <textarea name="telegram_connectivity_success_connect_message"
+                                  id="telegram_connectivity_success_connect_message" cols="50" class="emoji"
+                                  rows="2"><?php echo $this->get_option('telegram_connectivity_success_connect_message', $this->words['profile_success_connect']) ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="telegram_connectivity_disconnect_message"><?php _e('Disconnect message', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <textarea name="telegram_connectivity_disconnect_message"
+                                  id="telegram_connectivity_disconnect_message" cols="50" class="emoji"
+                                  rows="2"><?php echo $this->get_option('telegram_connectivity_disconnect_message', $this->words['profile_disconnect']) ?></textarea>
                     </td>
                 </tr>
                 <tr>

@@ -75,7 +75,7 @@ class WPUserAvatarWPTP extends WPTelegramPro
         if ($users) {
             $keyboard = array(array(
                 array(
-                    'text' => __('User profile', $this->plugin_key),
+                    'text' => __('User Profile', $this->plugin_key),
                     'url' => admin_url('user-edit.php?user_id=' . $user_id)
                 )
             ));
