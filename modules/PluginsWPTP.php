@@ -94,6 +94,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'WPStatisticsWPTP',
             'path' => 'wp-statistics/wp-statistics.php'
         ),
+        'wp-user-avatar' => array(
+            'class' => 'WPUserAvatarWPTP',
+            'path' => 'wp-user-avatar/wp-user-avatar.php'
+        ),
     ),
         $currentActivePlugins = array();
     public static $instance = null;

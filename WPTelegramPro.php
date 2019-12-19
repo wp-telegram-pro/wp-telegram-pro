@@ -61,15 +61,17 @@ class WPTelegramPro
         add_filter('wptelegrampro_words', [$this, 'words']);
 
         if (!$bypass) {
-            add_action('wptelegrampro_keyboard_response', array($this, 'change_user_status'), 1);
-            add_action('wptelegrampro_keyboard_response', array($this, 'connect_telegram_wp_user'), 1);
-            add_filter('wptelegrampro_after_settings_update_message', array($this, 'after_settings_updated_message'), 10);
-            add_action('wp_login', array($this, 'check_user_id'));
-            add_action('user_register', array($this, 'check_user_id'));
-            add_action('admin_menu', array($this, 'menu'));
-            add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
-            add_action('wp_ajax_bot_info_wptp', array($this, 'get_bot_info'));
-            add_filter('cron_schedules', array($this, 'add_every_minutes'));
+            add_action('wptelegrampro_keyboard_response', [$this, 'change_user_status'], 1);
+            add_action('wptelegrampro_keyboard_response', [$this, 'connect_telegram_wp_user'], 1);
+            add_filter('wptelegrampro_after_settings_update_message', [$this, 'after_settings_updated_message'], 10);
+            add_action('wp_login', [$this, 'check_user_id']);
+            add_action('user_register', [$this, 'check_user_id']);
+            add_action('admin_menu', [$this, 'menu']);
+            add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
+            add_action('wp_ajax_bot_info_wptp', [$this, 'get_bot_info']);
+            add_filter('cron_schedules', [$this, 'add_every_minutes']);
+            add_filter('plugin_action_links', [$this, 'plugin_action_links'], 10, 2);
+            add_filter('plugin_row_meta', [$this, 'plugin_row_meta'], 10, 4);
 
             add_filter('wptelegrampro_settings_update_message', [$this, 'check_ssl'], 100);
             add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 100);
@@ -991,7 +993,7 @@ class WPTelegramPro
     /**
      * Get user role
      *
-     * @param WP_User $user WP_User object of the logged-in user.
+     * @param WP_User|int $user WP_User object of the logged-in user or User ID.
      * @return string|bool Return user role name or false
      */
     function get_user_role($user = null)
@@ -999,6 +1001,10 @@ class WPTelegramPro
         if ($user != null || is_user_logged_in()) {
             if ($user == null)
                 $user = wp_get_current_user();
+            elseif (is_numeric($user))
+                $user = get_userdata($user);
+            else
+                return false;
             $roles = ( array )$user->roles;
             return $roles[0];
         } else
@@ -1029,6 +1035,43 @@ class WPTelegramPro
     public static function excerpt_more($more)
     {
         return ' ...';
+    }
+
+    /**
+     * Add action links
+     *
+     * @param array $links Links
+     * @param string $plugin_file Plugin file
+     * @return array
+     */
+    public function plugin_action_links($links, $plugin_file)
+    {
+        if ($plugin_file == plugin_basename(__FILE__)) {
+            array_unshift($links, '<a href="' . admin_url('admin.php?page=wp-telegram-pro-debugs') . '">' . __('Debugs', $this->plugin_key) . '</a>');
+            array_unshift($links, '<a href="' . admin_url('admin.php?page=wp-telegram-pro-helps') . '">' . __('Helps', $this->plugin_key) . '</a>');
+            array_unshift($links, '<a href="' . admin_url('admin.php?page=wp-telegram-pro') . '">' . __('Settings', $this->plugin_key) . '</a>');
+        }
+
+        return $links;
+    }
+
+    /**
+     * Add more links to plugin row meta
+     *
+     * @access  public
+     * @param array $links_array An array of the plugin's metadata
+     * @param string $plugin_file Path to the plugin file
+     * @param array $plugin_data An array of plugin data
+     * @param string $status Status of the plugin
+     * @return  array       $links_array
+     */
+    function plugin_row_meta($links_array, $plugin_file, $plugin_data, $status)
+    {
+        if ($plugin_file == plugin_basename(__FILE__)) {
+            $links_array[] = '<a href="https://t.me/wptelegrampro" target="_blank">' . __('Telegram Channel', $this->plugin_key) . '</a>';
+        }
+
+        return $links_array;
     }
 
     static function install()
