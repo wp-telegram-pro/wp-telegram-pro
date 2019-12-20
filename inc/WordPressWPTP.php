@@ -200,7 +200,7 @@ class WordPressWPTP extends WPTelegramPro
             $userIP = HelpersWPTP::getUserIP();
             $text = "*" . sprintf(__('Dear %s', $this->plugin_key), $user->display_name) . "*\n";
             /* translators: 1: User name 2: Date 3: Time 4: IP address */
-            $text .= sprintf(__('Your successful login to %1$s account on date %2$s at %3$s done with %4$s IP address.', $this->plugin_key), $user_login, HelpersWPTP::localeDate(null, "l j F Y"), HelpersWPTP::localeDate(null, "H:i"), "[{$userIP}](http://{$userIP}.ipaddress.com)");
+            $text .= sprintf(__('Your successful login to %1$s account on date %2$s at %3$s with %4$s IP address done.', $this->plugin_key), $user_login, HelpersWPTP::localeDate(null, "l j F Y"), HelpersWPTP::localeDate(null, "H:i"), "[{$userIP}](http://{$userIP}.ipaddress.com)");
 
             $text = apply_filters('wptelegrampro_user_login_notification_text', $text, $user_login, $user);
 

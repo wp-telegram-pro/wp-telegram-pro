@@ -94,6 +94,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'BackWPupWPTP',
             'path' => 'backwpup/backwpup.php'
         ),
+        'backupwordpress' => array(
+            'class' => 'BackUpWordPressWPTP',
+            'path' => 'backupwordpress/backupwordpress.php'
+        ),
         'wp-statistics' => array(
             'class' => 'WPStatisticsWPTP',
             'path' => 'wp-statistics/wp-statistics.php'
@@ -141,6 +145,11 @@ class PluginsWPTP extends WPTelegramPro
     {
         foreach ($this->plugins as $plugin => $info)
             if (file_exists(WPTELEGRAMPRO_PLUGINS_DIR . $info['class'] . '.php') && $this->check_plugin_active($info['path'])) {
+                if (isset($info['preneed'])) {
+                    foreach ($info['preneed'] as $file)
+                        if (file_exists(WPTELEGRAMPRO_PLUGINS_DIR . $file))
+                            require_once WPTELEGRAMPRO_PLUGINS_DIR . $file;
+                }
                 $this->currentActivePlugins[] = $plugin;
                 require_once WPTELEGRAMPRO_PLUGINS_DIR . $info['class'] . '.php';
             }

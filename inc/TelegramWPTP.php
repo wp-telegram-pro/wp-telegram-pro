@@ -61,9 +61,11 @@ class TelegramWPTP
 
             if (in_array($method, $this->fileMethod) && isset($parameter['file'])) {
                 $key = $this->file_key = strtolower(str_replace(array('send', 'VideoNote'), array('', 'video_note'), $method));
-                if (filter_var($parameter['file'], FILTER_VALIDATE_URL)) {
+
+                if (filter_var($parameter['file'], FILTER_VALIDATE_URL)) { // is url
                     $parameter[$key] = $parameter['file'];
                     remove_action('http_api_curl', [$this, 'modify_http_api_curl']);
+
                 } else {
                     $parameter[$key] = $this->file = $parameter['file'];
                     $headers['attache_file'] = true;

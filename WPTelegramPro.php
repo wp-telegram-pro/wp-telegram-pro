@@ -21,6 +21,9 @@ if (!function_exists('get_plugin_data'))
 $plugin = get_plugin_data(__FILE__, false, false);
 $version = $plugin['Version'];
 define('WPTELEGRAMPRO_VERSION', $version);
+define('WPTELEGRAMPRO_PLUGIN_KEY', 'wp-telegram-pro');
+define('WPTELEGRAMPRO_MAX_PHOTO_SIZE', '10mb'); //https://core.telegram.org/bots/api#sending-files
+define('WPTELEGRAMPRO_MAX_FILE_SIZE', '50mb');  //https://core.telegram.org/bots/api#sending-files
 define('WPTELEGRAMPRO_BASENAME', plugin_basename(__FILE__));
 define('WPTELEGRAMPRO_DIR', untrailingslashit(plugin_dir_path(__FILE__)));
 define('WPTELEGRAMPRO_URL', untrailingslashit(plugins_url('', __FILE__)));
