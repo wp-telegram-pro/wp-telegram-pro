@@ -79,30 +79,28 @@ class BackUpWordPressWPTP extends WPTelegramPro
 
         } elseif (file_exists($file)) {
             $title = sprintf(__('Backup of %s', $this->plugin_key), $domain);
+            $start_message = sprintf(__('BackUpWordPress has completed a backup of your site %s.', $this->plugin_key) . "\n", home_url());
+            $end_message = sprintf(__('You can download the backup file by clicking the link below:', $this->plugin_key) . "\n\n" . '%2$s' . "\n", $download);
+
             if ($attacheFile) {
                 // If it's larger than the max attachment size limit assume it's not going to be able to send the backup
                 $maxFileSize = wp_convert_hr_to_bytes(WPTELEGRAMPRO_MAX_FILE_SIZE);
                 if (@filesize($file) < $maxFileSize) {
-                    $message = sprintf(__('BackUpWordPress has completed a backup of your site %1$s.', $this->plugin_key) . "\n" .
-                        __('The backup file should be attached to this message.', $this->plugin_key) . "\n" .
-                        __('You can download the backup file by clicking the link below:', $this->plugin_key) . "\n\n" . '%2$s' . "\n", home_url(), $download);
-
+                    $mid_message = __('The backup file should be attached to this message.', $this->plugin_key) . "\n";
+                    $message = $start_message . $mid_message . $end_message;
                     $this->send_notification($title, $message, $backup, $file);
                 }
 
                 // If we didn't send the telegram message notification above then send just the notification
                 $result = $this->telegram->get_last_result();
                 if (isset($result['ok']) && !$result['ok']) {
-                    $message = sprintf(__('BackUpWordPress has completed a backup of your site %1$s.', $this->plugin_key) . "\n" .
-                        __('Unfortunately, the backup file was too large to attach to this message.', $this->plugin_key) . "\n" .
-                        __('You can download the backup file by clicking the link below:', $this->plugin_key) . "\n\n" . '%2$s' . "\n"
-                        , home_url(), $download);
+                    $mid_message = __('Unfortunately, the backup file was too large to attach to this message.', $this->plugin_key) . "\n";
+                    $message = $start_message . $mid_message . $end_message;
                     $this->send_notification($title, $message, $backup);
                 }
+
             } else {
-                $message = sprintf(__('BackUpWordPress has completed a backup of your site %1$s.', $this->plugin_key) . "\n" .
-                    __('You can download the backup file by clicking the link below:', $this->plugin_key) . "\n\n" . '%2$s' . "\n"
-                    , home_url(), $download);
+                $message = $start_message . $end_message;
                 $this->send_notification($title, $message, $backup);
             }
         }
