@@ -80,7 +80,7 @@ class BackUpWordPressWPTP extends WPTelegramPro
         } elseif (file_exists($file)) {
             $title = sprintf(__('Backup of %s', $this->plugin_key), $domain);
             $start_message = sprintf(__('BackUpWordPress has completed a backup of your site %s.', $this->plugin_key) . "\n", home_url());
-            $end_message = sprintf(__('You can download the backup file by clicking the link below:', $this->plugin_key) . "\n\n" . '%2$s' . "\n", $download);
+            $end_message = __('You can download the backup file by clicking the link below:', $this->plugin_key) . "\n\n" . $download . "\n";
 
             if ($attacheFile) {
                 // If it's larger than the max attachment size limit assume it's not going to be able to send the backup
