@@ -74,10 +74,6 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'NewsletterWPTP',
             'path' => 'newsletter/plugin.php'
         ),
-        'wysija-newsletters' => array(
-            'class' => 'MailPoetNewslettersWPTP',
-            'path' => 'wysija-newsletters/index.php'
-        ),
         'wordfence' => array(
             'class' => 'WordfenceWPTP',
             'path' => 'wordfence/wordfence.php'
@@ -90,7 +86,7 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'AllInOneWPSecurityFirewallWPTP',
             'path' => 'all-in-one-wp-security-and-firewall/wp-security.php'
         ),
-        'wp-cerber-security' => array(
+        'wp-cerber' => array(
             'class' => 'WPCerberSecurityWPTP',
             'path' => 'wp-cerber/wp-cerber.php'
         ),
