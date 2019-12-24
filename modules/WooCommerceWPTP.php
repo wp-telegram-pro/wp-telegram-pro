@@ -594,7 +594,7 @@ class WooCommerceWPTP extends WPTelegramPro
                     array(
                         'taxonomy' => 'product_cat',
                         'field' => 'term_id',
-                        'terms' => $this->get_option('exclude_categories', []),
+                        'terms' => $this->get_option('wc_exclude_categories', []),
                         'operator' => 'NOT IN',
                     )
                 )
@@ -605,7 +605,7 @@ class WooCommerceWPTP extends WPTelegramPro
             $this->send_products($products);
 
         } elseif ($user_text == '/product_categories' || $user_text == $words['product_categories']) {
-            $product_category = $this->get_tax_keyboard('product_category', 'product_cat', 'parent', $this->get_option('exclude_display_categories'));
+            $product_category = $this->get_tax_keyboard('product_category', 'product_cat', 'parent', $this->get_option('wc_exclude_display_categories'));
             $keyboard = $this->telegram->keyboard($product_category, 'inline_keyboard');
             $this->telegram->sendMessage($words['product_categories'] . ":", $keyboard);
 
@@ -737,7 +737,7 @@ class WooCommerceWPTP extends WPTelegramPro
                     array(
                         'taxonomy' => 'product_cat',
                         'field' => 'term_id',
-                        'terms' => $this->get_option('exclude_categories'),
+                        'terms' => $this->get_option('wc_exclude_categories'),
                         'operator' => 'NOT IN',
                     )
                 )
@@ -813,15 +813,15 @@ class WooCommerceWPTP extends WPTelegramPro
                 </tr>
                 <tr>
                     <td>
-                        <label for="exclude_categories"><?php _e('Exclude Categories', $this->plugin_key) ?></label>
+                        <label for="wc_exclude_categories"><?php _e('Exclude Categories', $this->plugin_key) ?></label>
                     </td>
-                    <td><?php echo $this->dropdown_categories('exclude_categories[]', 'product_cat', $this->get_option('exclude_categories')); ?></td>
+                    <td><?php echo $this->dropdown_categories('wc_exclude_categories[]', 'product_cat', $this->get_option('wc_exclude_categories'), array('blank' => __('None', $this->plugin_key), 'class' => 'multi_select_none_wptp')); ?></td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="exclude_categories"><?php _e('Exclude Display Categories', $this->plugin_key) ?></label>
+                        <label for="wc_exclude_display_categories"><?php _e('Exclude Display Categories', $this->plugin_key) ?></label>
                     </td>
-                    <td><?php echo $this->dropdown_categories('exclude_display_categories[]', 'product_cat', $this->get_option('exclude_display_categories')); ?></td>
+                    <td><?php echo $this->dropdown_categories('wc_exclude_display_categories[]', 'product_cat', $this->get_option('wc_exclude_display_categories'), array('blank' => __('None', $this->plugin_key), 'class' => 'multi_select_none_wptp')); ?></td>
                 </tr>
                 <tr>
                     <th colspan="2"><?php _e('Notification', $this->plugin_key) ?></th>
@@ -983,7 +983,7 @@ class WooCommerceWPTP extends WPTelegramPro
             //$columns = $this->keyboard_columns($max_lengths, count($product['categories_ids']));
             $terms_r = $terms_d = array();
             $c = 1;
-            $exclude = $this->get_option('exclude_display_categories');
+            $exclude = $this->get_option('wc_exclude_display_categories');
             foreach ($product['categories_ids'] as $category) {
                 if (in_array(intval($category), $exclude))
                     continue;

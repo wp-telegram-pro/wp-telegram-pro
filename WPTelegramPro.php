@@ -80,7 +80,8 @@ class WPTelegramPro
             add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 100);
             add_action('wptelegrampro_helps_content', [$this, 'helps_command_list'], 1);
             add_action('wptelegrampro_settings_content', [$this, 'about_settings_content']);
-            add_filter('wptelegrampro_post_info', [$this, 'fix_post_info'], 1000, 9999);
+            add_filter('wptelegrampro_post_info', [$this, 'fix_post_info'], 9999, 3);
+            add_filter('wptelegrampro_telegram_bot_api_parameters', [$this, 'fix_telegram_text'], 9999);
         }
     }
 
@@ -552,6 +553,17 @@ class WPTelegramPro
         return $items;
     }
 
+    function fix_telegram_text($parameters)
+    {
+        if (isset($parameters['text']))
+            $parameters['text'] = html_entity_decode($parameters['text'], ENT_QUOTES, 'UTF-8');
+
+        if (isset($parameters['caption']))
+            $parameters['caption'] = html_entity_decode($parameters['caption'], ENT_QUOTES, 'UTF-8');
+
+        return $parameters;
+    }
+
     function fix_post_info($item, $post_id, $query)
     {
         $item['excerpt'] = do_shortcode($item['excerpt']);
@@ -806,17 +818,25 @@ class WPTelegramPro
         return $sizes;
     }
 
-    function dropdown_categories($name, $taxonomy, $selected = array())
+    function dropdown_categories($name, $taxonomy, $selected = array(), $args = array())
     {
-        $select = wp_dropdown_categories(array(
-            'name' => 'pa_city',
-            'id' => 'pa_city',
-            'show_option_none' => __('- Category Select -', $this->plugin_key),
-            'option_none_value' => '-1',
+        $argv = array(
+            'name' => $name,
+            'id' => str_replace('[]', '', $name),
             'taxonomy' => $taxonomy,
             'hierarchical' => true,
             'echo' => false
-        ));
+        );
+
+        if (isset($args['class']))
+            $argv['class'] = 'multi_select_none_wptp';
+
+        if (isset($args['blank'])) {
+            $argv['show_option_none'] = '- ' . $args['blank'] . ' -';
+            $argv['option_none_value'] = '';
+        }
+
+        $select = wp_dropdown_categories($argv);
 
         if (is_array($selected))
             foreach ($selected as $sel)

@@ -56,6 +56,8 @@ class TelegramWPTP
         $proxy_status = apply_filters('wptelegrampro_proxy_status', '');
         $url = 'https://api.telegram.org/bot' . $this->token . '/' . $method;
 
+        $parameter = apply_filters('wptelegrampro_telegram_bot_api_parameters', $parameter);
+
         if (!empty($proxy_status)) {
             $headers = array('wptelegrampro' => true);
 

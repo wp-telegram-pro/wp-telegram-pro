@@ -61,8 +61,8 @@ class BackWPupWPTP extends WPTelegramPro
         $message = $args['message'];
         $message = HelpersWPTP::br2nl($message);
         $message = wp_strip_all_tags($message);
-        $message = utf8_decode($message);
-        $message = str_replace(["&#160;", "&hellip;", "&quot;"], [' ', '...', '"'], $message);
+        //$message = utf8_decode($message);
+        //$message = str_replace(["&#160;", "&hellip;", "&quot;"], [' ', '...', '"'], $message);
         $text .= $message . "\n";
 
         $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";

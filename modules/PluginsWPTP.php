@@ -74,6 +74,10 @@ class PluginsWPTP extends WPTelegramPro
             'class' => 'NewsletterWPTP',
             'path' => 'newsletter/plugin.php'
         ),
+        'wysija-newsletters' => array(
+            'class' => 'MailPoetNewslettersWPTP',
+            'path' => 'wysija-newsletters/index.php'
+        ),
         'wordfence' => array(
             'class' => 'WordfenceWPTP',
             'path' => 'wordfence/wordfence.php'
@@ -112,9 +116,14 @@ class PluginsWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        if (!$this->check_plugins()) return;
         parent::__construct(true);
+        //$this->plugins_loaded();
+        add_action('plugins_loaded', [$this, 'plugins_loaded'], 99999);
+    }
 
+    function plugins_loaded()
+    {
+        if (!$this->check_plugins()) return;
         add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 35);
         add_action('wptelegrampro_settings_content', [$this, 'settings_content']);
     }
