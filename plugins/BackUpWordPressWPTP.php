@@ -73,7 +73,7 @@ class BackUpWordPressWPTP extends WPTelegramPro
             $title = sprintf(__('Backup of %s Failed', $this->plugin_key), $domain);
             $message = sprintf(__('BackUpWordPress was unable to backup your site %1$s.', $this->plugin_key) . "\n" .
                 __('Here are the errors that we\'ve encountered:', $this->plugin_key) . "\n" . '%2$s' . "\n" .
-                __('If the errors above look like Martian, you can find further assistance on our support forum: %3$s' . "\n", $this->plugin_key), home_url(), $error_message, 'http://wordpress.org/support/plugin/backupwordpress');
+                __('If the errors above look like Martian, you can find further assistance on our support forum:', $this->plugin_key) . '%3$s' . "\n", home_url(), $error_message, 'http://wordpress.org/support/plugin/backupwordpress');
 
             $this->send_notification($title, $message, $backup);
 

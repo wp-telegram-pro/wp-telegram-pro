@@ -12,12 +12,19 @@ class DebugsWPTP extends WPTelegramPro
         $this->page_title = __('Debugs', $this->plugin_key);
         $this->url = get_bloginfo('url');
         add_action('admin_menu', array($this, 'menu'), 999999);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
 
         add_filter('wptelegrampro_debugs_info', [$this, 'wptp_info'], 1);
         add_filter('wptelegrampro_debugs_info', [$this, 'php_info']);
         add_filter('wptelegrampro_debugs_info', [$this, 'wp_info']);
         add_filter('wptelegrampro_debugs_info', [$this, 'host_info']);
         add_filter('wptelegrampro_debugs_info', [$this, 'ssl_info']);
+    }
+
+    function enqueue_scripts()
+    {
+        wp_enqueue_style('thickbox');
+        wp_enqueue_script('thickbox');
     }
 
     /**
@@ -146,7 +153,25 @@ class DebugsWPTP extends WPTelegramPro
             __('Plugin Version', $this->plugin_key) => WPTELEGRAMPRO_VERSION,
             __('Plugin DB Table Created', $this->plugin_key) => $checkDBTable
         );
+
+        if ($updateInfo = $this->check_update_plugin())
+            $debugs[$this->plugin_name][__('Update', $this->plugin_key)] = '<a href="' . $updateInfo['updateDetailURL'] . '" class="thickbox open-plugin-details-modal">' . __('Update to new version', $this->plugin_key) . ' ' . $updateInfo['newVersion'] . '</a>';
+
         return $debugs;
+    }
+
+    protected function check_update_plugin($file = null)
+    {
+        if ($file == null) $file = 'wp-telegram-pro/WPTelegramPro.php';
+        $plugin_updates = get_plugin_updates();
+        if (in_array($file, array_keys($plugin_updates)))
+            return array(
+                'name' => $plugin_updates[$file]->Name,
+                'newVersion' => $plugin_updates[$file]->update->new_version,
+                'updateURL' => wp_nonce_url(self_admin_url('update.php?action=upgrade-plugin&plugin=') . $file, 'upgrade-plugin_' . $file),
+                'updateDetailURL' => self_admin_url('plugin-install.php?tab=plugin-information&plugin=' . $plugin_updates[$file]->update->slug . '&section=changelog&TB_iframe=true&width=772&height=367')
+            );
+        return false;
     }
 
     /**
