@@ -14,8 +14,8 @@ class WPCerberSecurityWPTP extends WPTelegramPro
         $this->events = array(
             'citadel' => __('Citadel mode is activated', $this->plugin_key),
             'lockout' => __('Number of lockouts is increasing', $this->plugin_key),
-            'new_version' => __('A new version of WP Cerber is available to install', $this->plugin_key),
-            'shutdown' => __('The WP Cerber security plugin has been deactivated', $this->plugin_key),
+            'new_version' => __('A new version of WP Cerber Security is available to install', $this->plugin_key),
+            'shutdown' => __('The WP Cerber Security plugin has been deactivated', $this->plugin_key),
             'newlurl' => __('New Custom login URL', $this->plugin_key),
             'subs' => __('A new activity has been recorded', $this->plugin_key),
             'report' => __('Weekly report', $this->plugin_key),
@@ -42,7 +42,7 @@ class WPCerberSecurityWPTP extends WPTelegramPro
                     }
                 </style>
                 <div class="dashicons-before dashicons-shield cerber-security-icon"><br></div>
-                <?php _e('WP Cerber Security', $this->plugin_key) ?>
+                <span>WP Cerber Security</span>
             </th>
         </tr>
         <tr>

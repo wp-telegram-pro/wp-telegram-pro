@@ -23,7 +23,7 @@ class NinjaFormsWPTP extends WPTelegramPro
         <tr>
             <th colspan="2" class="title-with-icon">
                 <span class="dashicons-before dashicons-feedback"></span>
-                <?php _e('Ninja Forms', $this->plugin_key) ?>
+                <span>Ninja Forms</span>
             </th>
         </tr>
         <tr>

@@ -62,7 +62,7 @@ class WordfenceWPTP extends WPTelegramPro
                               style="fill:#333;fill-rule:nonzero;"/>
                     </g>
                 </svg>
-                <?php _e('Wordfence Security', $this->plugin_key) ?>
+                <span>Wordfence Security</span>
             </th>
         </tr>
         <tr>
@@ -163,7 +163,7 @@ class WordfenceWPTP extends WPTelegramPro
             'duration' => __('Duration', $this->plugin_key),
             'email' => __('Email', $this->plugin_key),
             'resetPasswordURL' => __('Reset Password URL', $this->plugin_key),
-            'supportURL' => __('support URL', $this->plugin_key),
+            'supportURL' => __('Support URL', $this->plugin_key),
             'attackCount' => __('Attack Count', $this->plugin_key),
             'attackTable' => __('Attack Table', $this->plugin_key)
         );

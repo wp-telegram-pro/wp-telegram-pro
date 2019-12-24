@@ -23,7 +23,7 @@ class WPSMSWPTP extends WPTelegramPro
         <tr>
             <th colspan="2" class="title-with-icon">
                 <div class="dashicons-before dashicons-email-alt"></div>
-                <?php _e('WP SMS', $this->plugin_key) ?>
+                <span>WP SMS</span>
             </th>
         </tr>
         <tr>

@@ -29,7 +29,7 @@ class BackWPupWPTP extends WPTelegramPro
                     }
                 </style>
                 <div class="backwpup-icon pg-icon"></div>
-                <span><?php _e('BackWPup', $this->plugin_key) ?></span>
+                <span>BackWPup</span>
             </th>
         </tr>
         <tr>

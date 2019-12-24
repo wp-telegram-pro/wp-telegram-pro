@@ -31,7 +31,7 @@ class MailchimpForWPWPTP extends WPTelegramPro
                               id="path5822"/>
                     </g>
                 </svg>
-                <?php _e('Mailchimp for WordPress', $this->plugin_key) ?>
+                <span>Mailchimp for WordPress</span>
             </th>
         </tr>
         <tr>

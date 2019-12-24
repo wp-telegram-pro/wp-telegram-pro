@@ -28,7 +28,7 @@ class BackUpWordPressWPTP extends WPTelegramPro
         ?>
         <tr>
             <th colspan="2">
-                <span><?php _e('BackUpWordPress', $this->plugin_key) ?></span>
+                <span>BackUpWordPress</span>
             </th>
         </tr>
         <tr>

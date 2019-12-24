@@ -25,7 +25,7 @@ class NewsletterWPTP extends WPTelegramPro
             <th colspan="2" class="title-with-icon">
                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9JREFUeNrslFFqwkAQhmd3A1bENkfIUXoE3wW1pX22N4iewwfbk+hNfPZNMSVg3J3+k2ZhESVWfWsGPggzsx+T2RCiJu4SPHzvgfiG8wkYybOucmOwQnJyhWguZ8FQclFQlwlTNEhhqr5mn+dExeAt1kp9SP9xLTrRn4A5xNL8AvHSF7b919hAdGAeGwzA8opKkaoRhuIFxCKcrvdFUjCnDnlAgql2pitxndDHs/AUGdpZR44ZQIjzVv1KTXAZ0aUX8KB1Se4cZRBbiEXk5Zr/KPTRhrQFvq2lXMTBlFcJ/bfWNYY6IDvYcmqrbhCG4kfstsNa9rtpfhH/JX4EGABR/Fz7GiR5NAAAAABJRU5ErkJggg=="
                      class="pg-icon">
-                <span><?php _e('Newsletter', $this->plugin_key) ?></span>
+                <span>Newsletter</span>
             </th>
         </tr>
         <tr>

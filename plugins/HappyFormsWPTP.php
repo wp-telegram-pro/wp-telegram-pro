@@ -23,7 +23,7 @@ class HappyFormsWPTP extends WPTelegramPro
         <tr>
             <th colspan="2" class="title-with-icon">
                 <div class="dashicons-before dashicons-format-status"></div>
-                <?php _e('Happy Forms', $this->plugin_key) ?>
+                <span>Happy Forms</span>
             </th>
         </tr>
         <tr>

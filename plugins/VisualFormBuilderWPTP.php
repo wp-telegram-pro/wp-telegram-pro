@@ -23,7 +23,7 @@ class VisualFormBuilderWPTP extends WPTelegramPro
         <tr>
             <th colspan="2" class="title-with-icon">
                 <div class="dashicons-before dashicons-feedback"></div>
-                <?php _e('Visual Form Builder', $this->plugin_key) ?>
+                <span>Visual Form Builder</span>
             </th>
         </tr>
         <tr>

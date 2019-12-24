@@ -23,7 +23,7 @@ class CalderaFormsWPTP extends WPTelegramPro
         <tr>
             <th colspan="2" class="title-with-icon">
                 <div class="dashicons-before dashicons-cf-logo wp-menu-image"><br></div>
-                <?php _e('Caldera Forms', $this->plugin_key) ?>
+                <span>Caldera Forms</span>
             </th>
         </tr>
         <tr>

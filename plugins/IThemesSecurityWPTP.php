@@ -24,7 +24,7 @@ class IThemesSecurityWPTP extends WPTelegramPro
         <tr>
             <th colspan="2" class="title-with-icon">
                 <div class="pg-icon it-icon-itsec"></div>
-                <?php _e('iThemes Security', $this->plugin_key) ?>
+                <span>iThemes Security</span>
             </th>
         </tr>
         <tr>

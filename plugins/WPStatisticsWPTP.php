@@ -24,7 +24,7 @@ class WPStatisticsWPTP extends WPTelegramPro
         <tr>
             <th colspan="2" class="title-with-icon">
                 <div class="dashicons-before dashicons-chart-pie"><br></div>
-                <span><?php _e('WP Statistics', $this->plugin_key) ?></span>
+                <span>WP Statistics</span>
             </th>
         </tr>
         <tr>

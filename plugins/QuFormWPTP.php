@@ -46,7 +46,7 @@ class QuFormWPTP extends WPTelegramPro
 102 l-32 33 -153 2 c-83 1 -161 -1 -172 -6z"/>
                     </g>
                 </svg>
-                <?php _e('Quform', $this->plugin_key) ?>
+                <span>Quform</span>
             </th>
         </tr>
         <tr>

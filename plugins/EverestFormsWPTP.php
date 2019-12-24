@@ -28,7 +28,7 @@ class EverestFormsWPTP extends WPTelegramPro
                               d="M18.1 4h-3.8l1.2 2h3.9zM20.6 8h-3.9l1.2 2h3.9zM20.6 18H5.8L12 7.9l2.5 4.1H12l-1.2 2h7.3L12 4.1 2.2 20h19.6z"/>
                     </g>
                 </svg>
-                <?php _e('Everest Forms', $this->plugin_key) ?>
+                <span>Everest Forms</span>
             </th>
         </tr>
         <tr>

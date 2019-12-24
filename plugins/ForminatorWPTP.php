@@ -37,7 +37,7 @@ class ForminatorWPTP extends WPTelegramPro
             c-0.1-0.6-0.2-1.2-0.2-1.8c0.2-4.2,3.6-7.4,7.5-7.4c0.2,0,0.2,0,0.4,0L9.6,2.1L9.6,2.1z"/>
                         </g>
                 </svg>
-                <?php _e('Forminator', $this->plugin_key) ?>
+                <span>Forminator</span>
             </th>
         </tr>
         <tr>
