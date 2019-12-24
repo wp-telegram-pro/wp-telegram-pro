@@ -12,7 +12,7 @@ class DebugsWPTP extends WPTelegramPro
         $this->page_title = __('Debugs', $this->plugin_key);
         $this->url = get_bloginfo('url');
         add_action('admin_menu', array($this, 'menu'), 999999);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
+        add_action('admin_enqueue_scripts', [$this, 'admin_enqueue_scripts']);
 
         add_filter('wptelegrampro_debugs_info', [$this, 'wptp_info'], 1);
         add_filter('wptelegrampro_debugs_info', [$this, 'php_info']);
@@ -21,10 +21,13 @@ class DebugsWPTP extends WPTelegramPro
         add_filter('wptelegrampro_debugs_info', [$this, 'ssl_info']);
     }
 
-    function enqueue_scripts()
+    function admin_enqueue_scripts()
     {
-        wp_enqueue_style('thickbox');
-        wp_enqueue_script('thickbox');
+        global $pagenow;
+        if ($pagenow == 'admin.php' && isset($_GET['page']) && $_GET['page'] == 'wp-telegram-pro-debugs') {
+            wp_enqueue_style('thickbox');
+            wp_enqueue_script('thickbox');
+        }
     }
 
     /**
