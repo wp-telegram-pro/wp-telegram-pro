@@ -123,6 +123,8 @@ class DebugsWPTP extends WPTelegramPro
             __('Character encoding', $this->plugin_key) => $charset,
             __('Text Direction', $this->plugin_key) => $text_direction
         );
+        if (version_compare($wp_version, '5.2', '>='))
+            $debugs[__('WordPress')][__('Site Health', $this->plugin_key)] = '<a href="' . admin_url('site-health.php') . '">' . __('Check site health page', $this->plugin_key) . '</a>';
         return $debugs;
     }
 
