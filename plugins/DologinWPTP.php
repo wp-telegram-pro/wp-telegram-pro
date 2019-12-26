@@ -178,7 +178,7 @@ class DoLoginWPTP extends WPTelegramPro
         if (!$row->code || $row->code != $_POST['dologin-two_factor_code']) {
             $error->add('dynamic_code_not_correct', $this->words['dynamic_code_not_correct']);
             defined('DOLOGIN_ERR') || define('DOLOGIN_ERR', true);
-            defined('debug') && debug('❌ sms wrong');
+            defined('debug') && debug('❌ Dynamic code is wrong');
             return $error;
         }
 
