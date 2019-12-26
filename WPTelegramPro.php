@@ -33,6 +33,7 @@ define('WPTELEGRAMPRO_MODINC_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'mo
 define('WPTELEGRAMPRO_PLUGINS_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR);
 
 require_once WPTELEGRAMPRO_INC_DIR . 'HelpersWPTP.php';
+require_once WPTELEGRAMPRO_INC_DIR . 'FilterableScriptsWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'TelegramWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'WordPressWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'HelpsWPTP.php';
@@ -106,6 +107,8 @@ class WPTelegramPro
             'profile_success_connect' => __('Welcome, Your Telegram account is successfully connected to the website.', $this->plugin_key),
             'profile_disconnect' => __('Your profile was successfully disconnected from Telegram account.', $this->plugin_key),
             'user_disconnect' => __('This profile was successfully disconnected from Telegram account.', $this->plugin_key),
+            'no_linked_telegram_account' => __('No linked Telegram account to this user profile.', $this->plugin_key),
+            'error_sending_message' => __('Error in sending message', $this->plugin_key),
         );
         $words = array_merge($words, $new_words);
 
@@ -171,9 +174,7 @@ class WPTelegramPro
     {
         ?>
         <div id="<?php echo $this->aboutTabID ?>-content" class="wptp-tab-content hidden">
-            <p>
             <h3><?php _e('Integrate WordPress with Telegram', $this->plugin_key) ?></h3>
-            </p>
             <p><?php _e('Do you like WP Telegram Pro?', $this->plugin_key) ?>
                 <br>
                 <a href="https://wordpress.org/support/plugin/wp-telegram-pro/reviews/#new-post" target="_blank">
@@ -854,7 +855,7 @@ class WPTelegramPro
 
     /**
      * WordPress post type select
-     * @param string $name Select Name
+     * @param string $field_name Select Name
      * @param string $post_type post type name
      * @param array $args Options
      * @return  string HTML post type select

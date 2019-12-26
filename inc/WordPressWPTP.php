@@ -78,7 +78,7 @@ class WordPressWPTP extends WPTelegramPro
 
         $bot_user = $this->set_user(array('wp_id' => $user->ID));
         ?>
-        <h2><?php _e('Telegram', $this->plugin_key); ?></h2>
+        <h2 id="wptp"><?php _e('Telegram', $this->plugin_key); ?></h2>
         <table class="form-table">
             <tr>
                 <?php if ($bot_user) { ?>
