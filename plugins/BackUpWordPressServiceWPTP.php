@@ -1,6 +1,6 @@
 <?php
 
-namespace WPTP\Plugins;
+namespace wptelegrampro;
 
 use HM\BackUpWordPress\Service;
 use HM\BackUpWordPress\Services;
@@ -124,4 +124,4 @@ class BackUpWordPressServiceWPTP extends Service
 }
 
 // Register the service
-Services::register(__FILE__, 'WPTP\Plugins\BackUpWordPressServiceWPTP');
+Services::register(__FILE__, 'wptelegrampro\BackUpWordPressServiceWPTP');

@@ -1,4 +1,5 @@
 <?php
+namespace wptelegrampro;
 
 use dologin\Data;
 use dologin\IP;
@@ -20,7 +21,7 @@ class DoLoginWPTP extends WPTelegramPro
 
         if ($this->get_option('dologin_plugin_two_factor_auth', false)) {
             add_filter('wptelegrampro_words', [$this, 'words']);
-            add_action('init', [$this, 'init']);
+            add_action('init', [$this, 'init_addon']);
             add_action('init', function () {
                 $GLOBALS['wp_scripts'] = new FilterableScriptsWPTP;
             });
@@ -95,7 +96,7 @@ class DoLoginWPTP extends WPTelegramPro
      * @since  1.0
      * @access public
      */
-    public function init()
+    public function init_addon()
     {
         add_action('rest_api_init', [$this, 'rest_api_init']);
     }

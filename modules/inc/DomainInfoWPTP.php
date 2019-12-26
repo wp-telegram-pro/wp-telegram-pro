@@ -1,5 +1,7 @@
 <?php
 
+namespace wptelegrampro;
+
 /**
  * WPTelegramPro Domain Info
  *

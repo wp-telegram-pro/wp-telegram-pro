@@ -1,4 +1,6 @@
 <?php
+
+namespace wptelegrampro;
 if (!defined('ABSPATH')) exit;
 
 class CustomCommandWPT extends WPTelegramPro
@@ -12,7 +14,7 @@ class CustomCommandWPT extends WPTelegramPro
 
     function settings()
     {
-        
+
     }
 
     /**

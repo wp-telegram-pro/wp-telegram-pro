@@ -11,6 +11,8 @@
  * WC tested up to: 3.8.1
  */
 
+namespace wptelegrampro;
+
 if (!defined('ABSPATH')) exit;
 
 if (!function_exists('get_plugin_data'))
@@ -32,8 +34,10 @@ define('WPTELEGRAMPRO_MOD_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'modul
 define('WPTELEGRAMPRO_MODINC_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR);
 define('WPTELEGRAMPRO_PLUGINS_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR);
 
+require_once WPTELEGRAMPRO_INC_DIR . 'Instance.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'HelpersWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'FilterableScriptsWPTP.php';
+require_once WPTELEGRAMPRO_INC_DIR . 'REST.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'TelegramWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'WordPressWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'HelpsWPTP.php';
@@ -65,6 +69,7 @@ class WPTelegramPro
         add_filter('wptelegrampro_words', [$this, 'words']);
 
         if (!$bypass) {
+            REST::get_instance()->init();
             add_action('wptelegrampro_keyboard_response', [$this, 'change_user_status'], 1);
             add_action('wptelegrampro_keyboard_response', [$this, 'connect_telegram_wp_user'], 1);
             add_filter('wptelegrampro_after_settings_update_message', [$this, 'after_settings_updated_message'], 10);

@@ -1,4 +1,6 @@
 <?php
+namespace wptelegrampro;
+use WP_Scripts;
 
 /**
  * Filterable WP Scripts

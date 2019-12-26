@@ -1,4 +1,5 @@
 <?php
+namespace wptelegrampro;
 
 class DebugsWPTP extends WPTelegramPro
 {
@@ -79,6 +80,7 @@ class DebugsWPTP extends WPTelegramPro
         if (is_ssl()) {
             $ssl_info = array();
             $info = $this->checkSSLCertificate($this->url);
+
             if (is_array($info)) {
                 $ssl_info[__('Issuer', $this->plugin_key)] = $info['issuer'];
                 $ssl_info[__('Valid', $this->plugin_key)] = $info['isValid'] ? __('Yes', $this->plugin_key) : __('No', $this->plugin_key);
@@ -211,7 +213,7 @@ class DebugsWPTP extends WPTelegramPro
      */
     function checkSSLCertificate($host)
     {
-        if (!is_ssl() || !class_exists('SSLCertificateWPTP')) return false;
+        if (!is_ssl() || !class_exists('wptelegrampro\SSLCertificateWPTP')) return false;
         try {
             $SSLCertificate = new SSLCertificateWPTP($host);
             return $SSLCertificate->request()->response();

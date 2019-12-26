@@ -1,4 +1,5 @@
 <?php
+namespace wptelegrampro;
 
 class HelpsWPTP extends WPTelegramPro
 {

@@ -1,4 +1,5 @@
 <?php
+namespace wptelegrampro;
 if (!defined('ABSPATH')) exit;
 
 class ChannelWPTP extends WPTelegramPro

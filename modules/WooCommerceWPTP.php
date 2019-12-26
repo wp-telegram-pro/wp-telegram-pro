@@ -1,4 +1,5 @@
 <?php
+namespace wptelegrampro;
 
 if (!defined('ABSPATH')) exit;
 if (!class_exists('WooCommerce')) return;

@@ -5,6 +5,7 @@
  * @WebSite: http://parsa.ws
  */
 
+namespace wptelegrampro;
 if (!defined('ABSPATH')) exit;
 if (class_exists('TelegramWPTP')) return;
 

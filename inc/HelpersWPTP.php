@@ -1,5 +1,6 @@
 <?php
 
+namespace wptelegrampro;
 /**
  * WPTelegramPro Helper functions
  *

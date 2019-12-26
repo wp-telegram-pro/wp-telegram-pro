@@ -1,4 +1,6 @@
 <?php
+
+namespace wptelegrampro;
 if (!defined('ABSPATH')) exit;
 global $ContactForm7WPTP;
 
