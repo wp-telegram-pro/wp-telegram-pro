@@ -43,7 +43,7 @@ class REST extends Instance
      */
     public function telegramBotAuth()
     {
-        return SMS::get_instance()->send();
+        return Users::get_instance()->telegramBotTFA();
     }
 
     /**
@@ -54,7 +54,7 @@ class REST extends Instance
      */
     public static function ok($data)
     {
-        $data['result'] = true;
+        $data['_res'] = true;
         return $data;
     }
 
@@ -66,6 +66,6 @@ class REST extends Instance
      */
     public static function err($message)
     {
-        return array('result' => false, '_msg' => $message);
+        return array('_res' => false, '_msg' => $message);
     }
 }

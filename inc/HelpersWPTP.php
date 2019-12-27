@@ -380,4 +380,39 @@ class HelpersWPTP
         }
         return $string;
     }
+
+    /*
+     * https://stackoverflow.com/a/25584726/3224296
+     * */
+    public static function string2Stars($string = '', $first = 0, $last = 0, $rep = '*')
+    {
+        if ($first == 0 && $last == 0) {
+            $third = intval(mb_strlen($string) / 3);
+            $first = $third;
+            $last = $third * -1;
+        }
+        $begin = substr($string, 0, $first);
+        $middle = str_repeat($rep, strlen(substr($string, $first, $last)));
+        $end = substr($string, $last);
+        $stars = $begin . $middle . $end;
+        return $stars;
+    }
+
+    public static function randomStrings($length, $string_type = array('NUMBER'))
+    {
+        $original_string = array();
+        if (in_array("NUMBER", $string_type)) {
+            $original_string = array_merge(range(1, 9), $original_string);
+        }
+        if (in_array("CLCASE", $string_type)) {
+            $original_string = array_merge(range('a', 'z'), $original_string);
+        }
+        if (in_array("CUCASE", $string_type)) {
+            $original_string = array_merge(range('A', 'Z'), $original_string);
+        }
+
+        $original_string = implode("", $original_string);
+        $original_string = strlen($original_string) < $length ? str_repeat($original_string, intval($length / strlen($original_string) + 1)) : $original_string;
+        return substr(str_shuffle($original_string), 0, $length);
+    }
 }

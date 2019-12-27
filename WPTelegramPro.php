@@ -32,6 +32,7 @@ define('WPTELEGRAMPRO_MAX_FILE_SIZE', '50mb');  //https://core.telegram.org/bots
 define('WPTELEGRAMPRO_BASENAME', plugin_basename(__FILE__));
 define('WPTELEGRAMPRO_DIR', untrailingslashit(plugin_dir_path(__FILE__)));
 define('WPTELEGRAMPRO_URL', untrailingslashit(plugins_url('', __FILE__)));
+define('WPTELEGRAMPRO_ASSETS_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR);
 define('WPTELEGRAMPRO_INC_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR);
 define('WPTELEGRAMPRO_MOD_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR);
 define('WPTELEGRAMPRO_MODINC_DIR', WPTELEGRAMPRO_DIR . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR);
@@ -60,6 +61,8 @@ class WPTelegramPro
     public function __construct($bypass = false)
     {
         global $wpdb;
+
+        //date_default_timezone_set(get_option('timezone_string'));
 
         $this->page_title_divider = is_rtl() ? ' < ' : ' > ';
         $this->options = get_option($this->plugin_key);
@@ -120,6 +123,11 @@ class WPTelegramPro
             'user_disconnect' => __('This profile was successfully disconnected from Telegram account.', $this->plugin_key),
             'no_linked_telegram_account' => __('No linked Telegram account to this user profile.', $this->plugin_key),
             'error_sending_message' => __('Error in sending message', $this->plugin_key),
+            'dynamic_code_missing' => __('Dynamic code is required.', $this->plugin_key),
+            'dynamic_code_not_correct' => __('Dynamic code is not correct.', $this->plugin_key),
+            'dynamic_code_expired' => __('Dynamic code expired.', $this->plugin_key),
+            'empty_username_password' => __('Empty username/password.', $this->plugin_key),
+            'unknown_error' => __('Unknown error', $this->plugin_key),
         );
         $words = array_merge($words, $new_words);
 
@@ -327,7 +335,7 @@ class WPTelegramPro
 
     function enqueue_scripts()
     {
-        $js_version = date("ymd-Gis", filemtime(plugin_dir_path(__FILE__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'wptp.js'));
+        $js_version = date("ymd-Gis", filemtime(WPTELEGRAMPRO_ASSETS_DIR . 'js' . DIRECTORY_SEPARATOR . 'wptp.js'));
         $version = rand(100, 200) . rand(200, 300);
         wp_enqueue_script('textrange-js', plugin_dir_url(__FILE__) . 'assets/js/textrange.js', array('jquery'), $version, true);
         wp_enqueue_script('jquery.caret-js', plugin_dir_url(__FILE__) . 'assets/js/jquery.caret.js', array('jquery'), $version, true);
@@ -614,29 +622,29 @@ class WPTelegramPro
         return $terms_;
     }
 
-    function get_user_meta($key)
+    function get_user_meta($key, $default = null)
     {
         $meta = $this->user['meta'];
         if (empty($meta))
-            return null;
+            return $default;
 
         $meta = unserialize($meta);
         if (isset($meta[$key]))
             return $meta[$key];
         else
-            return null;
+            return $default;
     }
 
     function update_user_meta($key, $value)
     {
-        $meta = $this->user['meta'];
-        if (empty($meta))
-            $meta = array();
-        else
+        $meta = trim($this->user['meta']);
+        if (!empty($meta) && is_serialized($meta))
             $meta = unserialize($meta);
+        else
+            $meta = array();
 
         $meta[$key] = $value;
-        $this->update_user(array('meta' => serialize($meta)));
+        return $this->update_user(array('meta' => serialize($meta)));
     }
 
     function user_field($key)
@@ -661,6 +669,8 @@ class WPTelegramPro
 
         if ($result && isset($this->telegram_input['form']['id']))
             $this->set_user(array('user_id' => $this->telegram_input['form']['id']));
+        elseif ($result && isset($this->user['user_id']))
+            $this->set_user(array('user_id' => $this->user['user_id']));
 
         return $result;
     }
@@ -967,7 +977,7 @@ class WPTelegramPro
         $code_not_exists = false;
         $code = '';
         while (!$code_not_exists) {
-            $code = $this->random_strings($this->rand_id_length);
+            $code = HelpersWPTP::randomStrings($this->rand_id_length);
             $user = $wpdb->get_row("SELECT umeta_id FROM {$wpdb->usermeta} WHERE meta_key='{$this->wp_user_rc_key}' AND meta_value = '{$code}'", ARRAY_A);
             if ($user === null)
                 $code_not_exists = true;
@@ -981,30 +991,12 @@ class WPTelegramPro
         $id_not_exists = false;
         $id = '';
         while (!$id_not_exists) {
-            $id = $this->random_strings($this->rand_id_length);
+            $id = HelpersWPTP::randomStrings($this->rand_id_length);
             $user = $wpdb->get_row("SELECT id FROM {$this->db_users_table} WHERE rand_id = '{$id}'", ARRAY_A);
             if ($user === null)
                 $id_not_exists = true;
         }
         return $id;
-    }
-
-    private function random_strings($length, $string_type = array('NUMBER'))
-    {
-        $original_string = array();
-        if (in_array("NUMBER", $string_type)) {
-            $original_string = array_merge(range(1, 9), $original_string);
-        }
-        if (in_array("CLCASE", $string_type)) {
-            $original_string = array_merge(range('a', 'z'), $original_string);
-        }
-        if (in_array("CUCASE", $string_type)) {
-            $original_string = array_merge(range('A', 'Z'), $original_string);
-        }
-
-        $original_string = implode("", $original_string);
-        $original_string = strlen($original_string) < $length ? str_repeat($original_string, intval($length / strlen($original_string) + 1)) : $original_string;
-        return substr(str_shuffle($original_string), 0, $length);
     }
 
     function add_every_minutes($schedules)
@@ -1161,8 +1153,11 @@ class WPTelegramPro
      * @param bool $bypass
      * @return  WPTelegramPro
      */
-    static function getInstance($bypass = false)
+    static function getInstance()
     {
+        $bypass = false;
+        if (func_num_args())
+            $bypass = func_get_args()[0];
         if (self::$instance == null)
             self::$instance = new WPTelegramPro($bypass);
         return self::$instance;

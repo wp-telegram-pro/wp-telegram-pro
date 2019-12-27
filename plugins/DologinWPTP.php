@@ -1,10 +1,12 @@
 <?php
+
 namespace wptelegrampro;
 
 use dologin\Data;
 use dologin\IP;
 use dologin\REST;
 use dologin\s;
+use WP_User;
 
 if (!defined('ABSPATH')) exit;
 global $DoLoginWPTP;
@@ -20,7 +22,6 @@ class DoLoginWPTP extends WPTelegramPro
         add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
 
         if ($this->get_option('dologin_plugin_two_factor_auth', false)) {
-            add_filter('wptelegrampro_words', [$this, 'words']);
             add_action('init', [$this, 'init_addon']);
             add_action('init', function () {
                 $GLOBALS['wp_scripts'] = new FilterableScriptsWPTP;
@@ -78,18 +79,6 @@ class DoLoginWPTP extends WPTelegramPro
         <?php
     }
 
-    function words($words)
-    {
-        $new_words = array(
-            'dynamic_code_missing' => __('Dynamic code is required.', $this->plugin_key),
-            'dynamic_code_not_correct' => __('Dynamic code is not correct.', $this->plugin_key),
-            'empty_u_p' => __('Empty username/password.', $this->plugin_key),
-        );
-        $words = array_merge($words, $new_words);
-
-        return $words;
-    }
-
     /**
      * Init
      *
@@ -124,7 +113,7 @@ class DoLoginWPTP extends WPTelegramPro
     }
 
     /**
-     * Verify SMS after u+p authenticated
+     * Verify Telegram bot after u+p authenticated
      *
      * @since  1.3
      */
@@ -265,7 +254,8 @@ class DoLoginWPTP extends WPTelegramPro
 
         // Expected response
         if ($result && isset($result['ok']) && $result['ok']) {
-            $message = sprintf(__('Sent dynamic code to this Telegram account @%s.', $this->plugin_key), $bot_user['username']);
+            $usernameStar = HelpersWPTP::string2Stars($bot_user['username']);
+            $message = sprintf(__('Sent dynamic code to this Telegram account @%s.', $this->plugin_key), $usernameStar);
             return REST::ok(array('info' => $message));
         }
 
@@ -277,7 +267,7 @@ class DoLoginWPTP extends WPTelegramPro
     }
 
     /**
-     * Send notification to admin users when add subscriber to WP SMS
+     * Send dynamic code notification
      *
      * @param array $bot_user name.
      * @param string $message Message.

@@ -1,4 +1,5 @@
 <?php
+
 namespace wptelegrampro;
 
 class WordPressWPTP extends WPTelegramPro
@@ -728,7 +729,7 @@ class WordPressWPTP extends WPTelegramPro
                                       name="telegram_bot_two_factor_auth" <?php checked($this->get_option('telegram_bot_two_factor_auth', 0), 1) ?>> <?php _e('Enable Two Step Telegram bot Auth', $this->plugin_key) ?>
                         </label>
                         <p class="description">
-                            <?php _e('Verify text code for each login attempt. Users need to setup the Telegram account in their profile.', $this->plugin_key); ?>
+                            <?php _e('Verify text code for each login attempt. Users need to setup the Telegram account in their profile. To ensure no conflict with other plugins, Disable other Two step authentication.', $this->plugin_key); ?>
                         </p>
                     </td>
                 </tr>
