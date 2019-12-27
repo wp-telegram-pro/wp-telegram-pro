@@ -17,6 +17,9 @@ if (!defined('ABSPATH')) exit;
 
 if (!function_exists('get_plugin_data'))
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+global $WPTelegramPro;
+
 /**
  * Define version.
  */
@@ -41,6 +44,7 @@ require_once WPTELEGRAMPRO_INC_DIR . 'REST.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'TelegramWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'WordPressWPTP.php';
 require_once WPTELEGRAMPRO_INC_DIR . 'HelpsWPTP.php';
+require_once WPTELEGRAMPRO_INC_DIR . 'Users.php';
 
 HelpersWPTP::requireAll(WPTELEGRAMPRO_MOD_DIR);
 
@@ -68,8 +72,10 @@ class WPTelegramPro
 
         add_filter('wptelegrampro_words', [$this, 'words']);
 
-        if (!$bypass) {
+        if ($bypass) {
             REST::get_instance()->init();
+            Users::get_instance()->init();
+
             add_action('wptelegrampro_keyboard_response', [$this, 'change_user_status'], 1);
             add_action('wptelegrampro_keyboard_response', [$this, 'connect_telegram_wp_user'], 1);
             add_filter('wptelegrampro_after_settings_update_message', [$this, 'after_settings_updated_message'], 10);
@@ -1152,15 +1158,16 @@ class WPTelegramPro
 
     /**
      * Returns an instance of class
+     * @param bool $bypass
      * @return  WPTelegramPro
      */
-    static function getInstance()
+    static function getInstance($bypass = false)
     {
         if (self::$instance == null)
-            self::$instance = new WPTelegramPro();
+            self::$instance = new WPTelegramPro($bypass);
         return self::$instance;
     }
 }
 
-$WPTelegramPro = WPTelegramPro::getInstance();
+$WPTelegramPro = WPTelegramPro::getInstance(true);
 register_activation_hook(__FILE__, array('WPTelegramPro', 'install'));

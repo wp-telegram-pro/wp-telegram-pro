@@ -16,7 +16,7 @@ class DoLoginWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
 
         if ($this->get_option('dologin_plugin_two_factor_auth', false)) {

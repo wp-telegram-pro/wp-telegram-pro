@@ -1,0 +1,20 @@
+
+.wptp-login-message {
+    line-height: 2em;
+}
+
+.wptp-login-message .dashicons-wptp-telegram {
+    float: right;
+    padding: 5px;
+    border-radius: 50%;
+    color: #00a0d2;
+    border: 2px solid #00a0d2;
+}
+
+.wptp-login-message .title {
+    text-transform: uppercase;
+}
+
+body.rtl .wptp-login-message .dashicons-wptp-telegram {
+    float: left;
+}

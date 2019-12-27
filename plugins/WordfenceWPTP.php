@@ -12,7 +12,7 @@ class WordfenceWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         $this->security_events = array(
             'autoUpdate' => __('Wordfence auto update', $this->plugin_key),
             'wafDeactivated' => __('Wordfence firewall deactivated', $this->plugin_key),

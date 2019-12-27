@@ -11,7 +11,7 @@ class WPStatisticsWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
 
         if ($this->get_option('wpstatistics_send_report_notification', false)) {

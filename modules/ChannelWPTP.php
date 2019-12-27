@@ -11,7 +11,7 @@ class ChannelWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         add_action('wp_ajax_channel_members_count_wptp', [$this, 'channel_members_count']);
         add_action('wp_ajax_quick_send_channel_wptp', [$this, 'quick_send_channel']);
         add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 20);

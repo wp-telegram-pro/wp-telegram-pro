@@ -8,7 +8,7 @@ class DebugsWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         $this->page_key = $this->plugin_key . '-debugs';
         $this->page_title = __('Debugs', $this->plugin_key);
         $this->url = get_bloginfo('url');

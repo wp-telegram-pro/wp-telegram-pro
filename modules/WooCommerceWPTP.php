@@ -11,7 +11,7 @@ class WooCommerceWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
 
         $this->default_products_keyboard = array(array(
             array('text' => __('Detail', $this->plugin_key), 'callback_data' => 'product_detail')

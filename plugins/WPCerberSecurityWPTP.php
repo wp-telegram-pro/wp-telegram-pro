@@ -12,7 +12,7 @@ class WPCerberSecurityWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
 
         $this->events = array(
             'citadel' => __('Citadel mode is activated', $this->plugin_key),

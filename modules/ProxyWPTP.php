@@ -9,7 +9,7 @@ class ProxyWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
 
         add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 35);
         add_action('wptelegrampro_settings_content', [$this, 'settings_content']);

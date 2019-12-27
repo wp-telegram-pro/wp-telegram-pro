@@ -117,7 +117,7 @@ class PluginsWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         //$this->plugins_loaded();
         add_action('plugins_loaded', [$this, 'plugins_loaded'], 99999);
     }

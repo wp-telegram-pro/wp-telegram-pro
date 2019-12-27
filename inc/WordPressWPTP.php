@@ -8,7 +8,7 @@ class WordPressWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         $this->words = apply_filters('wptelegrampro_words', $this->words);
 
         add_filter('wptelegrampro_patterns_tags', [$this, 'patterns_tags']);
@@ -717,6 +717,38 @@ class WordPressWPTP extends WPTelegramPro
                         <textarea name="telegram_connectivity_disconnect_message"
                                   id="telegram_connectivity_disconnect_message" cols="50" class="emoji"
                                   rows="2"><?php echo $this->get_option('telegram_connectivity_disconnect_message', $this->words['profile_disconnect']) ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="telegram_bot_two_factor_auth"><?php _e('Two factor auth', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="telegram_bot_two_factor_auth"
+                                      name="telegram_bot_two_factor_auth" <?php checked($this->get_option('telegram_bot_two_factor_auth', 0), 1) ?>> <?php _e('Enable Two Step Telegram bot Auth', $this->plugin_key) ?>
+                        </label>
+                        <p class="description">
+                            <?php _e('Verify text code for each login attempt. Users need to setup the Telegram account in their profile.', $this->plugin_key); ?>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="telegram_bot_force_two_factor_auth"><?php _e('Force Telegram bot auth validation', $this->plugin_key) ?></label>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="telegram_bot_force_two_factor_auth"
+                                      name="telegram_bot_force_two_factor_auth" <?php checked($this->get_option('telegram_bot_force_two_factor_auth', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                        </label>
+                        <p class="description">
+                            <?php _e('If enabled this, any user without linked Telegram account in profile will not be able to login.', $this->plugin_key); ?>
+                            <?php
+                            if (!$this->user)
+                                echo '<div class="wptp-warning-h3">' . __('You need to setup your Telegram Connectivity before enabling this setting to avoid yourself being blocked from next time login.', $this->plugin_key) .
+                                    '<br><a href="profile.php#wptp">' . __('Click here to connect the WordPress profile to the Telegram account', $this->plugin_key) . '</a>' .
+                                    '</div>';
+                            ?>
+                        </p>
                     </td>
                 </tr>
                 <tr>

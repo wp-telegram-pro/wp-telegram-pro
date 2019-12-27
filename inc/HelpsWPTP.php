@@ -8,7 +8,7 @@ class HelpsWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         $this->page_key = $this->plugin_key . '-helps';
         $this->page_title = __('Helps', $this->plugin_key);
         add_action('admin_menu', array($this, 'menu'), 999998);

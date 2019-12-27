@@ -10,7 +10,7 @@ class BackWPupWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
 
         if ($this->get_option('backwpup_send_log_notification', false)) {

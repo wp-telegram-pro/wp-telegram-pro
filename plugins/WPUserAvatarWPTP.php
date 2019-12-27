@@ -11,7 +11,7 @@ class WPUserAvatarWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
 
         if ($this->get_option('wpuseravatar_avatar_change_notification', false)) {

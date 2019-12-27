@@ -9,7 +9,7 @@ class CustomCommandWPT extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
     }
 
     function settings()
