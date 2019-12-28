@@ -197,13 +197,16 @@ class Users extends Instance
      */
     public function login_form()
     {
-        echo '	<p id="wptp-login-process">' . __('Telegram Authentication', WPTELEGRAMPRO_PLUGIN_KEY) . ':
-                    <span id="wptp-process-msg"></span>
-                </p>
-                <p id="wptp-dynamic_code">
-                    <label for="wptp-two_factor_code">' . __('Dynamic Code', WPTELEGRAMPRO_PLUGIN_KEY) . ':</label>
-                    <br /><input type="text" name="wptp-two_factor_code" id="wptp-two_factor_code" autocomplete="off" />
-                </p>';
+        $inputClass = apply_filters('wptelegrampro_input_class', '');
+        $login_form = '<p id="wptp-login-process">' . __('Telegram Authentication', WPTELEGRAMPRO_PLUGIN_KEY) . ':
+                            <span id="wptp-process-msg"></span>
+                        </p>
+                        <p id="wptp-dynamic_code">
+                            <label for="wptp-two_factor_code">' . __('Dynamic Code', WPTELEGRAMPRO_PLUGIN_KEY) . ':</label>
+                            <br /><input type="text" name="wptp-two_factor_code" id="wptp-two_factor_code" class="' . $inputClass . '" autocomplete="off" />
+                        </p>';
+        $login_form = apply_filters('wptelegrampro_tfa_login_form_output', $login_form);
+        echo $login_form;
     }
 
     /**
