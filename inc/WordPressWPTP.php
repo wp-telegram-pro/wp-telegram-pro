@@ -148,7 +148,7 @@ class WordPressWPTP extends WPTelegramPro
         }
 
         if (isset($new_option['force_update_keyboard']))
-            update_option('update_keyboard_time_wptp', time(), false);
+            update_option('update_keyboard_time_wptp', current_time('U'), false);
 
         return $update_message;
     }
@@ -510,7 +510,7 @@ class WordPressWPTP extends WPTelegramPro
                 $default_keyboard = apply_filters('wptelegrampro_default_keyboard', array());
                 $default_keyboard = $this->telegram->keyboard($default_keyboard);
                 $this->telegram->sendMessage(__('Update'), $default_keyboard);
-                $this->update_user_meta('update_keyboard_time', time());
+                $this->update_user_meta('update_keyboard_time', current_time('U'));
             }
         }
     }

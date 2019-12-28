@@ -126,7 +126,7 @@ class WPTelegramPro
             'dynamic_code_missing' => __('Dynamic code is required.', $this->plugin_key),
             'dynamic_code_not_correct' => __('Dynamic code is not correct.', $this->plugin_key),
             'dynamic_code_expired' => __('Dynamic code expired.', $this->plugin_key),
-            'empty_username_password' => __('Empty username/password.', $this->plugin_key),
+            'empty_username_password' => __('Username or password is empty.', $this->plugin_key),
             'unknown_error' => __('Unknown error', $this->plugin_key),
         );
         $words = array_merge($words, $new_words);
@@ -714,7 +714,7 @@ class WPTelegramPro
                         'last_name' => $from['last_name'],
                         'username' => $from['username'],
                         'status' => 'start',
-                        'meta' => serialize(array('update_keyboard_time' => time())),
+                        'meta' => serialize(array('update_keyboard_time' => current_time('U'))),
                         'created_at' => $this->now,
                         'updated_at' => $this->now
                     )
@@ -1145,7 +1145,7 @@ class WPTelegramPro
         }
 
         update_option('wptelegrampro_version', WPTELEGRAMPRO_VERSION, false);
-        update_option('update_keyboard_time_wptp', time(), false);
+        update_option('update_keyboard_time_wptp', current_time('U'), false);
     }
 
     /**

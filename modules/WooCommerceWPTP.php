@@ -494,8 +494,8 @@ class WooCommerceWPTP extends WPTelegramPro
             $average_rating = $_product->get_average_rating();
             // Check Sale Price Dates
             if (!empty($_product->get_date_on_sale_from()) || !empty($_product->get_date_on_sale_to())) {
-                if ((!empty($_product->get_date_on_sale_from()) && strtotime($_product->get_date_on_sale_from()) > time()) ||
-                    (!empty($_product->get_date_on_sale_to()) && strtotime($_product->get_date_on_sale_to()) < time()))
+                if ((!empty($_product->get_date_on_sale_from()) && strtotime($_product->get_date_on_sale_from()) > current_time('U')) ||
+                    (!empty($_product->get_date_on_sale_to()) && strtotime($_product->get_date_on_sale_to()) < current_time('U')))
                     $saleprice = null;
             }
             // Get Product Attribute
@@ -1378,7 +1378,7 @@ class WooCommerceWPTP extends WPTelegramPro
             $user = $this->set_user(array('rand_id' => $_GET['wptpwc']));
             if ($user === null) return;
             if (!is_user_logged_in())
-                setcookie('wptpwc_user_id', $_GET['wptpwc'], time() + (60 * 60 * 12 * 7));
+                setcookie('wptpwc_user_id', $_GET['wptpwc'], current_time('U') + (60 * 60 * 12 * 7));
             elseif (empty($user['wp_id'])) {
                 $wp_id = get_current_user_id();
                 $this->update_user(array('wp_id' => $wp_id));

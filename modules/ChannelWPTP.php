@@ -325,7 +325,7 @@ class ChannelWPTP extends WPTelegramPro
     function schedule()
     {
         if (isset($this->options['send_to_channels']) && !wp_next_scheduled('auto_channels_wptp'))
-            wp_schedule_event(time(), 'every_' . (intval($this->options['channels_cron_interval']) != 0 ? $this->options['channels_cron_interval'] : 1) . '_minutes', 'auto_channels_wptp');
+            wp_schedule_event(current_time('U'), 'every_' . (intval($this->options['channels_cron_interval']) != 0 ? $this->options['channels_cron_interval'] : 1) . '_minutes', 'auto_channels_wptp');
     }
 
     function meta_save($post_id, $post)

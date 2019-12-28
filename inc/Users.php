@@ -7,6 +7,7 @@
 
 namespace wptelegrampro;
 
+use WP_Error;
 use WP_User;
 
 defined('ABSPATH') || exit;
@@ -36,10 +37,14 @@ class Users extends Instance
      *
      * @copyright This code inspired by DoLogin plugin, https://wordpress.org/plugins/dologin
      * @since  1.0
+     * @param null|WP_User|WP_Error $user WP_User if the user is authenticated.
+     *                                        WP_Error or null otherwise.
+     * @param string $username Username or email address.
+     * @param string $password User password
+     * @return WP_User|WP_Error
      */
     public function authenticate($user, $username, $password)
     {
-        global $wpdb;
         $WPTelegramPro = $this->WPTelegramPro;
 
         if ($this->_login_dry_run)
@@ -53,10 +58,10 @@ class Users extends Instance
 
         // If telegram is optional and the user doesn't have linked account, bypass
         $bot_user = $WPTelegramPro->set_user(array('wp_id' => $user->ID));
-        if (!$bot_user && !$this->get_option('telegram_bot_force_two_factor_auth', false))
+        if (!$bot_user && !$WPTelegramPro->get_option('telegram_bot_force_two_factor_auth', false))
             return $user;
 
-        $error = new \WP_Error();
+        $error = new WP_Error();
 
         // Validate dynamic code
         if (empty($_POST['wptp-two_factor_code'])) {
@@ -122,7 +127,7 @@ class Users extends Instance
         // Search if the user has linked Telegram account
         $bot_user = $WPTelegramPro->set_user(array('wp_id' => $user->ID));
         if (!$bot_user) {
-            if (!$this->get_option('telegram_bot_force_two_factor_auth', false)) {
+            if (!$WPTelegramPro->get_option('telegram_bot_force_two_factor_auth', false)) {
                 return REST::ok(array('bypassed' => 1));
             }
             return REST::err($WPTelegramPro->words['no_linked_telegram_account']);
