@@ -214,7 +214,7 @@ class SSLCertificateWPTP
         return false;
     }
 
-    protected function wildcardHostCoversHost(string $wildcardHost, string $host): bool
+    protected function wildcardHostCoversHost(string $wildcardHost, string $host)
     {
         if ($host === $wildcardHost) {
             return true;

@@ -28,7 +28,7 @@ class Users extends Instance
             add_action('login_form', [$this, 'login_form']);
             add_action('woocommerce_login_form', [$this, 'login_enqueue_scripts']);
             add_action('woocommerce_login_form', [$this, 'login_form']);
-            add_filter('authenticate', [$this, 'authenticate'], 30, 3);
+            add_filter('authenticate', [$this, 'login_authenticate'], 30, 3);
         }
     }
 
@@ -43,7 +43,7 @@ class Users extends Instance
      * @param string $password User password
      * @return WP_User|WP_Error
      */
-    public function authenticate($user, $username, $password)
+    public function login_authenticate($user, $username, $password)
     {
         $WPTelegramPro = $this->WPTelegramPro;
 
@@ -167,7 +167,7 @@ class Users extends Instance
      */
     public function login_enqueue_scripts()
     {
-        $this->enqueue_style();
+        $this->login_enqueue_style();
         $js_version = date("ymd-Gis", filemtime(WPTELEGRAMPRO_ASSETS_DIR . 'js' . DIRECTORY_SEPARATOR . 'login.js'));
 
         wp_register_script('wptp-login', WPTELEGRAMPRO_URL . '/assets/js/login.js', array('jquery'), $js_version, false);
@@ -183,7 +183,7 @@ class Users extends Instance
      * Load style
      * @since 1.0
      */
-    public function enqueue_style()
+    public function login_enqueue_style()
     {
         wp_enqueue_style('wptp-login', WPTELEGRAMPRO_URL . '/assets/css/login.css', array(), WPTELEGRAMPRO_VERSION, 'all');
         wp_enqueue_style('wptp-icon', WPTELEGRAMPRO_URL . '/assets/css/icon.css', array('wptp-login'), WPTELEGRAMPRO_VERSION, 'all');

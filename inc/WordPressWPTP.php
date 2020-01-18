@@ -274,7 +274,7 @@ class WordPressWPTP extends WPTelegramPro
     function admin_recovery_mode_notification($email, $url)
     {
         $text = $email['message'];
-        $text = str_replace([__('emailed'), __('email')], __('notification', $this->plugin_key), $text);
+        $text = str_replace([__('Email'), __('emailed'), __('email')], __('notification', $this->plugin_key), $text);
         $text = apply_filters('wptelegrampro_admin_recovery_mode_notification_text', $text, $email, $url);
 
         if (!$text) return $email;
