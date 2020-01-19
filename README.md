@@ -11,6 +11,7 @@ Description
 * Send post types manually or automatically to Telegram channel
 * Display Telegram channel members count with shortcode
 * Connect WordPress profile to Telegram account
+* Two Step Telegram bot Authentication
 
 **Integrate with E-Commerce plugins:**
 * [WooCommerce](https://wordpress.org/plugins/woocommerce) – Sale products on the Telegram bot. Send product to Telegram channels. New order, Order status change, Product low/no stock, new order note notification
@@ -39,6 +40,7 @@ Description
 * [iThemes Security (formerly Better WP Security)](https://wordpress.org/plugins/better-wp-security)
 * [All In One WP Security & Firewall](https://wordpress.org/plugins/all-in-one-wp-security-and-firewall)
 * [Cerber Security, Antispam & Malware Scan](https://wordpress.org/plugins/wp-cerber)
+* [DoLogin Security](https://wordpress.org/plugins/dologin)
 
 **Integrate with Backup plugins:**
 * [BackWPup – WordPress Backup Plugin](https://wordpress.org/plugins/backwpup)

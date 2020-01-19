@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/parsakafi/wp-telegram-pro
  * Description: Integrate WordPress with Telegram
  * Author: Parsa Kafi
- * Version: 1.9
+ * Version: 2.0
  * Author URI: http://parsa.ws
  * Text Domain: wp-telegram-pro
  * WC requires at least: 3.0.0
@@ -61,8 +61,6 @@ class WPTelegramPro
     public function __construct($bypass = false)
     {
         global $wpdb;
-
-        //date_default_timezone_set(get_option('timezone_string'));
 
         $this->page_title_divider = is_rtl() ? ' < ' : ' > ';
         $this->options = get_option($this->plugin_key);
@@ -275,7 +273,6 @@ class WPTelegramPro
                 $new_status = 'start';
 
             $this->update_user_meta('search_query', null);
-
             $this->update_user(array('status' => $new_status));
             $this->set_user();
         }
@@ -398,6 +395,7 @@ class WPTelegramPro
 
         $this->options = get_option($this->plugin_key);
         add_filter('wp_dropdown_cats', array($this, 'dropdown_filter'), 10, 2);
+
         ?>
         <div class="wrap wptp-wrap">
             <h1 class="wp-heading-inline"><?php echo $this->plugin_name ?></h1>
@@ -496,10 +494,9 @@ class WPTelegramPro
                     $args['cat'] = intval($query['category_id']);
             }
         }
-
         $args = apply_filters('wptelegrampro_query_args', $args, $query);
 
-        $query_ = new WP_Query($args);
+        $query_ = new \WP_Query($args);
 
         $max_num_pages = $query_->max_num_pages;
         if (!$max_num_pages) $max_num_pages = 1;
@@ -904,7 +901,7 @@ class WPTelegramPro
             'orderby' => $args['orderby'],
             'posts_per_page' => $args['posts_per_page']
         );
-        $query = new WP_Query($query_args);
+        $query = new \WP_Query($query_args);
 
         $items = [];
         if ($query->have_posts())

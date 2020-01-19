@@ -28,7 +28,7 @@ class TelegramWPTP
         if ($input) {
             $data = json_decode($input, true);
             if (json_last_error() !== JSON_ERROR_NONE || !isset($data['update_id']))
-                throw new Exception('Json With Error!');
+                throw new \Exception('Json With Error!');
             $return = array();
             $return['input'] = $data;
             $return['text'] = $data['message']['text'];
@@ -47,7 +47,7 @@ class TelegramWPTP
             $this->input = $return;
             return $return;
         } else {
-            throw new Exception('Not Receive Telegram Input!');
+            throw new \Exception('Not Receive Telegram Input!');
         }
     }
 
@@ -111,7 +111,7 @@ class TelegramWPTP
                 if (filter_var($parameter['file'], FILTER_VALIDATE_URL)) {
                     $parameter[$key] = $parameter['file'];
                 } else {
-                    $parameter[$key] = new CURLFile(realpath($parameter['file']));
+                    $parameter[$key] = new \CURLFile(realpath($parameter['file']));
                     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                         "Content-Type:multipart/form-data"
                     ));
@@ -139,7 +139,7 @@ class TelegramWPTP
     {
         $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
         if ($this->file && $image_send_mode === 'image_path') {
-            $parameter[$this->file_key] = new CURLFile(realpath($this->file));
+            $parameter[$this->file_key] = new \CURLFile(realpath($this->file));
         }
         return $parameter;
     }

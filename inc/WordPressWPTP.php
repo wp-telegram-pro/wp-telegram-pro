@@ -16,7 +16,7 @@ class WordPressWPTP extends WPTelegramPro
         add_filter('wptelegrampro_settings_tabs', [$this, 'settings_tab'], 10);
         add_action('wptelegrampro_settings_content', [$this, 'settings_content']);
         add_action('wptelegrampro_inline_keyboard_response', array($this, 'inline_keyboard'));
-        add_action('wptelegrampro_keyboard_response', array($this, 'keyboard'));
+        add_action('wptelegrampro_keyboard_response', array($this, 'post_action'));
         add_action('wptelegrampro_keyboard_response', array($this, 'check_keyboard_need_update'), 9999);
         add_filter('wptelegrampro_before_settings_update_message', array($this, 'update_api_token'), 10, 3);
         add_filter('wptelegrampro_option_settings', array($this, 'update_bot_username'), 100, 2);
@@ -515,7 +515,7 @@ class WordPressWPTP extends WPTelegramPro
         }
     }
 
-    function keyboard($user_text)
+    function post_action($user_text)
     {
         $this->set_user();
         $this->words = $words = apply_filters('wptelegrampro_words', $this->words);
@@ -546,11 +546,13 @@ class WordPressWPTP extends WPTelegramPro
         } else if ($user_text == '/posts' || $user_text == $words['posts']) {
             $this->update_user(array('page' => 1));
             $this->update_user_meta('category_id', null);
+
             $args = array(
                 'post_type' => 'post',
                 'per_page' => $this->get_option('posts_per_page', 1)
             );
             $posts = $this->query($args);
+            $this->telegram->sendMessage(var_export($posts));
             $this->send_posts($posts);
 
         } elseif ($user_text == '/categories' || $user_text == $words['categories']) {

@@ -143,13 +143,13 @@ class HelpersWPTP
         }
 
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new Exception("String `{$url}` is not a valid url.");
+            throw new \Exception("String `{$url}` is not a valid url.");
         }
 
         $parsedUrl = parse_url($url);
 
         if (!isset($parsedUrl['host'])) {
-            throw new Exception("Could not determine host from url `{$url}`.");
+            throw new \Exception("Could not determine host from url `{$url}`.");
         }
 
         return $parsedUrl['host'];

@@ -222,7 +222,7 @@ class ChannelWPTP extends WPTelegramPro
                             )
                         );
                     }
-                    $query = new WP_Query($args);
+                    $query = new \WP_Query($args);
                     if ($query->have_posts()) {
                         $query->the_post();
                         $post_id = get_the_ID();

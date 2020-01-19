@@ -479,7 +479,7 @@ class WooCommerceWPTP extends WPTelegramPro
             if ($variations)
                 $product_variation_id = $variations[0]->ID;
 
-            $_product = new WC_Product($product_id);
+            $_product = new \WC_Product($product_id);
             $product_type_ = get_the_terms($product_id, 'product_type');
             if ($product_type_)
                 $product_type = $product_type_[0]->slug;
@@ -647,7 +647,7 @@ class WooCommerceWPTP extends WPTelegramPro
             if (get_post_status($product_id) === 'publish') {
                 $image_size = $this->get_option('image_size');
                 $this->telegram->answerCallbackQuery(__('Galleries', $this->plugin_key) . ': ' . get_the_title($product_id));
-                $_product = new WC_Product($product_id);
+                $_product = new \WC_Product($product_id);
                 $galleries = $_product->get_gallery_image_ids();
                 if (is_array($galleries) && count($galleries)) {
                     $keyboards = null;
