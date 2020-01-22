@@ -1,4 +1,5 @@
 <?php
+
 namespace wptelegrampro;
 if (!defined('ABSPATH')) exit;
 
@@ -278,7 +279,7 @@ class ChannelWPTP extends WPTelegramPro
 
             if (isset($post['tags']) && is_array($post['tags']))
                 if (count($post['tags']) > 0)
-                    $post['tags'] = '#' . implode(' #', array_keys($post['tags']));
+                    $post['tags'] = '#' . implode(' #', str_replace(' ', '_', array_keys($post['tags'])));
                 else
                     $post['tags'] = '';
 
@@ -413,6 +414,9 @@ class ChannelWPTP extends WPTelegramPro
             <?php
             $current_channel = array();
             foreach ($options['channel_username'] as $k => $v) {
+                if (!is_array($options['channel_post_type'][$k]))
+                    continue;
+
                 $post_types = array_keys($options['channel_post_type'][$k]);
                 if (empty($v) || in_array($options['channel_username'][$k], $current_channel) || !isset($options['channel_post_type'][$k]) || isset($options['channel_post_type'][$k]) && is_array($options['channel_post_type'][$k]) && !in_array(get_post_type($post_id), $post_types))
                     continue;
@@ -644,7 +648,7 @@ class ChannelWPTP extends WPTelegramPro
                     $item = array(
                         'index' => $c,
                         'channel_username' => $options['channel_username'][$k],
-                        'channel_post_type' => isset($options['channel_post_type'][$k]) ? $options['channel_post_type'][$k] : array(),
+                        'channel_post_type' => isset($options['channel_post_type'][$k]) && is_array($options['channel_post_type'][$k]) ? $options['channel_post_type'][$k] : array(),
                         'send_to_channel' => isset($options['send_to_channel'][$k]) ? $options['send_to_channel'][$k] : '',
                         'message_pattern' => $options['channel_message_pattern'][$k],
                         'with_featured_image' => isset($options['channel_with_featured_image'][$k]) ? $options['channel_with_featured_image'][$k] : '',

@@ -63,6 +63,16 @@ Useful Tools:
 
 Changelog
 -----------
+**2.0.1 2020-01-22**
+* Fixed tags with space
+* Fixed create plugin DB table
+* Fixed duplicate plugin menu 
+
+**2.0 2020-01-19**
+* Two Step Telegram bot Authentication
+* Integrate with DoLogin Security plugin
+* Fixed error in PHP5.*
+
 **1.9**
 * Integrate with some plugins
 * New WordPress and WooCommerce notification option

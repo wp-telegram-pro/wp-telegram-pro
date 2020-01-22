@@ -4,11 +4,11 @@
  * Plugin URI: https://github.com/parsakafi/wp-telegram-pro
  * Description: Integrate WordPress with Telegram
  * Author: Parsa Kafi
- * Version: 2.0
+ * Version: 2.0.1
  * Author URI: http://parsa.ws
  * Text Domain: wp-telegram-pro
  * WC requires at least: 3.0.0
- * WC tested up to: 3.8.1
+ * WC tested up to: 3.9
  */
 
 namespace wptelegrampro;
@@ -1111,7 +1111,7 @@ class WPTelegramPro
         return $links_array;
     }
 
-    static function install()
+    public static function install()
     {
         global $table_prefix, $wpdb;
 
@@ -1138,8 +1138,10 @@ class WPTelegramPro
                    UNIQUE KEY `rand_id` (`rand_id`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
             require_once(ABSPATH . '/wp-admin/includes/upgrade.php');
-            dbDelta($sql);
+            $insert = dbDelta($sql);
+            wp_die($insert);
         }
+
 
         update_option('wptelegrampro_version', WPTELEGRAMPRO_VERSION, false);
         update_option('update_keyboard_time_wptp', current_time('U'), false);
@@ -1147,7 +1149,6 @@ class WPTelegramPro
 
     /**
      * Returns an instance of class
-     * @param bool $bypass
      * @return  WPTelegramPro
      */
     static function getInstance()
@@ -1162,4 +1163,4 @@ class WPTelegramPro
 }
 
 $WPTelegramPro = WPTelegramPro::getInstance(true);
-register_activation_hook(__FILE__, array('WPTelegramPro', 'install'));
+register_activation_hook(__FILE__, array('wptelegrampro\WPTelegramPro', 'install'));
