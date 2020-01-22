@@ -140,7 +140,7 @@ class WPTelegramPro
                 $this->set_user();
                 if (!$bypass)
                     add_action('init', array($this, 'get_init'));
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // Exception
             }
         }

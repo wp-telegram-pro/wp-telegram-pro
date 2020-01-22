@@ -51,7 +51,7 @@ class DoLoginWPTP extends WPTelegramPro
                               name="dologin_plugin_two_factor_auth" <?php checked($this->get_option('dologin_plugin_two_factor_auth', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
                 </label>
                 <p class="description">
-                    <?php _e('This feature replace with DoLogin Two Step SMS Auth.', $this->plugin_key); ?>
+                    <?php _e('This feature replaces with DoLogin Two Step SMS Auth.', $this->plugin_key); ?>
                     <?php _e('(Requires Telegram Connectivity in WordPress tab)', $this->plugin_key); ?>
                 </p>
             </td>

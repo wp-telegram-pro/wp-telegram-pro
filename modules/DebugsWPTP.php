@@ -162,7 +162,7 @@ class DebugsWPTP extends WPTelegramPro
         );
 
         if ($updateInfo = $this->check_update_plugin())
-            $debugs[$this->plugin_name][__('Update', $this->plugin_key)] = '<a href="' . $updateInfo['updateDetailURL'] . '" class="thickbox open-plugin-details-modal">' . __('Update to new version', $this->plugin_key) . ' ' . $updateInfo['newVersion'] . '</a>';
+            $debugs[$this->plugin_name][__('Update', $this->plugin_key)] = '<a href="' . $updateInfo['updateDetailURL'] . '" class="thickbox open-plugin-details-modal">' . __('Update to the new version', $this->plugin_key) . ' ' . $updateInfo['newVersion'] . '</a>';
 
         return $debugs;
     }
@@ -217,7 +217,7 @@ class DebugsWPTP extends WPTelegramPro
         try {
             $SSLCertificate = new SSLCertificateWPTP($host);
             return $SSLCertificate->request()->response();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }

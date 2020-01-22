@@ -24,7 +24,7 @@ class SSLCertificateWPTP
     public function request()
     {
         if ($this->host === null)
-            throw new Exception('Your host address is null!');
+            throw new \Exception('Your host address is null!');
 
         $client = false;
         $streamContext = stream_context_create([
@@ -46,7 +46,7 @@ class SSLCertificateWPTP
         }
 
         if (!$client)
-            throw new Exception("Could not download certificate for host `{$this->host}` because Could not connect to `{$this->host}");
+            throw new \Exception("Could not download certificate for host `{$this->host}` because Could not connect to `{$this->host}");
 
         $this->rawResponse = stream_context_get_params($client);
         return $this;
@@ -238,13 +238,13 @@ class SSLCertificateWPTP
     protected function handleRequestFailure(string $hostName, Throwable $thrown)
     {
         if (HelpersWPTP::strContains($thrown->getMessage(), 'getaddrinfo failed')) {
-            throw new Exception("The host named `{$hostName}` does not exist.");
+            throw new \Exception("The host named `{$hostName}` does not exist.");
         }
 
         if (HelpersWPTP::strContains($thrown->getMessage(), 'error:14090086')) {
-            throw new Exception("Could not find a certificate on  host named `{$hostName}`.");
+            throw new \Exception("Could not find a certificate on  host named `{$hostName}`.");
         }
 
-        throw new Exception("Could not download certificate for host `{$hostName}` because {$thrown->getMessage()}");
+        throw new \Exception("Could not download certificate for host `{$hostName}` because {$thrown->getMessage()}");
     }
 }
