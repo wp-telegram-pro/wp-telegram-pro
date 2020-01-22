@@ -11,7 +11,7 @@ class VisualFormBuilderWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
 
         if ($this->get_option('visualformbuilder_new_message_notification', false)) {

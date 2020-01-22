@@ -11,7 +11,7 @@ class MailchimpForWPWPTP extends WPTelegramPro
 
     public function __construct()
     {
-        parent::__construct(true);
+        parent::__construct();
         add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
 
         if ($this->get_option('mailchimpforwp_email_subscribe_notification', false))

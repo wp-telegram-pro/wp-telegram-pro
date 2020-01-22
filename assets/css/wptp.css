@@ -445,6 +445,13 @@ body.rtl .wptp-wrap .title-with-icon [class^="dashicons-"] {
 
 body.rtl .wptp-warning-h3 {
     padding: 12px 50px 12px 12px;
+    border-right: 4px solid red;
+    border-left: none;
+}
+
+body.rtl .wptp-warning-h3:before{
+    left: auto;
+    right: 10px;
 }
 
 @media screen and (min-width: 783px) {
