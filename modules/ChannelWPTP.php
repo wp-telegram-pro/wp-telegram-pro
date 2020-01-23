@@ -140,8 +140,8 @@ class ChannelWPTP extends WPTelegramPro
                         $terms = get_the_terms($post_id, $_field[1]);
                         $names = (is_wp_error($terms) || empty($terms)) ? array() : wp_list_pluck($terms, 'name');
                         if (!empty($names)) {
-                            $delimiter = apply_filters('wptelegrampro_taxonomy_terms_delimiter', '|');
-                            $value = implode(" {$delimiter} ", $names);
+                            $delimiter = apply_filters('wptelegrampro_taxonomy_terms_delimiter', ' | ');
+                            $value = implode($delimiter, $names);
                         }
                     }
                     $template = str_replace("{{$field}}", $value, $template);
@@ -155,7 +155,7 @@ class ChannelWPTP extends WPTelegramPro
         $template = preg_replace('/{if=\'(.*?)\'}(.*?){\/if}/', '[if_statement_wptp field="$1" post_id="' . $post_id . '"]$2[/if_statement_wptp]', $template);
 
         $template = do_shortcode($template);
-        
+
         return $template;
     }
 

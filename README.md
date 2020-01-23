@@ -63,6 +63,9 @@ Useful Tools:
 
 Changelog
 -----------
+**2.0.2 2020-01-23**
+* Fixed plugins addon error
+
 **2.0.1 2020-01-22**
 * Fixed tags with space
 * Fixed create plugin DB table
