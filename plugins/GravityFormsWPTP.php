@@ -179,7 +179,7 @@ class GravityFormsWPTP extends WPTelegramPro
 
     private static function forms_select($field_name, $args = array())
     {
-        $forms = GFAPI::get_forms();
+        $forms = \GFAPI::get_forms();
         $items = [];
         if (count($forms))
             foreach ($forms as $form) {

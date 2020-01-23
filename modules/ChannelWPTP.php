@@ -155,7 +155,7 @@ class ChannelWPTP extends WPTelegramPro
         $template = preg_replace('/{if=\'(.*?)\'}(.*?){\/if}/', '[if_statement_wptp field="$1" post_id="' . $post_id . '"]$2[/if_statement_wptp]', $template);
 
         $template = do_shortcode($template);
-
+        
         return $template;
     }
 
