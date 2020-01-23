@@ -133,13 +133,16 @@ class ChannelWPTP extends WPTelegramPro
                 if ($_field[0] == 'cf') {
                     $value = get_post_meta($post_id, $_field[1], true);
                     $template = str_replace("{{$field}}", $value, $template);
+
                 } elseif ($_field[0] == 'terms') {
                     $value = '';
                     if (taxonomy_exists($_field[1])) {
                         $terms = get_the_terms($post_id, $_field[1]);
                         $names = (is_wp_error($terms) || empty($terms)) ? array() : wp_list_pluck($terms, 'name');
-                        if (!empty($names))
-                            $value = implode(' | ', $names);
+                        if (!empty($names)) {
+                            $delimiter = apply_filters('wptelegrampro_taxonomy_terms_delimiter', '|');
+                            $value = implode(" {$delimiter} ", $names);
+                        }
                     }
                     $template = str_replace("{{$field}}", $value, $template);
                 }
@@ -308,7 +311,7 @@ class ChannelWPTP extends WPTelegramPro
 
             $this->telegram->disable_web_page_preview($disable_web_page_preview);
             if ($featured_image && $post[$image_send_mode] !== null)
-                $this->telegram->sendFile('sendPhoto', $post[$image_send_mode], $text, $keyboards, '@' . $channel);
+                $this->telegram->sendFile('sendPhoto', $post[$image_send_mode], $text, $keyboards, '@' . $channel, $formatting_messages);
             else
                 $this->telegram->sendMessage($text, $keyboards, '@' . $channel, $formatting_messages);
 
