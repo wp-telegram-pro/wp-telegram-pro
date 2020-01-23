@@ -87,7 +87,7 @@ class ContactForm7WPTP extends WPTelegramPro
         if ($contact_form->in_demo_mode())
             return;
 
-        $submission = WPCF7_Submission::get_instance();
+        $submission = \WPCF7_Submission::get_instance();
 
         if (!$submission
             or !$posted_data = $submission->get_posted_data()) {

@@ -15,7 +15,8 @@ class BackUpWordPressWPTP extends WPTelegramPro
 
         if ($this->get_option('backupwordpress_plugin_new_backup_notification', false)) {
             add_action('wptelegrampro_backupwordpress_plugin_new_backup', [$this, 'new_backup'], 10, 2);
-            add_action('plugins_loaded', [$this, 'plugins_loaded'], 99999);
+            //add_action('plugins_loaded', [$this, 'plugins_loaded'], 99999);
+            $this->plugins_loaded();
         }
     }
 

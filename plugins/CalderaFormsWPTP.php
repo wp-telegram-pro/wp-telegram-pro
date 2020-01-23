@@ -88,7 +88,7 @@ class CalderaFormsWPTP extends WPTelegramPro
             if (!in_array($field['type'], $valid_type))
                 continue;
 
-            $value = Caldera_Forms::get_field_data($field_id, $form);
+            $value = \Caldera_Forms::get_field_data($field_id, $form);
 
             if ($field['type'] == 'checkbox' && is_array($value) && !empty($field['config']['option'])) {
                 $options = [];
@@ -132,7 +132,7 @@ class CalderaFormsWPTP extends WPTelegramPro
     private static function forms_select($field_name, $args = array())
     {
         $items = [];
-        $forms = Caldera_Forms::get_forms();
+        $forms = \Caldera_Forms::get_forms();
         if ($forms && count($forms))
             foreach ($forms as $form) {
                 $items[$form['ID']] = $form['name'];

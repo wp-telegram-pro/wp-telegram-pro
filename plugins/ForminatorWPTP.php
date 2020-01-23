@@ -1,4 +1,7 @@
 <?php
+
+namespace wptelegrampro;
+
 if (!defined('ABSPATH')) exit;
 global $ForminatorWPTP;
 
@@ -85,7 +88,7 @@ class ForminatorWPTP extends WPTelegramPro
         if ($entry->entry_id == 0 || count($forms_select) && $forms_select[0] != '' && !in_array($entry->form_id, $forms_select))
             return;
 
-        $meta = get_post_meta($entry->form_id, Forminator_Base_Form_Model::META_KEY, true);
+        $meta = get_post_meta($entry->form_id, \Forminator_Base_Form_Model::META_KEY, true);
         $fields = !empty($meta['fields']) ? $meta['fields'] : array();
 
         $users = $this->get_users();

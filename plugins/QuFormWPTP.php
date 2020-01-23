@@ -2,6 +2,9 @@
 
 namespace wptelegrampro;
 
+use Quform;
+use Quform_Repository;
+
 if (!defined('ABSPATH')) exit;
 global $QuFormWPTP;
 
@@ -182,7 +185,7 @@ class QuFormWPTP extends WPTelegramPro
         global $wpdb;
         $items = [];
 
-        $Quform_Repository = new \Quform_Repository();
+        $Quform_Repository = new Quform_Repository();
         $query = "SELECT id, name FROM " . $Quform_Repository->getFormsTableName() . " WHERE active = 1 AND trashed = 0";
         $forms = $wpdb->get_results($query);
 

@@ -104,7 +104,7 @@ class FormidableFormsWPTP extends WPTelegramPro
             'child_array' => false, // return embedded fields as nested array
         );
 
-        $entry_formatter = FrmEntryFactory::entry_formatter_instance($defaults);
+        $entry_formatter = \FrmEntryFactory::entry_formatter_instance($defaults);
         $text = $entry_formatter->get_formatted_entry_values();
         $text = "*" . __('New message', $this->plugin_key) . "*\n\n" . $text;
         $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
@@ -147,11 +147,11 @@ class FormidableFormsWPTP extends WPTelegramPro
         }
 
         $where = apply_filters('frm_forms_dropdown', $query, $field_name);
-        $forms = FrmForm::get_published_forms($where, 999, $defaults['inc_children']);
+        $forms = \FrmForm::get_published_forms($where, 999, $defaults['inc_children']);
 
         $items = [];
         foreach ($forms as $form) {
-            $items[$form->id] = esc_html('' === $form->name ? __('(no title)', 'formidable') : FrmAppHelper::truncate($form->name, 50) . ($form->parent_form_id ? __(' (child)', 'formidable') : ''));
+            $items[$form->id] = esc_html('' === $form->name ? __('(no title)', 'formidable') : \FrmAppHelper::truncate($form->name, 50) . ($form->parent_form_id ? __(' (child)', 'formidable') : ''));
         }
 
         HelpersWPTP::forms_select($field_name, $items, $args);

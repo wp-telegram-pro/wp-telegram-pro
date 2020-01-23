@@ -2,6 +2,8 @@
 
 namespace wptelegrampro;
 
+use TNP_User;
+
 if (!defined('ABSPATH')) exit;
 global $NewsletterWPTP;
 
