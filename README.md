@@ -63,6 +63,9 @@ Useful Tools:
 
 Changelog
 -----------
+**2.0.3 2020-01-26**
+* Fixed plugin activate error
+
 **2.0.2 2020-01-23**
 * Fixed error in the addons
 
