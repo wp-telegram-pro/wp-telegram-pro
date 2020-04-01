@@ -2,45 +2,46 @@
 
 namespace wptelegrampro;
 
-if (!defined('ABSPATH')) exit;
+if ( ! defined( 'ABSPATH' ) )
+	exit;
 global $WordfenceWPTP;
 
-class WordfenceWPTP extends WPTelegramPro
-{
-    public static $instance = null;
-    protected $security_events;
+class WordfenceWPTP extends WPTelegramPro {
+	public static $instance = null;
+	protected $security_events;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->security_events = array(
-            'autoUpdate' => __('Wordfence auto update', $this->plugin_key),
-            'wafDeactivated' => __('Wordfence firewall deactivated', $this->plugin_key),
-            'wordfenceDeactivated' => __('Wordfence deactivated', $this->plugin_key),
-            'block' => __('IP address blocked', $this->plugin_key),
-            'throttle' => __('IP address throttled', $this->plugin_key),
-            'lostPasswdForm' => __('Lost password form used', $this->plugin_key),
-            'loginLockout' => __('User locked out from login', $this->plugin_key),
-            'adminLogin' => __('Administrator user logged in', $this->plugin_key),
-            'adminLoginNewLocation' => __('Administrator user logged in from a new device or location', $this->plugin_key),
-            'nonAdminLogin' => __('Non administrator user logged in', $this->plugin_key),
-            'nonAdminLoginNewLocation' => __('Non administrator user logged in from a new device or location', $this->plugin_key),
-            'breachLogin' => __('Someone is blocked from logging in for using a password found in a breach', $this->plugin_key),
-            'increasedAttackRate' => __('Increase in attack rate', $this->plugin_key),
-        );
+	public function __construct() {
+		parent::__construct();
+		$this->security_events = array(
+			'autoUpdate'               => __( 'Wordfence auto update', $this->plugin_key ),
+			'wafDeactivated'           => __( 'Wordfence firewall deactivated', $this->plugin_key ),
+			'wordfenceDeactivated'     => __( 'Wordfence deactivated', $this->plugin_key ),
+			'block'                    => __( 'IP address blocked', $this->plugin_key ),
+			'throttle'                 => __( 'IP address throttled', $this->plugin_key ),
+			'lostPasswdForm'           => __( 'Lost password form used', $this->plugin_key ),
+			'loginLockout'             => __( 'User locked out from login', $this->plugin_key ),
+			'adminLogin'               => __( 'Administrator user logged in', $this->plugin_key ),
+			'adminLoginNewLocation'    => __( 'Administrator user logged in from a new device or location',
+				$this->plugin_key ),
+			'nonAdminLogin'            => __( 'Non administrator user logged in', $this->plugin_key ),
+			'nonAdminLoginNewLocation' => __( 'Non administrator user logged in from a new device or location',
+				$this->plugin_key ),
+			'breachLogin'              => __( 'Someone is blocked from logging in for using a password found in a breach',
+				$this->plugin_key ),
+			'increasedAttackRate'      => __( 'Increase in attack rate', $this->plugin_key ),
+		);
 
-        add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
-        add_filter('wptelegrampro_words', [$this, 'new_words']);
+		add_action( 'wptelegrampro_plugins_settings_content', [ $this, 'settings_content' ] );
+		add_filter( 'wptelegrampro_words', [ $this, 'new_words' ] );
 
-        if (count($this->get_option('wordfence_security_events', []))) {
-            add_action('wordfence_security_event', [$this, 'event_action'], 10, 3);
-        }
-    }
+		if ( count( $this->get_option( 'wordfence_security_events', [] ) ) ) {
+			add_action( 'wordfence_security_event', [ $this, 'event_action' ], 10, 3 );
+		}
+	}
 
-    function settings_content()
-    {
-        $this->options = get_option($this->plugin_key);
-        ?>
+	function settings_content() {
+		$this->options = get_option( $this->plugin_key );
+		?>
         <tr>
             <th colspan="2" class="title-with-icon">
                 <svg width="20" height="20" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -70,121 +71,127 @@ class WordfenceWPTP extends WPTelegramPro
         </tr>
         <tr>
             <td>
-                <?php _e('Notification for security events', $this->plugin_key); ?>
+				<?php _e( 'Notification for security events', $this->plugin_key ); ?>
             </td>
             <td>
-                <?php
-                $events = $this->get_option('wordfence_security_events', []);
-                foreach ($this->security_events as $key => $label) {
-                    echo '<label>
-                            <input type="checkbox" value="' . $key . '" name="wordfence_security_events[]" ' . checked(in_array($key, $events), true, false) . '> ' . $label . '
+				<?php
+				$events = $this->get_option( 'wordfence_security_events', [] );
+				foreach ( $this->security_events as $key => $label ) {
+					echo '<label>
+                            <input type="checkbox" value="' . $key . '" name="wordfence_security_events[]" ' . checked( in_array( $key,
+							$events ), true, false ) . '> ' . $label . '
                             </label><br>';
-                }
-                ?>
+				}
+				?>
             </td>
         </tr>
-        <?php
-    }
+		<?php
+	}
 
-    /**
-     * Send notification to admin users when new security events happened
-     *
-     * @param string $event Event name
-     * @param array $data Data
-     * @param array $alertCallback
-     */
-    function event_action($event, $data, $alertCallback = null)
-    {
-        $events = $this->get_option('wordfence_security_events', []);
-        if (!in_array($event, $events) || !is_array($data)) return;
+	/**
+	 * Send notification to admin users when new security events happened
+	 *
+	 * @param  string  $event  Event name
+	 * @param  array  $data  Data
+	 * @param  array  $alertCallback
+	 */
+	function event_action( $event, $data, $alertCallback = null ) {
+		$events = $this->get_option( 'wordfence_security_events', [] );
+		if ( ! in_array( $event, $events ) || ! is_array( $data ) )
+			return;
 
-        $text = "*" . __('Wordfence security event', $this->plugin_key) . "*\n\n";
+		$text = "*" . __( 'Wordfence security event', $this->plugin_key ) . "*\n\n";
 
-        $text .= __('Event', $this->plugin_key) . ': ' . $this->security_events[$event] . "\n";
+		$text .= __( 'Event', $this->plugin_key ) . ': ' . $this->security_events[ $event ] . "\n";
 
-        foreach ($data as $key => $value) {
-            $label = $key;
-            if ($label == 'ip') $label = 'IP';
-            elseif ($label == 'username') $label = 'userName';
-            $label = HelpersWPTP::wordsCamelCaseToSentence($label);
+		foreach ( $data as $key => $value ) {
+			$label = $key;
+			if ( $label == 'ip' )
+				$label = 'IP';
+            elseif ( $label == 'username' )
+				$label = 'userName';
+			$label = HelpersWPTP::wordsCamelCaseToSentence( $label );
 
-            if ($key == 'duration') {
-                $value = HelpersWPTP::secondsToHumanTime($value,
-                    array(
-                        'days' => __('Days', $this->plugin_key),
-                        'hours' => __('Hours', $this->plugin_key),
-                        'minutes' => __('Minutes', $this->plugin_key),
-                        'seconds' => __('Seconds', $this->plugin_key)
-                    ));
+			if ( $key == 'duration' ) {
+				$value = HelpersWPTP::secondsToHumanTime( $value,
+					array(
+						'days'    => __( 'Days', $this->plugin_key ),
+						'hours'   => __( 'Hours', $this->plugin_key ),
+						'minutes' => __( 'Minutes', $this->plugin_key ),
+						'seconds' => __( 'Seconds', $this->plugin_key )
+					) );
 
-            } elseif ($key == 'attackTable') {
-                $attackTable = '';
-                foreach ($value as $row) {
-                    $attackTable .= HelpersWPTP::localeDate($row['date']) . ' | ' . $row['IP'] . ' | ' . $row['country'] . ' | ' . $row['message'] . "\n";
-                }
-                $value = '';
-                if (!empty($attackTable))
-                    $value = "\n" . $attackTable;
-            }
+			} elseif ( $key == 'attackTable' ) {
+				$attackTable = '';
+				foreach ( $value as $row ) {
+					$attackTable .= HelpersWPTP::localeDate( $row['date'] ) . ' | ' . $row['IP'] . ' | ' . $row['country'] . ' | ' . $row['message'] . "\n";
+				}
+				$value = '';
+				if ( ! empty( $attackTable ) )
+					$value = "\n" . $attackTable;
+			}
 
-            $text .= __($label, $this->plugin_key) . ': ' . $value . "\n";
-        }
+			$text .= __( $label, $this->plugin_key ) . ': ' . $value . "\n";
+		}
 
-        $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
-        $text = apply_filters('wptelegrampro_wordfence_security_event_notification_text', $text, $event, $data, $alertCallback);
+		$text .= __( 'Date', $this->plugin_key ) . ': ' . HelpersWPTP::localeDate() . "\n";
+		$text = apply_filters( 'wptelegrampro_wordfence_security_event_notification_text', $text, $event, $data,
+			$alertCallback );
 
-        if (!$text) return;
+		if ( ! $text )
+			return;
 
-        $users = $this->get_users();
-        if ($users) {
-            if ($event == 'wordfenceDeactivated') {
-                $keyboards = null;
+		$users = $this->get_users( [ 'Administrator' ], [ 'telegram_receive_plugins_notification' => 1 ] );
+		if ( $users ) {
+			if ( $event == 'wordfenceDeactivated' ) {
+				$keyboards = null;
 
-            } else {
-                $keyboard = array(array(
-                    array(
-                        'text' => __('Wordfence Dashboard', $this->plugin_key),
-                        'url' => admin_url('admin.php?page=Wordfence')
-                    )
-                ));
-                $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
-            }
+			} else {
+				$keyboard  = array(
+					array(
+						array(
+							'text' => __( 'Wordfence Dashboard', $this->plugin_key ),
+							'url'  => admin_url( 'admin.php?page=Wordfence' )
+						)
+					)
+				);
+				$keyboards = $this->telegram->keyboard( $keyboard, 'inline_keyboard' );
+			}
 
-            foreach ($users as $user) {
-                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
-            }
-        }
-    }
+			foreach ( $users as $user ) {
+				$this->telegram->sendMessage( $text, $keyboards, $user['user_id'], 'Markdown' );
+			}
+		}
+	}
 
-    function new_words($words)
-    {
-        $new_words = array(
-            'ip' => __('IP', $this->plugin_key),
-            'version' => __('Version', $this->plugin_key),
-            'username' => __('User Name', $this->plugin_key),
-            'reason' => __('Reason', $this->plugin_key),
-            'duration' => __('Duration', $this->plugin_key),
-            'email' => __('Email', $this->plugin_key),
-            'resetPasswordURL' => __('Reset Password URL', $this->plugin_key),
-            'supportURL' => __('Support URL', $this->plugin_key),
-            'attackCount' => __('Attack Count', $this->plugin_key),
-            'attackTable' => __('Attack Table', $this->plugin_key)
-        );
-        $words = array_merge($words, $new_words);
+	function new_words( $words ) {
+		$new_words = array(
+			'ip'               => __( 'IP', $this->plugin_key ),
+			'version'          => __( 'Version', $this->plugin_key ),
+			'username'         => __( 'User Name', $this->plugin_key ),
+			'reason'           => __( 'Reason', $this->plugin_key ),
+			'duration'         => __( 'Duration', $this->plugin_key ),
+			'email'            => __( 'Email', $this->plugin_key ),
+			'resetPasswordURL' => __( 'Reset Password URL', $this->plugin_key ),
+			'supportURL'       => __( 'Support URL', $this->plugin_key ),
+			'attackCount'      => __( 'Attack Count', $this->plugin_key ),
+			'attackTable'      => __( 'Attack Table', $this->plugin_key )
+		);
+		$words     = array_merge( $words, $new_words );
 
-        return $words;
-    }
+		return $words;
+	}
 
-    /**
-     * Returns an instance of class
-     * @return WordfenceWPTP
-     */
-    static function getInstance()
-    {
-        if (self::$instance == null)
-            self::$instance = new WordfenceWPTP();
-        return self::$instance;
-    }
+	/**
+	 * Returns an instance of class
+	 * @return WordfenceWPTP
+	 */
+	static function getInstance() {
+		if ( self::$instance == null )
+			self::$instance = new WordfenceWPTP();
+
+		return self::$instance;
+	}
 }
 
 $WordfenceWPTP = WordfenceWPTP::getInstance();

@@ -1099,9 +1099,33 @@ class WPTelegramPro {
 		return $roles;
 	}
 
-	function get_users( $role = [ 'Administrator' ] ) {
+	function get_users( $role = [ 'Administrator' ], $metas = [] ) {
 		global $wpdb;
 		$user_ids = get_users( array( 'fields' => 'ids', 'role__in' => $role ) );
+
+		if ( count( $metas ) ) {
+			$metaQuery = [];
+			foreach ( $metas as $key => $value ) {
+				$metaQuery[] = array(
+					'key'     => $key,
+					'value'   => $value,
+					'compare' => '='
+				);
+			}
+
+			$user_ids_meta = get_users(
+				array(
+					'fields'     => 'ids',
+					'meta_query' => $metaQuery
+				)
+			);
+
+			if ( count( $user_ids_meta ) > 0 ) {
+				$user_ids = array_merge( $user_ids, $user_ids_meta );
+				$user_ids = array_unique( $user_ids );
+			}
+		}
+
 		if ( count( $user_ids ) == 0 )
 			return false;
 		$user_ids = implode( ',', $user_ids );

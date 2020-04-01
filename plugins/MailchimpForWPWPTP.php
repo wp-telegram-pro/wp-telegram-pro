@@ -2,28 +2,26 @@
 
 namespace wptelegrampro;
 
-if (!defined('ABSPATH')) exit;
+if ( ! defined( 'ABSPATH' ) )
+	exit;
 global $MailchimpForWPWPTP;
 
-class MailchimpForWPWPTP extends WPTelegramPro
-{
-    public static $instance = null;
+class MailchimpForWPWPTP extends WPTelegramPro {
+	public static $instance = null;
 
-    public function __construct()
-    {
-        parent::__construct();
-        add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
+	public function __construct() {
+		parent::__construct();
+		add_action( 'wptelegrampro_plugins_settings_content', [ $this, 'settings_content' ] );
 
-        if ($this->get_option('mailchimpforwp_email_subscribe_notification', false))
-            add_action('mc4wp_form_subscribed', [$this, 'email_subscribed'], 10, 4);
-        if ($this->get_option('mailchimpforwp_email_unsubscribe_notification', false))
-            add_action('mc4wp_form_unsubscribed', [$this, 'email_unsubscribed'], 10, 2);
-    }
+		if ( $this->get_option( 'mailchimpforwp_email_subscribe_notification', false ) )
+			add_action( 'mc4wp_form_subscribed', [ $this, 'email_subscribed' ], 10, 4 );
+		if ( $this->get_option( 'mailchimpforwp_email_unsubscribe_notification', false ) )
+			add_action( 'mc4wp_form_unsubscribed', [ $this, 'email_unsubscribed' ], 10, 2 );
+	}
 
-    function settings_content()
-    {
-        $this->options = get_option($this->plugin_key);
-        ?>
+	function settings_content() {
+		$this->options = get_option( $this->plugin_key );
+		?>
         <tr>
             <th colspan="2" class="title-with-icon">
                 <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -39,99 +37,104 @@ class MailchimpForWPWPTP extends WPTelegramPro
         </tr>
         <tr>
             <td>
-                <label for="mailchimpforwp_email_subscribe_notification"><?php _e('Notification for email subscribe', $this->plugin_key) ?></label>
+                <label for="mailchimpforwp_email_subscribe_notification"><?php _e( 'Notification for email subscribe',
+						$this->plugin_key ) ?></label>
             </td>
             <td>
                 <label><input type="checkbox" value="1" id="mailchimpforwp_email_subscribe_notification"
-                              name="mailchimpforwp_email_subscribe_notification" <?php checked($this->get_option('mailchimpforwp_email_subscribe_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                              name="mailchimpforwp_email_subscribe_notification" <?php checked( $this->get_option( 'mailchimpforwp_email_subscribe_notification',
+						0 ), 1 ) ?>> <?php _e( 'Active', $this->plugin_key ) ?>
                 </label>
             </td>
         </tr>
         <tr>
             <td>
-                <label for="mailchimpforwp_email_unsubscribe_notification"><?php _e('Notification for email unsubscribe', $this->plugin_key) ?></label>
+                <label for="mailchimpforwp_email_unsubscribe_notification"><?php _e( 'Notification for email unsubscribe',
+						$this->plugin_key ) ?></label>
             </td>
             <td>
                 <label><input type="checkbox" value="1" id="mailchimpforwp_email_unsubscribe_notification"
-                              name="mailchimpforwp_email_unsubscribe_notification" <?php checked($this->get_option('mailchimpforwp_email_unsubscribe_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                              name="mailchimpforwp_email_unsubscribe_notification" <?php checked( $this->get_option( 'mailchimpforwp_email_unsubscribe_notification',
+						0 ), 1 ) ?>> <?php _e( 'Active', $this->plugin_key ) ?>
                 </label>
             </td>
         </tr>
-        <?php
-    }
+		<?php
+	}
 
-    /**
-     * Send notification to admin users when email subscribed
-     *
-     * @param MC4WP_Form $form Instance of the submitted form
-     * @param string $email
-     * @param array $data
-     * @param MC4WP_MailChimp_Subscriber[] $map
-     */
-    function email_subscribed($form, $email, $data, $map)
-    {
-        $this->send_notification($email, $form, $form->last_event);
-    }
+	/**
+	 * Send notification to admin users when email subscribed
+	 *
+	 * @param  MC4WP_Form  $form  Instance of the submitted form
+	 * @param  string  $email
+	 * @param  array  $data
+	 * @param  MC4WP_MailChimp_Subscriber[]  $map
+	 */
+	function email_subscribed( $form, $email, $data, $map ) {
+		$this->send_notification( $email, $form, $form->last_event );
+	}
 
-    /**
-     * Send notification to admin users when email unsubscribed
-     *
-     * @param MC4WP_Form $form Instance of the submitted form.
-     * @param string $email
-     */
-    function email_unsubscribed($form, $email)
-    {
-        $this->send_notification($email, $form, $form->last_event);
-    }
+	/**
+	 * Send notification to admin users when email unsubscribed
+	 *
+	 * @param  MC4WP_Form  $form  Instance of the submitted form.
+	 * @param  string  $email
+	 */
+	function email_unsubscribed( $form, $email ) {
+		$this->send_notification( $email, $form, $form->last_event );
+	}
 
-    /**
-     * Send notification
-     *
-     * @param string $email Email.
-     * @param MC4WP_Form $form Instance of the submitted form.
-     * @param string $event Event.
-     */
-    private function send_notification($email, $form, $event = 'subscribed')
-    {
-        if (!in_array($event, ['subscribed', 'updated_subscriber', 'unsubscribed'])) return;
+	/**
+	 * Send notification
+	 *
+	 * @param  string  $email  Email.
+	 * @param  MC4WP_Form  $form  Instance of the submitted form.
+	 * @param  string  $event  Event.
+	 */
+	private function send_notification( $email, $form, $event = 'subscribed' ) {
+		if ( ! in_array( $event, [ 'subscribed', 'updated_subscriber', 'unsubscribed' ] ) )
+			return;
 
-        switch ($event) {
-            case 'subscribed':
-                $title = __('New email subscribed to Mailchimp', $this->plugin_key);
-                break;
-            case 'updated_subscriber':
-                $title = __('Subscriber email in Mailchimp updated', $this->plugin_key);
-                break;
-            case 'unsubscribed':
-            default:
-                $title = __('Email unsubscribed from Mailchimp', $this->plugin_key);
-                break;
-        }
+		switch ( $event ) {
+			case 'subscribed':
+				$title = __( 'New email subscribed to Mailchimp', $this->plugin_key );
+				break;
+			case 'updated_subscriber':
+				$title = __( 'Subscriber email in Mailchimp updated', $this->plugin_key );
+				break;
+			case 'unsubscribed':
+			default:
+				$title = __( 'Email unsubscribed from Mailchimp', $this->plugin_key );
+				break;
+		}
 
-        $text = "*" . $title . "*\n\n";
-        $text .= __('Email', $this->plugin_key) . ': ' . $email . "\n";
-        $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
+		$text = "*" . $title . "*\n\n";
+		$text .= __( 'Email', $this->plugin_key ) . ': ' . $email . "\n";
+		$text .= __( 'Date', $this->plugin_key ) . ': ' . HelpersWPTP::localeDate() . "\n";
 
-        $text = apply_filters('wptelegrampro_mailchimpforwp_new_subscriber_notification_text', $text, $email, $form, $event);
+		$text = apply_filters( 'wptelegrampro_mailchimpforwp_new_subscriber_notification_text', $text, $email, $form,
+			$event );
 
-        if (!$text) return;
+		if ( ! $text )
+			return;
 
-        $users = $this->get_users();
-        if ($users)
-            foreach ($users as $user)
-                $this->telegram->sendMessage($text, null, $user['user_id'], 'Markdown');
-    }
+		$users = $this->get_users( [ 'Administrator' ], [ 'telegram_receive_plugins_notification' => 1 ] );
+		if ( $users )
+			foreach ( $users as $user ) {
+				$this->telegram->sendMessage( $text, null, $user['user_id'], 'Markdown' );
+			}
+	}
 
-    /**
-     * Returns an instance of class
-     * @return MailchimpForWPWPTP
-     */
-    static function getInstance()
-    {
-        if (self::$instance == null)
-            self::$instance = new MailchimpForWPWPTP();
-        return self::$instance;
-    }
+	/**
+	 * Returns an instance of class
+	 * @return MailchimpForWPWPTP
+	 */
+	static function getInstance() {
+		if ( self::$instance == null )
+			self::$instance = new MailchimpForWPWPTP();
+
+		return self::$instance;
+	}
 }
 
 $MailchimpForWPWPTP = MailchimpForWPWPTP::getInstance();

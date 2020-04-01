@@ -2,27 +2,25 @@
 
 namespace wptelegrampro;
 
-if (!defined('ABSPATH')) exit;
+if ( ! defined( 'ABSPATH' ) )
+	exit;
 global $WeFormsWPTP;
 
-class WeFormsWPTP extends WPTelegramPro
-{
-    public static $instance = null;
+class WeFormsWPTP extends WPTelegramPro {
+	public static $instance = null;
 
-    public function __construct()
-    {
-        parent::__construct();
-        add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
+	public function __construct() {
+		parent::__construct();
+		add_action( 'wptelegrampro_plugins_settings_content', [ $this, 'settings_content' ] );
 
-        if ($this->get_option('weforms_new_message_notification', false)) {
-            add_action('weforms_entry_submission', [$this, 'form_submit'], 10, 4);
-        }
-    }
+		if ( $this->get_option( 'weforms_new_message_notification', false ) ) {
+			add_action( 'weforms_entry_submission', [ $this, 'form_submit' ], 10, 4 );
+		}
+	}
 
-    function settings_content()
-    {
-        $this->options = get_option($this->plugin_key);
-        ?>
+	function settings_content() {
+		$this->options = get_option( $this->plugin_key );
+		?>
         <tr>
             <th colspan="2" class="title-with-icon">
                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -35,111 +33,117 @@ class WeFormsWPTP extends WPTelegramPro
         </tr>
         <tr>
             <td>
-                <label for="weforms_new_message_notification"><?php _e('Notification for new message', $this->plugin_key) ?></label>
+                <label for="weforms_new_message_notification"><?php _e( 'Notification for new message',
+						$this->plugin_key ) ?></label>
             </td>
             <td>
                 <label><input type="checkbox" value="1" id="weforms_new_message_notification"
-                              name="weforms_new_message_notification" <?php checked($this->get_option('weforms_new_message_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                              name="weforms_new_message_notification" <?php checked( $this->get_option( 'weforms_new_message_notification',
+						0 ), 1 ) ?>> <?php _e( 'Active', $this->plugin_key ) ?>
                 </label>
             </td>
         </tr>
         <tr>
             <td>
-                <label for="weforms_forms_select"><?php _e('Notification from this forms', $this->plugin_key) ?></label>
+                <label for="weforms_forms_select"><?php _e( 'Notification from this forms',
+						$this->plugin_key ) ?></label>
             </td>
             <td>
-                <?php
-                $this->post_type_select('weforms_forms_select[]', 'wpuf_contact_form',
-                    array(
-                        'multiple' => 'multiple',
-                        'selected' => $this->get_option('weforms_forms_select', []),
-                        'class' => 'multi_select_none_wptp',
-                        'blank' => __('All', $this->plugin_key)
-                    )
-                );
-                ?>
+				<?php
+				$this->post_type_select( 'weforms_forms_select[]', 'wpuf_contact_form',
+					array(
+						'multiple' => 'multiple',
+						'selected' => $this->get_option( 'weforms_forms_select', [] ),
+						'class'    => 'multi_select_none_wptp',
+						'blank'    => __( 'All', $this->plugin_key )
+					)
+				);
+				?>
             </td>
         </tr>
-        <?php
-    }
+		<?php
+	}
 
-    /**
-     * Send notification to admin users when new message from weForms
-     *
-     * @param int $entry_id Current entry ID
-     * @param int $form_id Form ID
-     * @param int $page_id Page ID
-     * @param array $form_settings Form Settings
-     */
-    function form_submit($entry_id, $form_id, $page_id, $form_settings)
-    {
-        $forms_select = $this->get_option('weforms_forms_select', []);
-        if (count($forms_select) && $forms_select[0] != '' && !in_array($form_id, $forms_select))
-            return;
+	/**
+	 * Send notification to admin users when new message from weForms
+	 *
+	 * @param  int  $entry_id  Current entry ID
+	 * @param  int  $form_id  Form ID
+	 * @param  int  $page_id  Page ID
+	 * @param  array  $form_settings  Form Settings
+	 */
+	function form_submit( $entry_id, $form_id, $page_id, $form_settings ) {
+		$forms_select = $this->get_option( 'weforms_forms_select', [] );
+		if ( count( $forms_select ) && $forms_select[0] != '' && ! in_array( $form_id, $forms_select ) )
+			return;
 
-        $users = $this->get_users();
-        if (!$users) return;
+		$users = $this->get_users( [ 'Administrator' ], [ 'telegram_receive_plugins_notification' => 1 ] );
+		if ( ! $users )
+			return;
 
-        $text = "*" . __('New message', $this->plugin_key) . "*\n\n";
+		$text = "*" . __( 'New message', $this->plugin_key ) . "*\n\n";
 
-        $form = weforms()->form->get($form_id);
-        $entry = $form->entries()->get($entry_id);
-        $fields = $entry->get_fields();
+		$form   = weforms()->form->get( $form_id );
+		$entry  = $form->entries()->get( $entry_id );
+		$fields = $entry->get_fields();
 
-        if (false === $fields || sizeof($fields) < 1)
-            return;
+		if ( false === $fields || sizeof( $fields ) < 1 )
+			return;
 
-        $valid_type = array('name_field', 'text_field', 'radio_field', 'multiple_select', 'checkbox_field', 'website_url', 'email_address', 'textarea_field', 'date_field');
-        foreach ($fields as $key => $field) {
-            if (!in_array($field['type'], $valid_type))
-                continue;
+		$valid_type = array( 'name_field', 'text_field', 'radio_field', 'multiple_select', 'checkbox_field', 'website_url', 'email_address', 'textarea_field', 'date_field' );
+		foreach ( $fields as $key => $field ) {
+			if ( ! in_array( $field['type'], $valid_type ) )
+				continue;
 
-            $text .= $field['label'] . ': ';
-            $value = isset($field['value']) ? $field['value'] : '';
+			$text  .= $field['label'] . ': ';
+			$value = isset( $field['value'] ) ? $field['value'] : '';
 
-            if (is_array($value))
-                $value = (count($value) > 1 ? "\n" : '') . "▫️ " . implode("\n▫️ ", $value);
+			if ( is_array( $value ) )
+				$value = ( count( $value ) > 1 ? "\n" : '' ) . "▫️ " . implode( "\n▫️ ", $value );
 
-            if ($field['type'] == 'textarea_field') {
-                $text .= "\n";
-                $value = wp_strip_all_tags($value);
-            }
+			if ( $field['type'] == 'textarea_field' ) {
+				$text  .= "\n";
+				$value = wp_strip_all_tags( $value );
+			}
 
-            $text .= $value . "\n";
-        }
+			$text .= $value . "\n";
+		}
 
-        $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
+		$text .= __( 'Date', $this->plugin_key ) . ': ' . HelpersWPTP::localeDate() . "\n";
 
-        $text = apply_filters('wptelegrampro_weforms_message_notification_text', $text, $entry_id, $form_id, $page_id, $form_settings);
+		$text = apply_filters( 'wptelegrampro_weforms_message_notification_text', $text, $entry_id, $form_id, $page_id,
+			$form_settings );
 
-        if ($text) {
-            $keyboard = array(array(
-                array(
-                    'text' => '👁️',
-                    'url' => admin_url('admin.php?page=weforms#/form/' . $form_id . '/entries/' . $entry_id)
-                ),
-                array(
-                    'text' => '📂',
-                    'url' => admin_url('admin.php?page=weforms#/entries' )
-                )
-            ));
-            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
-            foreach ($users as $user) {
-                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
-            }
-        }
-    }
+		if ( $text ) {
+			$keyboard  = array(
+				array(
+					array(
+						'text' => '👁️',
+						'url'  => admin_url( 'admin.php?page=weforms#/form/' . $form_id . '/entries/' . $entry_id )
+					),
+					array(
+						'text' => '📂',
+						'url'  => admin_url( 'admin.php?page=weforms#/entries' )
+					)
+				)
+			);
+			$keyboards = $this->telegram->keyboard( $keyboard, 'inline_keyboard' );
+			foreach ( $users as $user ) {
+				$this->telegram->sendMessage( $text, $keyboards, $user['user_id'], 'Markdown' );
+			}
+		}
+	}
 
-    /**
-     * Returns an instance of class
-     * @return WeFormsWPTP
-     */
-    static function getInstance()
-    {
-        if (self::$instance == null)
-            self::$instance = new WeFormsWPTP();
-        return self::$instance;
-    }
+	/**
+	 * Returns an instance of class
+	 * @return WeFormsWPTP
+	 */
+	static function getInstance() {
+		if ( self::$instance == null )
+			self::$instance = new WeFormsWPTP();
+
+		return self::$instance;
+	}
 }
 
 $WeFormsWPTP = WeFormsWPTP::getInstance();

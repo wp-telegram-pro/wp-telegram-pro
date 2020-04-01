@@ -2,27 +2,25 @@
 
 namespace wptelegrampro;
 
-if (!defined('ABSPATH')) exit;
+if ( ! defined( 'ABSPATH' ) )
+	exit;
 global $ForminatorWPTP;
 
-class ForminatorWPTP extends WPTelegramPro
-{
-    public static $instance = null;
+class ForminatorWPTP extends WPTelegramPro {
+	public static $instance = null;
 
-    public function __construct()
-    {
-        parent::__construct();
-        add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
+	public function __construct() {
+		parent::__construct();
+		add_action( 'wptelegrampro_plugins_settings_content', [ $this, 'settings_content' ] );
 
-        if ($this->get_option('forminator_new_message_notification', false)) {
-            add_action('forminator_custom_form_mail_admin_sent', [$this, 'form_submit'], 10, 5);
-        }
-    }
+		if ( $this->get_option( 'forminator_new_message_notification', false ) ) {
+			add_action( 'forminator_custom_form_mail_admin_sent', [ $this, 'form_submit' ], 10, 5 );
+		}
+	}
 
-    function settings_content()
-    {
-        $this->options = get_option($this->plugin_key);
-        ?>
+	function settings_content() {
+		$this->options = get_option( $this->plugin_key );
+		?>
         <tr>
             <th colspan="2" class="title-with-icon">
                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
@@ -45,89 +43,95 @@ class ForminatorWPTP extends WPTelegramPro
         </tr>
         <tr>
             <td>
-                <label for="forminator_new_message_notification"><?php _e('Notification for new message', $this->plugin_key) ?></label>
+                <label for="forminator_new_message_notification"><?php _e( 'Notification for new message',
+						$this->plugin_key ) ?></label>
             </td>
             <td>
                 <label><input type="checkbox" value="1" id="forminator_new_message_notification"
-                              name="forminator_new_message_notification" <?php checked($this->get_option('forminator_new_message_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                              name="forminator_new_message_notification" <?php checked( $this->get_option( 'forminator_new_message_notification',
+						0 ), 1 ) ?>> <?php _e( 'Active', $this->plugin_key ) ?>
                 </label>
             </td>
         </tr>
         <tr>
             <td>
-                <label for="forminator_forms_select"><?php _e('Notification from this forms', $this->plugin_key) ?></label>
+                <label for="forminator_forms_select"><?php _e( 'Notification from this forms',
+						$this->plugin_key ) ?></label>
             </td>
             <td>
-                <?php
-                $this->post_type_select('forminator_forms_select[]', 'forminator_forms',
-                    array(
-                        'multiple' => 'multiple',
-                        'selected' => $this->get_option('forminator_forms_select', []),
-                        'class' => 'multi_select_none_wptp',
-                        'blank' => __('All', $this->plugin_key)
-                    )
-                );
-                ?>
+				<?php
+				$this->post_type_select( 'forminator_forms_select[]', 'forminator_forms',
+					array(
+						'multiple' => 'multiple',
+						'selected' => $this->get_option( 'forminator_forms_select', [] ),
+						'class'    => 'multi_select_none_wptp',
+						'blank'    => __( 'All', $this->plugin_key )
+					)
+				);
+				?>
             </td>
         </tr>
-        <?php
-    }
+		<?php
+	}
 
-    /**
-     * Send notification to admin users when new message from Forminator
-     *
-     * @param Forminator_CForm_Front_Mail $email - the current form
-     * @param Forminator_Custom_Form_Model $custom_form - the current form
-     * @param array $data - current data
-     * @param Forminator_Form_Entry_Model $entry - saved entry @since 1.0.3
-     * @param array $recipients - array or recipients
-     */
-    function form_submit($email, $custom_form, $data, $entry, $recipients)
-    {
-        $forms_select = $this->get_option('forminator_forms_select', []);
-        if ($entry->entry_id == 0 || count($forms_select) && $forms_select[0] != '' && !in_array($entry->form_id, $forms_select))
-            return;
+	/**
+	 * Send notification to admin users when new message from Forminator
+	 *
+	 * @param  Forminator_CForm_Front_Mail  $email  - the current form
+	 * @param  Forminator_Custom_Form_Model  $custom_form  - the current form
+	 * @param  array  $data  - current data
+	 * @param  Forminator_Form_Entry_Model  $entry  - saved entry @since 1.0.3
+	 * @param  array  $recipients  - array or recipients
+	 */
+	function form_submit( $email, $custom_form, $data, $entry, $recipients ) {
+		$forms_select = $this->get_option( 'forminator_forms_select', [] );
+		if ( $entry->entry_id == 0 || count( $forms_select ) && $forms_select[0] != '' && ! in_array( $entry->form_id,
+				$forms_select ) )
+			return;
 
-        $meta = get_post_meta($entry->form_id, \Forminator_Base_Form_Model::META_KEY, true);
-        $fields = !empty($meta['fields']) ? $meta['fields'] : array();
+		$meta   = get_post_meta( $entry->form_id, \Forminator_Base_Form_Model::META_KEY, true );
+		$fields = ! empty( $meta['fields'] ) ? $meta['fields'] : array();
 
-        $users = $this->get_users();
-        if (!$users || count($fields) == 0) return;
+		$users = $this->get_users( [ 'Administrator' ], [ 'telegram_receive_plugins_notification' => 1 ] );
+		if ( ! $users || count( $fields ) == 0 )
+			return;
 
-        $text = "*" . __('New message', $this->plugin_key) . "*\n\n";
+		$text = "*" . __( 'New message', $this->plugin_key ) . "*\n\n";
 
-        foreach ($fields as $field) {
-            if (isset($entry->meta_data[$field['id']]))
-                $text .= $field['field_label'] . ': ' . ($field['type'] == 'textarea' ? "\n" : '') . $entry->meta_data[$field['id']]['value'] . "\n";
-        }
+		foreach ( $fields as $field ) {
+			if ( isset( $entry->meta_data[ $field['id'] ] ) )
+				$text .= $field['field_label'] . ': ' . ( $field['type'] == 'textarea' ? "\n" : '' ) . $entry->meta_data[ $field['id'] ]['value'] . "\n";
+		}
 
-        $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
+		$text .= __( 'Date', $this->plugin_key ) . ': ' . HelpersWPTP::localeDate() . "\n";
 
-        if ($text) {
-            $keyboard = array(array(
-                array(
-                    'text' => '📂',
-                    'url' => admin_url('admin.php?page=forminator-entries&form_type=forminator_forms&form_id=' . $entry->form_id)
-                )
-            ));
-            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+		if ( $text ) {
+			$keyboard  = array(
+				array(
+					array(
+						'text' => '📂',
+						'url'  => admin_url( 'admin.php?page=forminator-entries&form_type=forminator_forms&form_id=' . $entry->form_id )
+					)
+				)
+			);
+			$keyboards = $this->telegram->keyboard( $keyboard, 'inline_keyboard' );
 
-            foreach ($users as $user) {
-                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
-            }
-        }
-    }
+			foreach ( $users as $user ) {
+				$this->telegram->sendMessage( $text, $keyboards, $user['user_id'], 'Markdown' );
+			}
+		}
+	}
 
-    /**
-     * Returns an instance of class
-     * @return ForminatorWPTP
-     */
-    static function getInstance()
-    {
-        if (self::$instance == null)
-            self::$instance = new ForminatorWPTP();
-        return self::$instance;
-    }
+	/**
+	 * Returns an instance of class
+	 * @return ForminatorWPTP
+	 */
+	static function getInstance() {
+		if ( self::$instance == null )
+			self::$instance = new ForminatorWPTP();
+
+		return self::$instance;
+	}
 }
 
 $ForminatorWPTP = ForminatorWPTP::getInstance();

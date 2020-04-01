@@ -5,27 +5,25 @@ namespace wptelegrampro;
 use Quform;
 use Quform_Repository;
 
-if (!defined('ABSPATH')) exit;
+if ( ! defined( 'ABSPATH' ) )
+	exit;
 global $QuFormWPTP;
 
-class QuFormWPTP extends WPTelegramPro
-{
-    public static $instance = null;
+class QuFormWPTP extends WPTelegramPro {
+	public static $instance = null;
 
-    public function __construct()
-    {
-        parent::__construct();
-        add_action('wptelegrampro_plugins_settings_content', [$this, 'settings_content']);
+	public function __construct() {
+		parent::__construct();
+		add_action( 'wptelegrampro_plugins_settings_content', [ $this, 'settings_content' ] );
 
-        if ($this->get_option('quform_new_message_notification', false)) {
-            add_filter('quform_post_process', [$this, 'form_submit'], 10, 2);
-        }
-    }
+		if ( $this->get_option( 'quform_new_message_notification', false ) ) {
+			add_filter( 'quform_post_process', [ $this, 'form_submit' ], 10, 2 );
+		}
+	}
 
-    function settings_content()
-    {
-        $this->options = get_option($this->plugin_key);
-        ?>
+	function settings_content() {
+		$this->options = get_option( $this->plugin_key );
+		?>
         <tr>
             <th colspan="2" class="title-with-icon">
                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
@@ -57,155 +55,161 @@ class QuFormWPTP extends WPTelegramPro
         </tr>
         <tr>
             <td>
-                <label for="quform_new_message_notification"><?php _e('Notification for new message', $this->plugin_key) ?></label>
+                <label for="quform_new_message_notification"><?php _e( 'Notification for new message',
+						$this->plugin_key ) ?></label>
             </td>
             <td>
                 <label><input type="checkbox" value="1" id="quform_new_message_notification"
-                              name="quform_new_message_notification" <?php checked($this->get_option('quform_new_message_notification', 0), 1) ?>> <?php _e('Active', $this->plugin_key) ?>
+                              name="quform_new_message_notification" <?php checked( $this->get_option( 'quform_new_message_notification',
+						0 ), 1 ) ?>> <?php _e( 'Active', $this->plugin_key ) ?>
                 </label>
             </td>
         </tr>
         <tr>
             <td>
-                <label for="quform_forms_select"><?php _e('Notification from this forms', $this->plugin_key) ?></label>
+                <label for="quform_forms_select"><?php _e( 'Notification from this forms',
+						$this->plugin_key ) ?></label>
             </td>
             <td>
-                <?php
-                self::forms_select(
-                    'quform_forms_select[]',
-                    array(
-                        'blank' => __('All', $this->plugin_key),
-                        'field_id' => 'quform_forms_select',
-                        'multiple' => 'multiple',
-                        'selected' => $this->get_option('quform_forms_select', []),
-                        'class' => 'multi_select_none_wptp',
-                    )
-                );
-                ?>
+				<?php
+				self::forms_select(
+					'quform_forms_select[]',
+					array(
+						'blank'    => __( 'All', $this->plugin_key ),
+						'field_id' => 'quform_forms_select',
+						'multiple' => 'multiple',
+						'selected' => $this->get_option( 'quform_forms_select', [] ),
+						'class'    => 'multi_select_none_wptp',
+					)
+				);
+				?>
             </td>
         </tr>
-        <?php
-    }
+		<?php
+	}
 
-    /**
-     * Send notification to admin users when new message from Quform Forms
-     *
-     * @param array $result Quform notification
-     * @param Quform_Form $form Quform form
-     * @return array
-     */
-    function form_submit($result, $form)
-    {
-        $forms_select = $this->get_option('quform_forms_select', []);
-        if (count($forms_select) && $forms_select[0] != '' && !in_array($form->getId(), $forms_select))
-            return $result;
+	/**
+	 * Send notification to admin users when new message from Quform Forms
+	 *
+	 * @param  array  $result  Quform notification
+	 * @param  Quform_Form  $form  Quform form
+	 *
+	 * @return array
+	 */
+	function form_submit( $result, $form ) {
+		$forms_select = $this->get_option( 'quform_forms_select', [] );
+		if ( count( $forms_select ) && $forms_select[0] != '' && ! in_array( $form->getId(), $forms_select ) )
+			return $result;
 
-        $users = $this->get_users();
-        if (!$users) return $result;
+		$users = $this->get_users( [ 'Administrator' ], [ 'telegram_receive_plugins_notification' => 1 ] );
+		if ( ! $users )
+			return $result;
 
-        $text = "*" . __('New message', $this->plugin_key) . "*\n\n";
+		$text = "*" . __( 'New message', $this->plugin_key ) . "*\n\n";
 
-        $fieldsText = $mediaURL = '';
-        foreach ($form->getRecursiveIterator() as $element) {
-            if ($element instanceof Quform_Element_Field && $element->config('saveToDatabase')) {
-                $type = $element->config('type');
-                $value = $element->getValue();
+		$fieldsText = $mediaURL = '';
+		foreach ( $form->getRecursiveIterator() as $element ) {
+			if ( $element instanceof Quform_Element_Field && $element->config( 'saveToDatabase' ) ) {
+				$type  = $element->config( 'type' );
+				$value = $element->getValue();
 
-                if ($type == 'file') {
-                    continue;
-                    /*if (is_array($value) && count($value)) {
-                        $file = current($value);
-                        $value = $file['url'];
-                        if (filter_var($value, FILTER_VALIDATE_URL)) {
-                            $file = explode('.', $value);
-                            $ext = strtolower(end($file));
-                            if (in_array($ext, ['png', 'gif', 'jpeg', 'jpg']))
-                                $mediaURL = $value;
-                        } else
-                            continue;
-                    } else
-                        continue;*/
-                }
+				if ( $type == 'file' ) {
+					continue;
+					/*if (is_array($value) && count($value)) {
+						$file = current($value);
+						$value = $file['url'];
+						if (filter_var($value, FILTER_VALIDATE_URL)) {
+							$file = explode('.', $value);
+							$ext = strtolower(end($file));
+							if (in_array($ext, ['png', 'gif', 'jpeg', 'jpg']))
+								$mediaURL = $value;
+						} else
+							continue;
+					} else
+						continue;*/
+				}
 
-                if ($type == 'name')
-                    $value = $element->getValueText();
+				if ( $type == 'name' )
+					$value = $element->getValueText();
 
-                if ($type == 'multiselect' && $element->isMultiple() && is_array($value))
-                    if (count($value))
-                        $value = (count($value) > 1 ? "\n" : '') . "▫️ " . implode("\n▫️ ", $value);
-                    else
-                        $value = '';
+				if ( $type == 'multiselect' && $element->isMultiple() && is_array( $value ) )
+					if ( count( $value ) )
+						$value = ( count( $value ) > 1 ? "\n" : '' ) . "▫️ " . implode( "\n▫️ ", $value );
+					else
+						$value = '';
 
-                $fieldsText .= Quform::escape($element->getLabel()) . ': ';
+				$fieldsText .= Quform::escape( $element->getLabel() ) . ': ';
 
-                if ($type == 'textarea' && !empty($value))
-                    $fieldsText .= "\n";
+				if ( $type == 'textarea' && ! empty( $value ) )
+					$fieldsText .= "\n";
 
-                $fieldsText .= $value . "\n";
-            }
-        }
-        if (empty($fieldsText)) return $result;
+				$fieldsText .= $value . "\n";
+			}
+		}
+		if ( empty( $fieldsText ) )
+			return $result;
 
-        $text .= $fieldsText;
+		$text .= $fieldsText;
 
-        $text .= __('Date', $this->plugin_key) . ': ' . HelpersWPTP::localeDate() . "\n";
+		$text .= __( 'Date', $this->plugin_key ) . ': ' . HelpersWPTP::localeDate() . "\n";
 
-        $text = apply_filters('wptelegrampro_quform_message_notification_text', $text, $form);
+		$text = apply_filters( 'wptelegrampro_quform_message_notification_text', $text, $form );
 
-        if ($text) {
-            $keyboard = array(array(
-                array(
-                    'text' => '👁️',
-                    'url' => admin_url('admin.php?page=quform.entries&sp=view&eid=' . $form->getEntryId())
-                ),
-                array(
-                    'text' => '📝',
-                    'url' => admin_url('admin.php?page=quform.entries&sp=edit&eid=' . $form->getEntryId())
-                ),
-                array(
-                    'text' => '📂',
-                    'url' => admin_url('admin.php?page=quform.entries&id=' . $form->getId())
-                )
-            ));
-            $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
+		if ( $text ) {
+			$keyboard  = array(
+				array(
+					array(
+						'text' => '👁️',
+						'url'  => admin_url( 'admin.php?page=quform.entries&sp=view&eid=' . $form->getEntryId() )
+					),
+					array(
+						'text' => '📝',
+						'url'  => admin_url( 'admin.php?page=quform.entries&sp=edit&eid=' . $form->getEntryId() )
+					),
+					array(
+						'text' => '📂',
+						'url'  => admin_url( 'admin.php?page=quform.entries&id=' . $form->getId() )
+					)
+				)
+			);
+			$keyboards = $this->telegram->keyboard( $keyboard, 'inline_keyboard' );
 
-            foreach ($users as $user) {
-                //if (empty($mediaURL))
-                $this->telegram->sendMessage($text, $keyboards, $user['user_id'], 'Markdown');
-                //else
-                //    $this->telegram->sendFile('sendPhoto', $mediaURL, $text, $keyboards, $user['user_id'], 'Markdown');
-            }
-        }
+			foreach ( $users as $user ) {
+				//if (empty($mediaURL))
+				$this->telegram->sendMessage( $text, $keyboards, $user['user_id'], 'Markdown' );
+				//else
+				//    $this->telegram->sendFile('sendPhoto', $mediaURL, $text, $keyboards, $user['user_id'], 'Markdown');
+			}
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 
-    private static function forms_select($field_name, $args = array())
-    {
-        global $wpdb;
-        $items = [];
+	private static function forms_select( $field_name, $args = array() ) {
+		global $wpdb;
+		$items = [];
 
-        $Quform_Repository = new Quform_Repository();
-        $query = "SELECT id, name FROM " . $Quform_Repository->getFormsTableName() . " WHERE active = 1 AND trashed = 0";
-        $forms = $wpdb->get_results($query);
+		$Quform_Repository = new Quform_Repository();
+		$query             = "SELECT id, name FROM " . $Quform_Repository->getFormsTableName() . " WHERE active = 1 AND trashed = 0";
+		$forms             = $wpdb->get_results( $query );
 
-        if ($forms)
-            foreach ($forms as $form) {
-                $items[$form->id] = $form->name;
-            }
-        HelpersWPTP::forms_select($field_name, $items, $args);
-    }
+		if ( $forms )
+			foreach ( $forms as $form ) {
+				$items[ $form->id ] = $form->name;
+			}
+		HelpersWPTP::forms_select( $field_name, $items, $args );
+	}
 
-    /**
-     * Returns an instance of class
-     * @return QuFormWPTP
-     */
-    static function getInstance()
-    {
-        if (self::$instance == null)
-            self::$instance = new QuFormWPTP();
-        return self::$instance;
-    }
+	/**
+	 * Returns an instance of class
+	 * @return QuFormWPTP
+	 */
+	static function getInstance() {
+		if ( self::$instance == null )
+			self::$instance = new QuFormWPTP();
+
+		return self::$instance;
+	}
 }
 
 $QuFormWPTP = QuFormWPTP::getInstance();

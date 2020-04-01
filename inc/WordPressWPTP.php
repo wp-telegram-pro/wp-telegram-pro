@@ -23,6 +23,8 @@ class WordPressWPTP extends WPTelegramPro {
 
 		add_action( 'show_user_profile', [ $this, 'user_profile' ] );
 		add_action( 'edit_user_profile', [ $this, 'user_profile' ] );
+		add_action( 'personal_options_update', [ $this, 'save_profile_fields' ] );
+		add_action( 'edit_user_profile_update', [ $this, 'save_profile_fields' ] );
 		add_action( 'wp_before_admin_bar_render', [ $this, 'admin_bar_render' ] );
 		add_action( 'admin_notices', [ $this, 'user_disconnect' ] );
 
@@ -82,9 +84,12 @@ class WordPressWPTP extends WPTelegramPro {
         <table class="form-table">
             <tr>
 				<?php if ( $bot_user ) { ?>
-                    <th colspan="2"><?php echo __( 'This profile has been linked to this Telegram account:',
+                    <th>
+						<?php _e( 'Connect', $this->plugin_key ) ?>
+                    </th>
+                    <td><?php echo __( 'This profile has been linked to this Telegram account:',
 								$this->plugin_key ) . ' ' . $bot_user['first_name'] . ' ' . $bot_user['last_name'] . ' <a href="https://t.me/' . $bot_user['username'] . '" target="_blank">@' . $bot_user['username'] . '</a> (<a href="' . $this->get_bot_disconnect_link( $user->ID ) . '">' . __( 'Disconnect',
-								$this->plugin_key ) . '</a>)'; ?></th>
+								$this->plugin_key ) . '</a>)'; ?></td>
 				<?php } else {
 					$code = $this->get_user_random_code( $user->ID );
 					?>
@@ -104,8 +109,30 @@ class WordPressWPTP extends WPTelegramPro {
                     </td>
 				<?php } ?>
             </tr>
+            <tr>
+                <th><?php _e( 'Receive Plugins Notification', $this->plugin_key ) ?></th>
+                <td><label><input type="checkbox" name="telegram_receive_plugins_notification" value="1"
+							<?php checked( get_user_meta( $user->ID, 'telegram_receive_plugins_notification',
+								true ), 1 ) ?>> <?php _e( 'Active',
+							$this->plugin_key ) ?></label></td>
+            </tr>
         </table>
 		<?php
+	}
+
+	/**
+	 * Save user profile meta fields
+	 *
+	 * @param  integer  $user_id  User ID
+	 *
+	 * @return void
+	 * */
+	function save_profile_fields( $user_id ) {
+		if ( ! current_user_can( 'edit_user', $user_id ) )
+			return;
+
+		update_user_meta( $user_id, 'telegram_receive_plugins_notification',
+			intval( isset( $_POST['telegram_receive_plugins_notification'] ) ) );
 	}
 
 	function default_commands( $commands ) {
