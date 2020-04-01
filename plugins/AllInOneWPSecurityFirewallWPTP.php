@@ -15,7 +15,7 @@ class AllInOneWPSecurityFirewallWPTP extends WPTelegramPro {
 		add_action( 'wptelegrampro_plugins_settings_content', [ $this, 'settings_content' ] );
 
 		if ( $this->get_option( 'allinonewpsecurityfirewall_lock_user_notification', false ) ) {
-			add_action( 'aiowps_lockdown_event', [ $this, 'lock_user' ], 10, 2 );
+			add_action( 'aiowps_lockdown_event', [ $this, 'new_blacklisted_ip' ], 10, 2 );
 		}
 	}
 
