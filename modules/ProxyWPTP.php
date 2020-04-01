@@ -263,8 +263,7 @@ class ProxyWPTP extends WPTelegramPro {
                    class="proxy-status-wptp" <?php echo $proxy_status != 'php_tunnel' ? 'style="display: none"' : '' ?>>
                 <tr>
                     <td>
-                        <label for="php_tunnel_script_url"><?php _e( 'PHP Tunnel Script URL',
-								$this->plugin_key ) ?></label>
+                        <label for="php_tunnel_script_url"><?php _e( 'Tunnel Script URL', $this->plugin_key ) ?></label>
                     </td>
                     <td>
                         <input type="url" name="php_tunnel_script_url" id="php_tunnel_script_url"
@@ -390,9 +389,11 @@ class ProxyWPTP extends WPTelegramPro {
             <button class="toggle" type="button"> <?php _e( 'Proxy Tunnel', $this->plugin_key ) ?></button>
             <div class="panel">
                 <div>
-					<?php _e( 'If your website host location (See the Debugs page) filtered/blocked the Telegram requests, You can use a Proxy Tunnel for receive/request to Telegram.', $this->plugin_key ); ?>
+					<?php _e( 'If your website host location (See the Debugs page) filtered/blocked the Telegram requests, You can use a Proxy Tunnel for receive/request to Telegram.',
+						$this->plugin_key ); ?>
                     <br>
-                    <a href="https://github.com/parsakafi/wp-telegram-pro-php-tunnel" target="_blank"><?php _e( 'Proxy tunnel usage guide', $this->plugin_key ); ?></a>
+                    <a href="https://github.com/parsakafi/wp-telegram-pro-php-tunnel"
+                       target="_blank"><?php _e( 'Proxy tunnel usage guide', $this->plugin_key ); ?></a>
                 </div>
             </div>
         </div>
