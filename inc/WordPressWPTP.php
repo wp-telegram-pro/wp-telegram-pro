@@ -149,10 +149,13 @@ class WordPressWPTP extends WPTelegramPro {
 
 	function default_keyboard( $keyboard ) {
 		$this->words  = apply_filters( 'wptelegrampro_words', $this->words );
-		$new_keyboard = array(
-			$this->words['posts'],
-			$this->words['categories']
-		);
+		$new_keyboard = array();
+
+		if ( $this->get_option( 'display_posts_buttons', false ) )
+			$new_keyboard = array(
+				$this->words['posts'],
+				$this->words['categories']
+			);
 
 		$search_post_type = $this->get_option( 'search_post_type', array() );
 		if ( count( $search_post_type ) )
@@ -880,6 +883,20 @@ class WordPressWPTP extends WPTelegramPro {
                     </td>
                 </tr>
                 <tr>
+                    <th colspan="2"><?php _e( 'Posts', $this->plugin_key ) ?></th>
+                </tr>
+                <tr>
+                    <td>
+						<?php _e( 'Posts Buttons', $this->plugin_key ) ?>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" value="1" id="display_posts_buttons"
+                                      name="display_posts_buttons" <?php checked( $this->get_option( 'display_posts_buttons' ),
+								1 ) ?>> <?php _e( 'Active', $this->plugin_key ) ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
                     <th colspan="2"><?php _e( 'Search', $this->plugin_key ) ?></th>
                 </tr>
                 <tr>
@@ -911,7 +928,7 @@ class WordPressWPTP extends WPTelegramPro {
                                    name="force_update_keyboard"> <?php _e( 'Update' ) ?>
                         </label><br>
                         <span class="description">
-                            <?php _e( "You should update keyboard for users when change WordPress language, active Woocommerce plugin, search setting changed. (Status don't save)",
+                            <?php _e( "You should update keyboard for users when change WordPress language, Active Woocommerce plugin, Posts buttons or search setting changed. (Status don't save)",
 	                            $this->plugin_key ) ?>
                         </span>
                     </td>
