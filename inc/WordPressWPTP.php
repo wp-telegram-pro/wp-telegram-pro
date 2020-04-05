@@ -2,6 +2,8 @@
 
 namespace wptelegrampro;
 
+global $WordPressWPTP;
+
 class WordPressWPTP extends WPTelegramPro {
 	public static $instance = null;
 	protected $tabID = 'wordpress-wptp-tab';
@@ -27,6 +29,7 @@ class WordPressWPTP extends WPTelegramPro {
 		add_action( 'edit_user_profile_update', [ $this, 'save_profile_fields' ] );
 		add_action( 'wp_before_admin_bar_render', [ $this, 'admin_bar_render' ] );
 		add_action( 'admin_notices', [ $this, 'user_disconnect' ] );
+		add_action( 'init', [ $this, 'user_init' ], 88888 );
 
 		if ( $this->get_option( 'new_comment_notification', false ) )
 			add_action( 'comment_post', array( $this, 'comment_notification' ), 10, 2 );
@@ -40,6 +43,24 @@ class WordPressWPTP extends WPTelegramPro {
 			add_filter( 'recovery_mode_email', [ $this, 'admin_recovery_mode_notification' ], 1000, 2 );
 		if ( $this->get_option( 'admin_auto_core_update_notification', false ) )
 			add_filter( 'auto_core_update_email', [ $this, 'admin_auto_core_update_notification' ], 1000, 4 );
+	}
+
+	function login_url() {
+		$url = wp_login_url();
+		$url .= strpos( $url, '?' ) === false ? '?' : '&';
+		$url .= 'wptpurid=' . $this->user_field( 'rand_id' );
+
+		return $url;
+	}
+
+	function user_init() {
+		if ( isset( $_GET['wptpurid'] ) && is_numeric( $_GET['wptpurid'] ) ) {
+			if ( is_user_logged_in() ) {
+				$this->check_user_id( get_current_user_id(), $_GET['wptpurid'] );
+			} else {
+				setcookie( 'wptpurid', $_GET['wptpurid'], current_time( 'U' ) + ( 60 * 60 * 12 * 7 ) );
+			}
+		}
 	}
 
 	function user_disconnect() {

@@ -65,6 +65,7 @@ class TelegramWPTP {
 		$url                                   = 'https://api.telegram.org/bot' . $this->token . '/' . $method;
 
 		$parameter = apply_filters( 'wptelegrampro_telegram_bot_api_parameters', $parameter );
+		$url       = apply_filters( 'wptelegrampro_api_request_url', $url );
 
 		if ( ! empty( $proxy_status ) ) {
 			$headers = array( 'wptelegrampro' => true, 'Content-Type' => 'application/json' );
@@ -87,7 +88,6 @@ class TelegramWPTP {
 				remove_action( 'http_api_curl', [ $this, 'modify_http_api_curl' ] );
 			}
 
-			$url = apply_filters( 'wptelegrampro_api_request_url', $url );
 			// $parameter = apply_filters('wptelegrampro_api_request_parameters', $parameter);
 			$parameter = $this->request_file_parameter( $parameter );
 
@@ -165,7 +165,7 @@ class TelegramWPTP {
 		if ( ! $result )
 			return false;
 
-		return isset( $result['result'] ) && $result['description'] === 'Webhook was set';
+		return isset( $result['result'] ) && ( $result['description'] === 'Webhook was set' || $result['description'] === 'Webhook is already set' );
 	}
 
 	function getWebhook() {

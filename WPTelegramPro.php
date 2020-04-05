@@ -13,6 +13,8 @@
 
 namespace wptelegrampro;
 
+use WP_User;
+
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
@@ -89,7 +91,7 @@ class WPTelegramPro {
 			add_action( 'wptelegrampro_keyboard_response', [ $this, 'connect_telegram_wp_user' ], 20 );
 			add_filter( 'wptelegrampro_after_settings_update_message', [ $this, 'after_settings_updated_message' ],
 				10 );
-			add_action( 'wp_login', [ $this, 'check_user_id' ] );
+			add_action( 'wp_login', [ $this, 'login_action' ], 10, 2 );
 			add_action( 'user_register', [ $this, 'check_user_id' ] );
 			add_action( 'admin_menu', [ $this, 'menu' ] );
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -243,10 +245,12 @@ class WPTelegramPro {
 				$bot_user = $this->set_user( array( 'wp_id' => $user_id ) );
 				$update   = $this->update_user( array( 'wp_id' => null ), array( 'wp_id' => $user_id ) );
 				if ( $update && $bot_user ) {
+					$default_keyboard   = apply_filters( 'wptelegrampro_default_keyboard', array() );
+					$default_keyboard   = $this->telegram->keyboard( $default_keyboard );
 					$disconnect_message = $this->get_option( 'telegram_connectivity_disconnect_message',
 						$this->words['profile_disconnect'] );
 					if ( ! empty( $disconnect_message ) )
-						$this->telegram->sendMessage( $disconnect_message, null, $bot_user['user_id'] );
+						$this->telegram->sendMessage( $disconnect_message, $default_keyboard, $bot_user['user_id'] );
 				}
 
 				return $update;
@@ -266,10 +270,12 @@ class WPTelegramPro {
 			$user_id = $this->find_user_by_code( $code );
 			if ( $user_id ) {
 				$this->update_user( array( 'wp_id' => $user_id ) );
+				$default_keyboard        = apply_filters( 'wptelegrampro_default_keyboard', array() );
+				$default_keyboard        = $this->telegram->keyboard( $default_keyboard );
 				$success_connect_message = $this->get_option( 'telegram_connectivity_success_connect_message',
 					$this->words['profile_success_connect'] );
 				if ( ! empty( $success_connect_message ) )
-					$this->telegram->sendMessage( $success_connect_message );
+					$this->telegram->sendMessage( $success_connect_message, $default_keyboard );
 			}
 		}
 	}
@@ -307,19 +313,48 @@ class WPTelegramPro {
 		exit;
 	}
 
-	function check_user_id( $user_id = null ) {
-		if ( ! isset( $_COOKIE['wptpwc_user_id'] ) || empty( $_COOKIE['wptpwc_user_id'] ) || strlen( $_COOKIE['wptpwc_user_id'] ) != $this->rand_id_length )
+	/**
+	 * Call after login successful
+	 *
+	 * @param  string  $user_login  Username
+	 * @param  WP_User  $user  object of the logged-in user.
+	 *
+	 * @return void
+	 **/
+	function login_action( $user_login, $user ) {
+		$this->check_user_id( $user->ID );
+	}
+
+	function check_user_id( $user_id = null, $wptpurid = null ) {
+		if ( $user_id == 0 )
 			return $user_id;
+
+		if ( $wptpurid == null && isset( $_COOKIE['wptpurid'] ) )
+			$wptpurid = $_COOKIE['wptpurid'];
+
+		if ( $wptpurid == null || strlen( $wptpurid ) != $this->rand_id_length )
+			return $user_id;
+
 		if ( is_user_logged_in() && $user_id === null )
 			$user_id = get_current_user_id();
-		$user = $this->set_user( array( 'rand_id' => $_GET['wptpwc_user_id'] ) );
+
+		$user = $this->set_user( array( 'rand_id' => $wptpurid ) );
 		if ( $user === null || ! empty( $user['wp_id'] ) )
 			return $user_id;
+
+		do_action( 'wptelegrampro_before_telegram_connectivity_success_connect' );
 		$this->update_user( array( 'wp_id' => $user_id ) );
-		$this->telegram->sendMessage( __( 'Welcome, Your Telegram account is successfully connected to the store.',
-			$this->plugin_key ), null, $user['user_id'] );
-		setcookie( 'wptpwc_user_id', null, - 1 );
-		unset( $_COOKIE['wptpwc_user_id'] );
+		$default_keyboard        = apply_filters( 'wptelegrampro_default_keyboard', array() );
+		$default_keyboard        = $this->telegram->keyboard( $default_keyboard );
+		$success_connect_message = $this->get_option( 'telegram_connectivity_success_connect_message',
+			$this->words['profile_success_connect'] );
+		$this->telegram->sendMessage( $success_connect_message, $default_keyboard, $user['user_id'] );
+		setcookie( 'wptpurid', null, - 1 );
+		unset( $_COOKIE['wptpurid'] );
+		do_action( 'wptelegrampro_after_telegram_connectivity_success_connect' );
+
+		if ( $GLOBALS['pagenow'] === 'wp-login.php' )
+			wp_redirect( get_bloginfo( 'url' ) );
 	}
 
 	function keyboard_columns( $length, $count ) {

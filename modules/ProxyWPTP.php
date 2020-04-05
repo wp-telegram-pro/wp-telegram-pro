@@ -17,7 +17,7 @@ class ProxyWPTP extends WPTelegramPro {
 		add_filter( 'wptelegrampro_image_send_mode', [ $this, 'image_send_mode' ], 35 );
 		add_filter( 'wptelegrampro_proxy_status', [ $this, 'proxy_status' ], 35 );
 
-		add_action( 'wptelegrampro_after_settings_updated', [ $this, 'checkTunnelUpdate' ], 9, 2 );
+		add_action( 'wptelegrampro_after_settings_updated', [ $this, 'checkProxySettingUpdated' ], 9, 2 );
 		add_filter( 'wptelegrampro_set_webhook', [ $this, 'tunnelUpdateWebHook' ] );
 
 		$this->setup_proxy();
@@ -84,19 +84,23 @@ class ProxyWPTP extends WPTelegramPro {
 		add_action( 'http_api_curl', [ $this, 'modify_http_api_curl' ], 10, 3 );
 	}
 
-	function checkTunnelUpdate( $last_options, $new_options ) {
+	function checkProxySettingUpdated( $last_options, $new_options ) {
+		$this->options = get_option( $this->plugin_key );
+
 		if ( $last_options['proxy_status'] != $new_options['proxy_status'] && ( $last_options['proxy_status'] === 'php_tunnel' || $new_options['proxy_status'] === 'php_tunnel' ) ) {
 			if ( $new_options['proxy_status'] === 'php_tunnel' ) {
 				add_filter( 'wptelegrampro_api_remote_post_args', [ $this, 'script_request_args' ], 10, 3 );
 				add_filter( 'wptelegrampro_api_request_url', [ $this, 'phpTunnelRequestURL' ] );
+
 			} else {
 				remove_action( 'wptelegrampro_api_remote_post_args', [ $this, 'script_request_args' ] );
 				remove_action( 'wptelegrampro_api_request_url', [ $this, 'phpTunnelRequestURL' ] );
+				remove_action( 'wptelegrampro_set_webhook', [ $this, 'tunnelUpdateWebHook' ] );
+				remove_action( 'wptelegrampro_proxy_status', [ $this, 'proxy_status' ] );
 			}
 
 			$telegram = new TelegramWPTP( $new_options['api_token'] );
-			$webHook  = $this->webHookURL( false );
-			update_option( 'wptp-rand-url', $webHook['rand'], false );
+			$webHook  = $this->webHookURL( false ); 
 
 			if ( $new_options['proxy_status'] === 'php_tunnel' && ! empty( $new_options['php_tunnel_script_url'] ) ) {
 				$webHook = apply_filters( 'wptelegrampro_set_webhook', $webHook );
