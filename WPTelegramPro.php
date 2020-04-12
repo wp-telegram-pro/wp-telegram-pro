@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name: WP Telegram Pro
- * Plugin URI: https://github.com/parsakafi/wp-telegram-pro
+ * Plugin URI: https://github.com/wp-telegram-pro
  * Description: Integrate WordPress with Telegram
  * Author: Parsa Kafi
- * Version: 2.0.3
+ * Version: 2.1
  * Author URI: http://parsa.ws
  * Text Domain: wp-telegram-pro
  * WC requires at least: 3.0.0
- * WC tested up to: 3.9
+ * WC tested up to: 4.0.1
  */
 
 namespace wptelegrampro;

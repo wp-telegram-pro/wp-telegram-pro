@@ -176,7 +176,7 @@ jQuery(function ($) {
                 });
             });
 
-            $('.multi_select_none_wptp').change(function() {
+            $('.multi_select_none_wptp').change(function () {
                 if ($('option:first', this).is(':selected')) {
                     $('option:not(:first)', this).prop('selected', false);
                 }
@@ -192,6 +192,7 @@ jQuery(function ($) {
             item.find('.channel_post_type').change_item_index(new_index);
             item.find('.send_to_channel').change_item_index(new_index);
             item.find('.message-pattern-wptp').change_item_index(new_index);
+            item.find('.message-pattern-wptp').val("{title}\n{excerpt}\n\n{short-link}");
             item.find('.with_featured_image').change_item_index(new_index);
             item.find('.formatting_messages').change_item_index(new_index);
             item.find('.excerpt_length').change_item_index(new_index);
@@ -217,8 +218,10 @@ jQuery(function ($) {
                 $(this).prop('disabled', true);
             wptp_init();
 
+            item.find('.emojionearea-editor').html('{title}<div></div>{excerpt}<div><br></div>{short-link}');
+
             if (accordion) {
-                item.find(".accordion-wptp").trigger("click");
+                item.find(".toggle").html(wptp.new_channel).trigger("click");
             }
         }
 

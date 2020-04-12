@@ -396,7 +396,7 @@ class ProxyWPTP extends WPTelegramPro {
 					<?php _e( 'If your website host location (See the Debugs page) filtered/blocked the Telegram requests, You can use a Proxy Tunnel for receive/request to Telegram.',
 						$this->plugin_key ); ?>
                     <br>
-                    <a href="https://github.com/parsakafi/wp-telegram-pro-php-tunnel"
+                    <a href="https://github.com/wp-telegram-pro/wp-telegram-pro-php-tunnel"
                        target="_blank"><?php _e( 'Proxy tunnel usage guide', $this->plugin_key ); ?></a>
                 </div>
             </div>

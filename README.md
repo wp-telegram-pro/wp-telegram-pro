@@ -5,13 +5,14 @@
 Description
 -----------
 
-**Integrate WordPress with Telegram**
+**Integrate your WordPress site with Telegram**
 * New comments, Recovery mode, Auto core update, Users login, Register a new user notification
 * Search in WordPress post types
 * Send post types manually or automatically to Telegram channel
 * Display Telegram channel members count with shortcode
 * Connect WordPress profile to Telegram account
 * Two Step Telegram bot Authentication
+* Connect to Telegram with Proxy
 
 **Integrate with E-Commerce plugins:**
 * [WooCommerce](https://wordpress.org/plugins/woocommerce) – Sale products on the Telegram bot. Send product to Telegram channels. New order, Order status change, Product low/no stock, new order note notification
@@ -63,6 +64,12 @@ Useful Tools:
 
 Changelog
 -----------
+**2.1 2020-04-12**
+* Now non-administrator user can receive plugins notification
+* Add Tunnel Proxy
+* Control the display of posts buttons
+* Fixed some bugs
+
 **2.0.3 2020-01-26**
 * Fixed plugin activate error
 
