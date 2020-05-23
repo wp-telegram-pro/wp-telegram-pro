@@ -205,6 +205,7 @@ class ChannelWPTP extends WPTelegramPro
                         'post_status' => 'publish',
                         'post_type' => $post_types,
                         'orderby' => 'modified',
+                        'ignore_sticky_posts' => true,
                         'meta_query' => array(
                             'relation' => 'AND',
                             array(
