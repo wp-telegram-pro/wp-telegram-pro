@@ -242,6 +242,7 @@ class ChannelWPTP extends WPTelegramPro
     {
         $image_send_mode = apply_filters('wptelegrampro_image_send_mode', 'image_path');
         $keyboards = null;
+        $inlineKeyboards = null;
         $options = $this->options;
         $result = false;
 
@@ -255,10 +256,9 @@ class ChannelWPTP extends WPTelegramPro
             $text = stripslashes($text);
 
             if (isset($options['channel_inline_button_title'][$index]) && !empty($options['channel_inline_button_title'][$index])) {
-                $keyboard = array(array(
-                    array('text' => $options['channel_inline_button_title'][$index], 'url' => $post['short-link'])
+	            $inlineKeyboards = array(array(
+	                array('text' => $options['channel_inline_button_title'][$index], 'url' => $post['short-link'])
                 ));
-                $keyboards = $this->telegram->keyboard($keyboard, 'inline_keyboard');
             }
 
             if ($post['image'] !== null) {
@@ -294,6 +294,7 @@ class ChannelWPTP extends WPTelegramPro
                     $post['categories'] = '';
 
             $this->patterns_tags = apply_filters('wptelegrampro_patterns_tags', $this->patterns_tags);
+
             foreach ($this->patterns_tags as $group => $group_item) {
                 if (isset($group_item['plugin']) && !$this->check_plugin_active($group_item['plugin']))
                     continue;
@@ -308,7 +309,11 @@ class ChannelWPTP extends WPTelegramPro
                 }
             }
 
-            $text = apply_filters('wptelegrampro_channel_text', $text, $post_id);
+            $text       = apply_filters('wptelegrampro_channel_text', $text, $post_id);
+	        $inlineKeyboards  = apply_filters('wptelegrampro_channel_inline_keyboards', $inlineKeyboards, $post_id);
+
+	        if(is_array($inlineKeyboards))
+		        $keyboards = $this->telegram->keyboard($inlineKeyboards, 'inline_keyboard');
 
             $this->telegram->disable_web_page_preview($disable_web_page_preview);
             if ($featured_image && $post[$image_send_mode] !== null)

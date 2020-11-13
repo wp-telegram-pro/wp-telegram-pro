@@ -1,5 +1,7 @@
 ## WP Telegram Pro [[Download Stable Version](https://wordpress.org/plugins/wp-telegram-pro)]
 
+### I stopped developing this plugin, please use a new version of the plugin called [Teligro](https://github.com/teligro/teligro).
+
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg)](https://opensource.org/licenses/mit-license.php)   
 
 Description
